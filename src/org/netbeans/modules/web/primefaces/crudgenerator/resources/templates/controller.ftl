@@ -27,14 +27,19 @@
 package ${controllerPackageName};
 
 import ${entityFullClassName};
+import ${ejbFullClassName};
 import java.io.Serializable;
+import javax.annotation.PostConstruct;
 <#if managedBeanName??>
 <#if cdiEnabled?? && cdiEnabled == true>
 import javax.inject.Named;
+import javax.inject.Inject;
 import javax.enterprise.context.SessionScoped;
 <#else>
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+//import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 </#if>
 </#if>
 
@@ -45,20 +50,27 @@ import javax.faces.bean.ViewScoped;
 @ManagedBean(name="${managedBeanName}")
 </#if>
 <#if cdiEnabled?? && cdiEnabled == true>
-//Since CDI does not have a View scope, you would have to either program some
-//ConversationScope logic. A better approach is to add Apache MyFaces CODI CDI
-//extension to the project and use @ViewAccessScoped  which works very well.
-//For a standard project in NetBeans that's CDI enabled, @SessionScoped is the
-//only other working solution.
 @SessionScoped
 <#else>
-@ViewScoped
+@SessionScoped
 </#if>
 </#if>
 public class ${controllerClassName} extends ${abstractControllerClassName} <${entityClassName}> implements Serializable {
 
+<#if cdiEnabled?? && cdiEnabled == true>
+    @Inject
+<#else>
+    @EJB
+</#if>
+    private ${ejbClassName} ejbFacade;
+
     public ${controllerClassName}() {
         super(${entityClassName}.class);
+    }
+
+    @PostConstruct
+    public void init() {
+        super.setFacade(ejbFacade);
     }
 
 }

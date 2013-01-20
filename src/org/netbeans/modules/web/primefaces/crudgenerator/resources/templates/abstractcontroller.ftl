@@ -44,12 +44,7 @@ import javax.ejb.EJB;
  */
 public abstract class ${abstractControllerClassName}<T> {
 
-<#if cdiEnabled?? && cdiEnabled == true>
-    @Inject
-<#else>
-    @EJB
-</#if>
-    private ${ejbFacadeClassName}<T> facade;
+    private ${ejbFacadeClassName}<T> ejbFacade;
     private Class<T> itemClass;
     private T selected;
     private List<T> items;
@@ -60,7 +55,14 @@ public abstract class ${abstractControllerClassName}<T> {
     public ${abstractControllerClassName}(Class<T> itemClass) {
         this.itemClass = itemClass;
     }
-    
+
+    protected AbstractFacade<T> getFacade() {
+        return ejbFacade;
+    }
+
+    protected void setFacade(AbstractFacade<T> ejbFacade) {
+        this.ejbFacade = ejbFacade;
+    }
 
     public T getSelected() {
         return selected;
@@ -77,27 +79,27 @@ public abstract class ${abstractControllerClassName}<T> {
      */
     public List<T> getItems() {
         if (items == null) {
-            items = this.facade.findAll();
+            items = this.ejbFacade.findAll();
         }
         return items;
     }
 
     public void save(ActionEvent event) {
         if (selected != null) {
-                this.facade.edit(selected);
+                this.ejbFacade.edit(selected);
         }
     }
 
     public void saveNew(ActionEvent event) {
         if (selected != null) {
-                this.facade.create(selected);
+                this.ejbFacade.create(selected);
                 items = null; // Invalidate list of items to trigger requery.
         }
     }
 
     public void delete(ActionEvent event) {
         if (selected != null) {
-            this.facade.remove(selected);
+            this.ejbFacade.remove(selected);
         }
     }
 
