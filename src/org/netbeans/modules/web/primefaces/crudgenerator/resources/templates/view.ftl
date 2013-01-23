@@ -23,6 +23,7 @@
         required - is field optional and nullable or it is not? (type: boolean)
         valuesGetter - if item is of type 1:1 or 1:many relationship then use this
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
+    primeFacesVersion - Version of the PrimeFaces library in use
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category JavaServer Faces->JSF from Entity.
@@ -42,19 +43,21 @@
 
             <h:form id="viewForm">
 
-                <p:panelGrid id="display" columns="2">
-<#list entityDescriptors as entityDescriptor>
-                    <h:outputText value="${r"#{"}bundle.View${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
-    <#if entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
-                    <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}">
-                        <f:convertDateTime pattern="${entityDescriptor.dateTimeFormat}" />
-                    </h:outputText>
-    <#else>
-                    <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
-    </#if>
-</#list>
-                </p:panelGrid>
-                <p:commandButton value="${r"#{bundle.Close}"}" onclick="${r"viewDialog.hide()"}"/>
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
+    <#list entityDescriptors as entityDescriptor>
+                        <h:outputText value="${r"#{"}bundle.View${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
+        <#if entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
+                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}">
+                            <f:convertDateTime pattern="${entityDescriptor.dateTimeFormat}" />
+                        </h:outputText>
+        <#else>
+                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
+        </#if>
+    </#list>
+                    </p:panelGrid>
+                    <p:commandButton value="${r"#{bundle.Close}"}" onclick="${r"viewDialog.hide()"}"/>
+                </h:panelGroup>
 
             </h:form>
 

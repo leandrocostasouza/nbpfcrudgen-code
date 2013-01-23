@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.event.ActionEvent;
+import javax.faces.model.SelectItem;
 <#if cdiEnabled?? && cdiEnabled == true>
 import javax.inject.Inject;
 <#else>
@@ -123,6 +124,28 @@ public abstract class ${abstractControllerClassName}<T> {
         return null;
     }
 
+
+    public SelectItem[] getItemsAvailableSelectMany() {
+        return getSelectItems(ejbFacade.findAll(), false);
+    }
+
+    public SelectItem[] getItemsAvailableSelectOne() {
+        return getSelectItems(ejbFacade.findAll(), true);
+    }
+
+    private SelectItem[] getSelectItems(List<T> entities, boolean selectOne) {
+        int size = selectOne ? entities.size() + 1 : entities.size();
+        SelectItem[] items = new SelectItem[size];
+        int i = 0;
+        if (selectOne) {
+            items[0] = new SelectItem("", "---");
+            i++;
+        }
+        for (Object x : entities) {
+            items[i++] = new SelectItem(x, x.toString());
+        }
+        return items;
+    }
 
 }
 

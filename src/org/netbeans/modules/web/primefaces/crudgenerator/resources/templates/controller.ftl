@@ -45,6 +45,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 </#if>
 </#if>
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.FacesConverter;
 
 <#if managedBeanName??>
 <#if cdiEnabled?? && cdiEnabled == true>
@@ -78,6 +82,53 @@ public class ${controllerClassName} extends ${abstractControllerClassName} <${en
     @PostConstruct
     public void init() {
         super.setFacade(ejbFacade);
+    }
+
+    @FacesConverter(forClass=${entityClassName}.class)
+    public static class ${controllerClassName}Converter implements Converter {
+<#if keyEmbedded>
+
+        private static final String SEPARATOR = "#";
+        private static final String SEPARATOR_ESCAPED = "\\#";
+</#if>
+
+        public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
+            if (value == null || value.length() == 0) {
+                return null;
+            }
+            ${controllerClassName} controller = (${controllerClassName})facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "${managedBeanName}");
+<#if ejbClassName??>
+            return controller.ejbFacade.find(getKey(value));
+<#elseif jpaControllerClassName??>
+            return controller.getJpaController().find${entityClassName}(getKey(value));
+</#if>
+        }
+
+        ${keyType} getKey(String value) {
+            ${keyType} key;
+${keyBody}
+            return key;
+        }
+
+        String getStringKey(${keyType} value) {
+            StringBuffer sb = new StringBuffer();
+${keyStringBody}
+            return sb.toString();
+        }
+
+        public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
+            if (object == null) {
+                return null;
+            }
+            if (object instanceof ${entityClassName}) {
+                ${entityClassName} o = (${entityClassName}) object;
+                return getStringKey(o.${keyGetter}());
+            } else {
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: "+${entityClassName}.class.getName());
+            }
+        }
+
     }
 
 }

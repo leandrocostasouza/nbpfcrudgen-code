@@ -25,6 +25,7 @@
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
     defaultDataTableRows - will be used for DataTable Paging
     defaultDataTableRowsPerPageTemplate - will be used for DataTable Paging
+    primeFacesVersion - Version of the PrimeFaces library in use
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category JavaServer Faces->JSF from Entity.

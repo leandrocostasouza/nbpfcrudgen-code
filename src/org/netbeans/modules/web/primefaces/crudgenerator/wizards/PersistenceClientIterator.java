@@ -443,10 +443,14 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             expandSingleJSFTemplate("create.ftl", entityClass, jsfFolder, webRoot, "Create", params, progressContributor, progressPanel, progressIndex++);
             expandSingleJSFTemplate("edit.ftl", entityClass, jsfFolder, webRoot, "Edit", params, progressContributor, progressPanel, progressIndex++);
             expandSingleJSFTemplate("view.ftl", entityClass, jsfFolder, webRoot, "View", params, progressContributor, progressPanel, progressIndex++);
+
             params = FromEntityBase.createFieldParameters(webRoot, entityClass, managedBean, managedBean + ".items", true, true, null);
             params.put("controllerClassName", controllerClassName);
             params.put("defaultDataTableRows", defaultDataTableRows);
             params.put("defaultDataTableRowsPerPageTemplate", defaultDataTableRowsPerPageTemplate);
+            if (!primeFacesVersion.isEmpty()) {
+                params.put("primeFacesVersion", primeFacesVersion); //NOI18N
+            }
             expandSingleJSFTemplate("list.ftl", entityClass, jsfFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
             expandSingleJSFTemplate("index.ftl", entityClass, jsfFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
 

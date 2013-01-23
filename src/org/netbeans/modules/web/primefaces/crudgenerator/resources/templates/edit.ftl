@@ -23,6 +23,7 @@
         required - is field optional and nullable or it is not? (type: boolean)
         valuesGetter - if item is of type 1:1 or 1:many relationship then use this
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
+    primeFacesVersion - Version of the PrimeFaces library in use
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category JavaServer Faces->JSF from Entity.
@@ -46,32 +47,34 @@
                     <p:messages id="editMessages"/>
                 </h:panelGroup>
 
-                <p:panelGrid  id="display" columns="2">
-<#list entityDescriptors as entityDescriptor>
-                    <h:outputLabel value="${r"#{"}bundle.Edit${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
-    <#if entityDescriptor.primaryKey>
-                    <h:outputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" />
-    <#elseif entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
-                    <p:inputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
-                        <f:convertDateTime pattern="${entityDescriptor.dateTimeFormat}" />
-                    </p:inputText>
-    <#elseif entityDescriptor.blob>
-                    <p:inputTextarea rows="4" cols="30" id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
-    <#elseif entityDescriptor.relationshipOne>
-                    <p:selectOneMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
-                        <f:selectItems value="${r"#{"}${entityDescriptor.valuesGetter}${r"}"}"/>
-                    </p:selectOneMenu>
-    <#elseif entityDescriptor.relationshipMany>
-                    <p:selectManyMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
-                        <f:selectItems value="${r"#{"}entityDescriptor.valuesGetter${r"}"}"/>
-                    </p:selectManyMenu>
-    <#else>
-                    <p:inputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
-    </#if>
-</#list>
-                </p:panelGrid>
-                <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{bundle.Save}"}" update="${r"display,messagePanel,:listForm:datalist"}" oncomplete="${r"if(!args.validationFailed) {editDialog.hide();}"}"/>
-                <p:commandButton value="${r"#{bundle.Cancel}"}" onclick="${r"editDialog.hide()"}"/>
+                <h:panelGroup id="display">
+                    <p:panelGrid  columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
+    <#list entityDescriptors as entityDescriptor>
+                        <h:outputLabel value="${r"#{"}bundle.Edit${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
+        <#if entityDescriptor.primaryKey>
+                        <h:outputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" />
+        <#elseif entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
+                        <p:inputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
+                            <f:convertDateTime pattern="${entityDescriptor.dateTimeFormat}" />
+                        </p:inputText>
+        <#elseif entityDescriptor.blob>
+                        <p:inputTextarea rows="4" cols="30" id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
+        <#elseif entityDescriptor.relationshipOne>
+                        <p:selectOneMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
+                            <f:selectItems value="${r"#{"}${entityDescriptor.valuesGetter}${r"}"}"/>
+                        </p:selectOneMenu>
+        <#elseif entityDescriptor.relationshipMany>
+                        <p:selectManyMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
+                            <f:selectItems value="${r"#{"}entityDescriptor.valuesGetter${r"}"}"/>
+                        </p:selectManyMenu>
+        <#else>
+                        <p:inputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
+        </#if>
+    </#list>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{bundle.Save}"}" update="${r"display,messagePanel,:listForm:datalist"}" oncomplete="${r"if(!args.validationFailed) {editDialog.hide();}"}"/>
+                    <p:commandButton value="${r"#{bundle.Cancel}"}" onclick="${r"editDialog.hide()"}"/>
+                </h:panelGroup>
 
             </h:form>
 
