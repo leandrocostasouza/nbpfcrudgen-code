@@ -45,6 +45,8 @@ package org.netbeans.modules.web.primefaces.crudgenerator.wizards;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,12 +75,14 @@ import org.netbeans.modules.web.primefaces.crudgenerator.JSFConfigUtilities;
 import org.netbeans.modules.web.primefaces.crudgenerator.dialogs.BrowseFolders;
 import org.netbeans.modules.web.primefaces.crudgenerator.palette.items.CancellableDialog;
 import org.netbeans.modules.web.primefaces.crudgenerator.palette.items.ManagedBeanCustomizer.OpenTemplateAction;
+import org.netbeans.modules.web.primefaces.crudgenerator.util.LibraryUtil;
 import org.netbeans.spi.java.project.support.ui.PackageView;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -152,6 +156,10 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         jLabel5 = new javax.swing.JLabel();
         defaultRowsPerPageTemplate = new javax.swing.JTextField();
         defaultRowsTextField = new javax.swing.JTextField();
+        primeFacesVersionForLabel = new javax.swing.JLabel();
+        primeFacesVersionLabel = new javax.swing.JLabel();
+        codiVersionForLabel = new javax.swing.JLabel();
+        codiVersionLabel = new javax.swing.JLabel();
 
         jTextField2.setText("jTextField2");
 
@@ -235,6 +243,14 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         defaultRowsTextField.setText("10");
 
+        primeFacesVersionForLabel.setText("PrimeFaces Version:");
+
+        primeFacesVersionLabel.setText("jLabel8");
+
+        codiVersionForLabel.setText("MyFaces CODI Version:");
+
+        codiVersionLabel.setText("jLabel7");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -274,7 +290,15 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(defaultRowsPerPageTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(ajaxifyCheckbox))
+                            .addComponent(ajaxifyCheckbox)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(primeFacesVersionForLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(primeFacesVersionLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(codiVersionForLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(codiVersionLabel)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -324,7 +348,13 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                 .addComponent(ajaxifyCheckbox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(overrideExistingCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(primeFacesVersionForLabel)
+                    .addComponent(primeFacesVersionLabel)
+                    .addComponent(codiVersionForLabel)
+                    .addComponent(codiVersionLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(customizeTemplatesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -393,10 +423,11 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         menu.show(customizeTemplatesLabel, evt.getX(), evt.getY());
 
     }//GEN-LAST:event_customizeTemplatesLabelMouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox ajaxifyCheckbox;
     private javax.swing.JButton browseFolderButton;
+    private javax.swing.JLabel codiVersionForLabel;
+    private javax.swing.JLabel codiVersionLabel;
     private javax.swing.JLabel customizeTemplatesLabel;
     private javax.swing.JTextField defaultRowsPerPageTemplate;
     private javax.swing.JTextField defaultRowsTextField;
@@ -417,6 +448,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JComboBox locationComboBox;
     private javax.swing.JLabel locationLabel;
     private javax.swing.JCheckBox overrideExistingCheckBox;
+    private javax.swing.JLabel primeFacesVersionForLabel;
+    private javax.swing.JLabel primeFacesVersionLabel;
     private javax.swing.JLabel projectLabel;
     private javax.swing.JTextField projectTextField;
     // End of variables declaration//GEN-END:variables
@@ -457,9 +490,16 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         //        }
         //        wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, null); // NOI18N
 
+        ClassPath cp = ClassPath.getClassPath(getLocationValue().getRootFolder(), ClassPath.COMPILE);
+        ClassLoader cl = cp.getClassLoader(true);
+
+        String pfVersion = LibraryUtil.getVersion(cl, "primefaces");
+        wizard.putProperty(WizardProperties.PRIMEFACES_VERSION, pfVersion);
+
+        String codiVersion = LibraryUtil.getVersion(cl, "MyFaces Extensions-CDI Core-API");
+        wizard.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersion);
+
         if (Util.isContainerManaged(project)) {
-            ClassPath cp = ClassPath.getClassPath(getLocationValue().getRootFolder(), ClassPath.COMPILE);
-            ClassLoader cl = cp.getClassLoader(true);
             try {
                 Class.forName("javax.transaction.UserTransaction", false, cl);
             } catch (ClassNotFoundException cnfe) {
@@ -569,11 +609,15 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         }
 
         boolean jsf2Generator = "true".equals(settings.getProperty(PersistenceClientIterator.JSF2_GENERATOR_PROPERTY));
+        String primeFacesVersion = (String) settings.getProperty(WizardProperties.PRIMEFACES_VERSION);
+        String codiVersion = (String) settings.getProperty(WizardProperties.MYFACES_CODI_VERSION);
         ajaxifyCheckbox.setVisible(!jsf2Generator);
         overrideExistingCheckBox.setVisible(jsf2Generator);
         customizeTemplatesLabel.setVisible(jsf2Generator);
         localizationBundleLabel.setVisible(jsf2Generator);
         localizationBundleTextField.setVisible(jsf2Generator);
+        primeFacesVersionLabel.setText(primeFacesVersion);
+        codiVersionLabel.setText(codiVersion);
 
     }
 
@@ -589,6 +633,9 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         //2013-01-17 Kay Wrobel
         settings.putProperty(WizardProperties.DEFAULT_DATATABLE_ROWS, defaultRowsTextField.getText());
         settings.putProperty(WizardProperties.DEFAULT_DATATABLE_ROWSPERPAGETEMPLATE, defaultRowsPerPageTemplate.getText());
+        settings.putProperty(WizardProperties.PRIMEFACES_VERSION, primeFacesVersionLabel.getText());
+        settings.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersionLabel.getText());
+
     }
 
     private void updateSourceGroupPackages() {

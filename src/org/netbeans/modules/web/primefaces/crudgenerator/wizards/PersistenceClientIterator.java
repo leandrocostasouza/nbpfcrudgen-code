@@ -153,7 +153,10 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         //2013-01-13 Kay Wrobel: Added two new fields to control how DataTable pager looks like
         final String defaultDataTableRows = (String) wizard.getProperty(WizardProperties.DEFAULT_DATATABLE_ROWS);
         final String defaultDataTableRowsPerPageTemplate = (String) wizard.getProperty(WizardProperties.DEFAULT_DATATABLE_ROWSPERPAGETEMPLATE);
-
+        //2013-01-13 Kay Wrobel: Added support for specific versions of PrimeFaces and MyFaces CODI
+        final String primeFacesVersion = (String) wizard.getProperty(WizardProperties.PRIMEFACES_VERSION);
+        final String myFacesCodiVersion = (String) wizard.getProperty(WizardProperties.MYFACES_CODI_VERSION);
+        
         // add framework to project first:
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
         JSFFrameworkProvider fp = new JSFFrameworkProvider();
@@ -219,7 +222,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jpaControllerPkg, entities, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate);
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jpaControllerPkg, entities, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion);
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }
@@ -337,7 +340,9 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             FileObject javaPackageRoot,
             FileObject resourcePackageRoot,
             String defaultDataTableRows,
-            String defaultDataTableRowsPerPageTemplate) throws IOException {
+            String defaultDataTableRowsPerPageTemplate,
+            String primeFacesVersion,
+            String myFacesCodiVersion) throws IOException {
         String progressMsg;
 
         //Create an abstract controller class file
@@ -417,6 +422,9 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             if (persistenceUnitName != null) {
                 params.put("persistenceUnitName", persistenceUnitName); //NOI18N
             }
+            if (!myFacesCodiVersion.isEmpty()) {
+                params.put("myFacesCodiVersion", myFacesCodiVersion); //NOI18N
+            }
             FromEntityBase.createParamsForConverterTemplate(params, targetFolder, entityClass);
 
             //Generate abstract controller on first loop
@@ -428,6 +436,9 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params = FromEntityBase.createFieldParameters(webRoot, entityClass, managedBean, managedBean + ".selected", false, true, null);
             bundleData.add(new TemplateData(simpleClassName, (List<FromEntityBase.TemplateData>) params.get("entityDescriptors")));
             params.put("controllerClassName", controllerClassName);
+            if (!primeFacesVersion.isEmpty()) {
+                params.put("primeFacesVersion", primeFacesVersion); //NOI18N
+            }
 
             expandSingleJSFTemplate("create.ftl", entityClass, jsfFolder, webRoot, "Create", params, progressContributor, progressPanel, progressIndex++);
             expandSingleJSFTemplate("edit.ftl", entityClass, jsfFolder, webRoot, "Edit", params, progressContributor, progressPanel, progressIndex++);

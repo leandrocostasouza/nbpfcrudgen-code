@@ -34,11 +34,14 @@ import javax.annotation.PostConstruct;
 <#if cdiEnabled?? && cdiEnabled == true>
 import javax.inject.Named;
 import javax.inject.Inject;
+<#if myFacesCodiVersion??>
+import org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessScoped;
+<#else>
 import javax.enterprise.context.SessionScoped;
+</#if>
 <#else>
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-//import javax.faces.bean.ViewScoped;
 import javax.faces.bean.SessionScoped;
 </#if>
 </#if>
@@ -50,7 +53,11 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name="${managedBeanName}")
 </#if>
 <#if cdiEnabled?? && cdiEnabled == true>
+<#if myFacesCodiVersion??>
+@ViewAccessScoped
+<#else>
 @SessionScoped
+</#if>
 <#else>
 @SessionScoped
 </#if>

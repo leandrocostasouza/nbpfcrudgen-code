@@ -60,4 +60,7 @@ public class WizardProperties {
     public static final String SUPPORT_PRIMEFACES = "SupportPrimeFaces"; //NOI18N
     public static final String DEFAULT_DATATABLE_ROWS = "DefaultDataTableRows"; //NOI18N
     public static final String DEFAULT_DATATABLE_ROWSPERPAGETEMPLATE = "DefaultDataTableRowsPerPageTemplate"; //NOI18N
+    //2013-01-23 Kay Wrobel
+    public static final String PRIMEFACES_VERSION = "PrimeFacesVersion";
+    public static final String MYFACES_CODI_VERSION = "MyFacesCODIVersion";
 }
