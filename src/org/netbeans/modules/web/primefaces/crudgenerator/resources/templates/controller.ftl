@@ -66,7 +66,7 @@ import javax.faces.convert.FacesConverter;
 @SessionScoped
 </#if>
 </#if>
-public class ${controllerClassName} extends ${abstractControllerClassName} <${entityClassName}> implements Serializable {
+public class ${controllerClassName} extends ${abstractControllerClassName}<${entityClassName}> implements Serializable {
 
 <#if cdiEnabled?? && cdiEnabled == true>
     @Inject
@@ -96,10 +96,10 @@ public class ${controllerClassName} extends ${abstractControllerClassName} <${en
             if (value == null || value.length() == 0) {
                 return null;
             }
-            ${controllerClassName} controller = (${controllerClassName})facesContext.getApplication().getELResolver().
+            ${abstractControllerClassName}<${entityClassName}> controller = (${abstractControllerClassName}<${entityClassName}>)facesContext.getApplication().getELResolver().
                     getValue(facesContext.getELContext(), null, "${managedBeanName}");
 <#if ejbClassName??>
-            return controller.ejbFacade.find(getKey(value));
+            return controller.getFacade().find(getKey(value));
 <#elseif jpaControllerClassName??>
             return controller.getJpaController().find${entityClassName}(getKey(value));
 </#if>

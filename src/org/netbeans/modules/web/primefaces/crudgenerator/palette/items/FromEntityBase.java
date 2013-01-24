@@ -636,7 +636,11 @@ public abstract class FromEntityBase {
         private boolean isRequired() {
             return !JpaControllerUtil.isFieldOptionalAndNullable(method, isFieldAccess());
         }
-
+        
+        public String getReturnType() {
+            return (String)method.getReturnType().toString();
+        }
+        
     }
 
     public static final class TemplateData {
@@ -658,6 +662,10 @@ public abstract class FromEntityBase {
 
         public String getDateTimeFormat() {
             return fd.getDateTimeFormat();
+        }
+        
+        public String getReturnType() {
+            return fd.getReturnType();
         }
 
         public boolean isBlob() {

@@ -37,7 +37,7 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
-
+        <h:form id="menuForm">
             <p:menubar>
                 <p:menuitem value="${r"#{bundle.Home}"}" url="${r"/"}${appIndex}" icon="ui-icon-home"/>
                 <p:submenu label="${r"#{bundle.Maintenance}"}">
@@ -46,8 +46,7 @@
 </#list>
                 </p:submenu>
             </p:menubar>
-        
-
+        </h:form>
     </ui:composition>
 
 </html>

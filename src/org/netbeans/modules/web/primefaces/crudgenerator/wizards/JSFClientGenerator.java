@@ -184,7 +184,7 @@ public class JSFClientGenerator {
     //2013-01-08 Kay Wrobel: PrimeFaces additions
     static final String PRIMEFACES_TEMPLATE_PAGE = "template.xhtml";  //NOI18N
     static final String PRIMEFACES_CRUD_STYLESHEET = "pfcrud.css"; //NOI18N
-    static final String PRIMEFACES_APPINDEX_PAGE = "appindex.xhtml"; //NOI18N
+    static final String PRIMEFACES_APPINDEX_PAGE = "index.xhtml"; //NOI18N
     static final String PRIMEFACES_APPMENU_PAGE = "appmenu.xhtml"; //NOI18N
 
     public static void generateJSFPages(ProgressContributor progressContributor, ProgressPanel progressPanel, final Project project, final String entityClass, String jsfFolderBase, String jsfFolderName, final String controllerPackage, final String controllerClass, FileObject pkg, FileObject controllerFileObject, final EmbeddedPkSupport embeddedPkSupport, final List<String> entities, final boolean ajaxify, String jpaControllerPackage, FileObject jpaControllerFileObject, FileObject converterFileObject, final boolean genSessionBean, int progressIndex) throws IOException {
