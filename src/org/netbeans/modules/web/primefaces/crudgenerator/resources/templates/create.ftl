@@ -16,6 +16,7 @@
         name - field property name (type: String)
         dateTimeFormat - date/time/datetime formatting (type: String)
         blob - does field represents a large block of text? (type: boolean)
+        generatedValue = does field have an auto-generated value? (type: boolean)
         primaryKey - is field a primary key field? (type: boolean)
         relationshipOne - does field represent one to one or many to one relationship (type: boolean)
         relationshipMany - does field represent one to many relationship (type: boolean)
@@ -51,6 +52,14 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
     <#list entityDescriptors as entityDescriptor>
+        <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
+            <#if entityDescriptor.getRelationsLabelName(searchLabels)??>
+              <#assign relationLabelName = entityDescriptor.getRelationsLabelName(searchLabels)>
+            <#else>
+              <#assign relationLabelName = "">
+            </#if>
+        </#if>
+      <#if entityDescriptor.generatedValue == false>
                         <h:outputLabel value="${r"#{"}bundle.Create${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
         <#if entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
                         <p:inputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Create${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Create${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
@@ -61,16 +70,30 @@
         <#elseif entityDescriptor.blob>
                         <p:inputTextarea rows="4" cols="30" id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Create${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Create${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
         <#elseif entityDescriptor.relationshipOne>
-                        <p:selectOneMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Create${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Create${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
-                            <f:selectItems value="${r"#{"}${entityDescriptor.valuesGetter}${r"}"}"/>
+                        <p:selectOneMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
+                            <f:selectItem itemValue="" itemLabel="${r"#{bundle.SelectOneMessage}"}"/>
+                            <f:selectItems value="${r"#{"}${entityDescriptor.valuesListGetter}${r"}"}"
+                                           var="${entityDescriptor.id?replace(".","_")}Item"
+                                           itemValue="${r"#{"}${entityDescriptor.id?replace(".","_")}Item${r"}"}"
+            <#if relationLabelName != "">
+                                           itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r"}"}"
+            </#if>
+                            />
                         </p:selectOneMenu>
         <#elseif entityDescriptor.relationshipMany>
-                        <p:selectManyMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Create${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Create${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
-                            <f:selectItems value="${r"#{"}${entityDescriptor.valuesGetter}${r"}"}"/>
+                        <p:selectManyMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
+                            <f:selectItems value="${r"#{"}${entityDescriptor.valuesListGetter}${r"}"}"
+                                           var="${entityDescriptor.id?replace(".","_")}Item"
+                                           itemValue="${r"#{"}${entityDescriptor.id?replace(".","_")}Item${r"}"}"
+            <#if relationLabelName != "">
+                                           itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r"}"}"
+            </#if>
+                            />
                         </p:selectManyMenu>
         <#else>
                         <p:inputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Create${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Create${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
         </#if>
+      </#if>
     </#list>
                     </p:panelGrid>
                     <p:commandButton actionListener="${r"#{"}${managedBean}${r".saveNew}"}" value="${r"#{bundle.Save}"}" update="${r"display,messagePanel,:listForm:datalist"}" oncomplete="${r"if(!args.validationFailed){createDialog.hide();}"}"/>

@@ -51,6 +51,13 @@
                 <h:panelGroup id="display">
                     <p:panelGrid  columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
     <#list entityDescriptors as entityDescriptor>
+        <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
+            <#if entityDescriptor.getRelationsLabelName(searchLabels)??>
+              <#assign relationLabelName = entityDescriptor.getRelationsLabelName(searchLabels)>
+            <#else>
+              <#assign relationLabelName = "">
+            </#if>
+        </#if>
                         <h:outputLabel value="${r"#{"}bundle.Edit${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
         <#if entityDescriptor.primaryKey>
                         <h:outputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" />
@@ -64,11 +71,24 @@
                         <p:inputTextarea rows="4" cols="30" id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
         <#elseif entityDescriptor.relationshipOne>
                         <p:selectOneMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
-                            <f:selectItems value="${r"#{"}${entityDescriptor.valuesGetter}${r"}"}"/>
+                            <f:selectItem itemValue="" itemLabel="${r"#{bundle.SelectOneMessage}"}"/>
+                            <f:selectItems value="${r"#{"}${entityDescriptor.valuesListGetter}${r"}"}"
+                                           var="${entityDescriptor.id?replace(".","_")}Item"
+                                           itemValue="${r"#{"}${entityDescriptor.id?replace(".","_")}Item${r"}"}"
+            <#if relationLabelName != "">
+                                           itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r"}"}"
+            </#if>
+                            />
                         </p:selectOneMenu>
         <#elseif entityDescriptor.relationshipMany>
                         <p:selectManyMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
-                            <f:selectItems value="${r"#{"}entityDescriptor.valuesGetter${r"}"}"/>
+                            <f:selectItems value="${r"#{"}${entityDescriptor.valuesListGetter}${r"}"}"
+                                           var="${entityDescriptor.id?replace(".","_")}Item"
+                                           itemValue="${r"#{"}${entityDescriptor.id?replace(".","_")}Item${r"}"}"
+            <#if relationLabelName != "">
+                                           itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r"}"}"
+            </#if>
+                            />
                         </p:selectManyMenu>
         <#else>
                         <p:inputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>

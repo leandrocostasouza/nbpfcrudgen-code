@@ -47,6 +47,13 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
     <#list entityDescriptors as entityDescriptor>
+        <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
+            <#if entityDescriptor.getRelationsLabelName(searchLabels)??>
+              <#assign relationLabelName = entityDescriptor.getRelationsLabelName(searchLabels)>
+            <#else>
+              <#assign relationLabelName = "">
+            </#if>
+        </#if>
                         <h:outputText value="${r"#{"}bundle.View${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
         <#if entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}">
@@ -54,6 +61,10 @@
                         </h:outputText>
         <#elseif entityDescriptor.returnType?contains("boolean")>
                         <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> disabled="true"/>
+        <#elseif entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
+            <#if relationLabelName?? && relationLabelName != "">
+                        <h:outputText value="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"/>
+            </#if>
         <#else>
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
         </#if>

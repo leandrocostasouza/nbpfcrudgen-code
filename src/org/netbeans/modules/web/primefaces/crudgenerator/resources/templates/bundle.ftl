@@ -41,7 +41,7 @@ Maintenance=Maintenance
 Home=Home
 Welcome=Welcome
 WelcomeMessage=Welcome to your PrimeFaces Application. Please explore by making a selection from the menu.
-
+SelectOneMessage=Select One...
 
 <#list entities as entity>
 ${entity.entityClassName}Title=${entity.entityClassName} Maintenance

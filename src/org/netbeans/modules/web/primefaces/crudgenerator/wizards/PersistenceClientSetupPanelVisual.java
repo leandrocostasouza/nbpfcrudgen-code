@@ -160,6 +160,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         primeFacesVersionLabel = new javax.swing.JLabel();
         codiVersionForLabel = new javax.swing.JLabel();
         codiVersionLabel = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        searchLabelsTextBox = new javax.swing.JTextField();
 
         jTextField2.setText("jTextField2");
 
@@ -251,6 +253,11 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         codiVersionLabel.setText("jLabel7");
 
+        jLabel7.setText("Field name artifacts for foreign fields:");
+
+        searchLabelsTextBox.setText("descr,name");
+        searchLabelsTextBox.setToolTipText("Comma-separated list of field name artifacts to look for");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -275,31 +282,36 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                             .addComponent(localizationBundleTextField))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(browseFolderButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(customizeTemplatesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel6)
-                            .addComponent(overrideExistingCheckBox)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel1))
-                                .addGap(27, 27, 27)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(defaultRowsPerPageTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(ajaxifyCheckbox)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(primeFacesVersionForLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(primeFacesVersionLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(codiVersionForLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(codiVersionLabel)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel7)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(searchLabelsTextBox))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(customizeTemplatesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel6)
+                                .addComponent(ajaxifyCheckbox)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel5)
+                                        .addComponent(jLabel1))
+                                    .addGap(27, 27, 27)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(defaultRowsPerPageTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(primeFacesVersionForLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(primeFacesVersionLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(codiVersionForLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(codiVersionLabel))
+                                .addComponent(overrideExistingCheckBox))
+                            .addGap(0, 0, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -344,11 +356,15 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(defaultRowsPerPageTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(searchLabelsTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(ajaxifyCheckbox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(overrideExistingCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(primeFacesVersionForLabel)
                     .addComponent(primeFacesVersionLabel)
@@ -437,6 +453,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JComboBox jpaPackageComboBox;
     private javax.swing.JLabel jpaPackageLabel;
@@ -452,6 +469,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JLabel primeFacesVersionLabel;
     private javax.swing.JLabel projectLabel;
     private javax.swing.JTextField projectTextField;
+    private javax.swing.JTextField searchLabelsTextBox;
     // End of variables declaration//GEN-END:variables
 
     public void addChangeListener(ChangeListener listener) {
@@ -635,7 +653,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         settings.putProperty(WizardProperties.DEFAULT_DATATABLE_ROWSPERPAGETEMPLATE, defaultRowsPerPageTemplate.getText());
         settings.putProperty(WizardProperties.PRIMEFACES_VERSION, primeFacesVersionLabel.getText());
         settings.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersionLabel.getText());
-
+        //2013-01-25 Kay Wrobel
+        settings.putProperty(WizardProperties.SEARCH_LABEL_ARTIFACTS, searchLabelsTextBox.getText());
     }
 
     private void updateSourceGroupPackages() {

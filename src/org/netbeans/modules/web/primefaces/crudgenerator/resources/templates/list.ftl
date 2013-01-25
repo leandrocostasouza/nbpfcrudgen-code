@@ -61,7 +61,14 @@
                     <p:ajax event="rowUnselect" update="viewButton editButton"/>  
 
 <#list entityDescriptors as entityDescriptor>
-                    <p:column>
+        <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
+            <#if entityDescriptor.getRelationsLabelName(searchLabels)??>
+              <#assign relationLabelName = entityDescriptor.getRelationsLabelName(searchLabels)>
+            <#else>
+              <#assign relationLabelName = "">
+            </#if>
+        </#if>
+                    <p:column sortBy="${r"#{"}${entityDescriptor.name}${r"}"}">
                         <f:facet name="header">
                             <h:outputText value="${r"#{"}bundle.List${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
                         </f:facet>
@@ -71,6 +78,10 @@
                         </h:outputText>
     <#elseif entityDescriptor.returnType?contains("boolean")>
                         <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> disabled="true"/>
+    <#elseif entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
+            <#if relationLabelName?? && relationLabelName != "">
+                        <h:outputText value="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"/>
+            </#if>
     <#else>
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}"/>
     </#if>

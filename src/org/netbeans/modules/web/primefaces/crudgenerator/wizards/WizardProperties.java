@@ -63,4 +63,6 @@ public class WizardProperties {
     //2013-01-23 Kay Wrobel
     public static final String PRIMEFACES_VERSION = "PrimeFacesVersion";
     public static final String MYFACES_CODI_VERSION = "MyFacesCODIVersion";
+    //2013-01-25 Kay Wrobel
+    public static final String SEARCH_LABEL_ARTIFACTS = "SearchLabelArtifacts";
 }

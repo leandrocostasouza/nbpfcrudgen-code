@@ -156,6 +156,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         //2013-01-13 Kay Wrobel: Added support for specific versions of PrimeFaces and MyFaces CODI
         final String primeFacesVersion = (String) wizard.getProperty(WizardProperties.PRIMEFACES_VERSION);
         final String myFacesCodiVersion = (String) wizard.getProperty(WizardProperties.MYFACES_CODI_VERSION);
+        final String searchLabelArtifacts = (String) wizard.getProperty(WizardProperties.SEARCH_LABEL_ARTIFACTS);
         
         // add framework to project first:
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
@@ -222,7 +223,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jpaControllerPkg, entities, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion);
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jpaControllerPkg, entities, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion,searchLabelArtifacts);
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }
@@ -342,7 +343,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             String defaultDataTableRows,
             String defaultDataTableRowsPerPageTemplate,
             String primeFacesVersion,
-            String myFacesCodiVersion) throws IOException {
+            String myFacesCodiVersion,
+            String searchLabelArtifacts) throws IOException {
         String progressMsg;
 
         //Create an abstract controller class file
@@ -439,6 +441,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             if (!primeFacesVersion.isEmpty()) {
                 params.put("primeFacesVersion", primeFacesVersion); //NOI18N
             }
+            params.put("searchLabels",searchLabelArtifacts); //Default property artifacts to look for
 
             expandSingleJSFTemplate("create.ftl", entityClass, jsfFolder, webRoot, "Create", params, progressContributor, progressPanel, progressIndex++);
             expandSingleJSFTemplate("edit.ftl", entityClass, jsfFolder, webRoot, "Edit", params, progressContributor, progressPanel, progressIndex++);
@@ -451,6 +454,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             if (!primeFacesVersion.isEmpty()) {
                 params.put("primeFacesVersion", primeFacesVersion); //NOI18N
             }
+            params.put("searchLabels",searchLabelArtifacts); //Default property artifacts to look for
             expandSingleJSFTemplate("list.ftl", entityClass, jsfFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
             expandSingleJSFTemplate("index.ftl", entityClass, jsfFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
 
