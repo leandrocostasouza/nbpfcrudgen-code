@@ -53,7 +53,7 @@
                             <f:convertDateTime pattern="${entityDescriptor.dateTimeFormat}" />
                         </h:outputText>
         <#elseif entityDescriptor.returnType?contains("boolean")>
-                        <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/ disabled="true">
+                        <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> disabled="true"/>
         <#else>
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
         </#if>
