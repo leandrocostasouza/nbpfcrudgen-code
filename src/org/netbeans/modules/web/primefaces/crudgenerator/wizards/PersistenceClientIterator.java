@@ -106,6 +106,7 @@ import org.netbeans.modules.web.primefaces.crudgenerator.api.facesmodel.JSFConfi
 import org.netbeans.modules.web.primefaces.crudgenerator.api.facesmodel.ResourceBundle;
 import org.netbeans.modules.web.primefaces.crudgenerator.palette.JSFPaletteUtilities;
 import org.netbeans.modules.web.primefaces.crudgenerator.palette.items.FromEntityBase;
+import org.netbeans.modules.web.primefaces.crudgenerator.util.Version;
 import org.netbeans.modules.web.spi.webmodule.WebModuleExtender;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -154,8 +155,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final String defaultDataTableRows = (String) wizard.getProperty(WizardProperties.DEFAULT_DATATABLE_ROWS);
         final String defaultDataTableRowsPerPageTemplate = (String) wizard.getProperty(WizardProperties.DEFAULT_DATATABLE_ROWSPERPAGETEMPLATE);
         //2013-01-13 Kay Wrobel: Added support for specific versions of PrimeFaces and MyFaces CODI
-        final String primeFacesVersion = (String) wizard.getProperty(WizardProperties.PRIMEFACES_VERSION);
-        final String myFacesCodiVersion = (String) wizard.getProperty(WizardProperties.MYFACES_CODI_VERSION);
+        final Version primeFacesVersion = (Version) wizard.getProperty(WizardProperties.PRIMEFACES_VERSION);
+        final Version myFacesCodiVersion = (Version) wizard.getProperty(WizardProperties.MYFACES_CODI_VERSION);
         final String searchLabelArtifacts = (String) wizard.getProperty(WizardProperties.SEARCH_LABEL_ARTIFACTS);
         
         // add framework to project first:
@@ -342,8 +343,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             FileObject resourcePackageRoot,
             String defaultDataTableRows,
             String defaultDataTableRowsPerPageTemplate,
-            String primeFacesVersion,
-            String myFacesCodiVersion,
+            Version primeFacesVersion,
+            Version myFacesCodiVersion,
             String searchLabelArtifacts) throws IOException {
         String progressMsg;
 
@@ -424,7 +425,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             if (persistenceUnitName != null) {
                 params.put("persistenceUnitName", persistenceUnitName); //NOI18N
             }
-            if (!myFacesCodiVersion.isEmpty()) {
+            if (myFacesCodiVersion != null) {
                 params.put("myFacesCodiVersion", myFacesCodiVersion); //NOI18N
             }
             FromEntityBase.createParamsForConverterTemplate(params, targetFolder, entityClass);
@@ -438,7 +439,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params = FromEntityBase.createFieldParameters(webRoot, entityClass, managedBean, managedBean + ".selected", false, true, null);
             bundleData.add(new TemplateData(simpleClassName, (List<FromEntityBase.TemplateData>) params.get("entityDescriptors")));
             params.put("controllerClassName", controllerClassName);
-            if (!primeFacesVersion.isEmpty()) {
+            if (primeFacesVersion != null) {
                 params.put("primeFacesVersion", primeFacesVersion); //NOI18N
             }
             params.put("searchLabels",searchLabelArtifacts); //Default property artifacts to look for
@@ -451,7 +452,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("controllerClassName", controllerClassName);
             params.put("defaultDataTableRows", defaultDataTableRows);
             params.put("defaultDataTableRowsPerPageTemplate", defaultDataTableRowsPerPageTemplate);
-            if (!primeFacesVersion.isEmpty()) {
+            if (primeFacesVersion != null) {
                 params.put("primeFacesVersion", primeFacesVersion); //NOI18N
             }
             params.put("searchLabels",searchLabelArtifacts); //Default property artifacts to look for

@@ -24,10 +24,10 @@
         required - is field optional and nullable or it is not? (type: boolean)
         valuesGetter - if item is of type 1:1 or 1:many relationship then use this
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
-    primeFacesVersion - Version of the PrimeFaces library in use
+    primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
 
   This template is accessible via top level menu Tools->Templates and can
-  be found in category JavaServer Faces->JSF from Entity.
+  be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
 
 </#if>
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -58,15 +58,23 @@
               <#assign relationLabelName = "">
             </#if>
         </#if>
+        <#if (primeFacesVersion.compareTo("3.3") >= 0)>
+                        <p:outputLabel value="${r"#{"}bundle.Edit${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
+        <#else>
                         <h:outputLabel value="${r"#{"}bundle.Edit${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
+        </#if>
         <#if entityDescriptor.primaryKey>
                         <h:outputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" />
         <#elseif entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
-                        <p:inputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
+                        <p:calendar id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> showOn="button">
                             <f:convertDateTime pattern="${entityDescriptor.dateTimeFormat}" />
-                        </p:inputText>
+                        </p:calendar>
         <#elseif entityDescriptor.returnType?contains("boolean")>
+          <#if (primeFacesVersion.compareTo("3") >= 0)>
+                        <p:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
+          <#else>
                         <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
+          </#if>
         <#elseif entityDescriptor.blob>
                         <p:inputTextarea rows="4" cols="30" id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
         <#elseif entityDescriptor.relationshipOne>

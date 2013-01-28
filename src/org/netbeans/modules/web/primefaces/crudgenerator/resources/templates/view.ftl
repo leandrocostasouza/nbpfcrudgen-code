@@ -24,10 +24,10 @@
         required - is field optional and nullable or it is not? (type: boolean)
         valuesGetter - if item is of type 1:1 or 1:many relationship then use this
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
-    primeFacesVersion - Version of the PrimeFaces library in use
+    primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
 
   This template is accessible via top level menu Tools->Templates and can
-  be found in category JavaServer Faces->JSF from Entity.
+  be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
 
 </#if>
 <?xml version="1.0" encoding="UTF-8" ?>

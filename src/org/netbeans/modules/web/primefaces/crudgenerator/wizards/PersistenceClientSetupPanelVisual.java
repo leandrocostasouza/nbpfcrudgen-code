@@ -76,6 +76,7 @@ import org.netbeans.modules.web.primefaces.crudgenerator.dialogs.BrowseFolders;
 import org.netbeans.modules.web.primefaces.crudgenerator.palette.items.CancellableDialog;
 import org.netbeans.modules.web.primefaces.crudgenerator.palette.items.ManagedBeanCustomizer.OpenTemplateAction;
 import org.netbeans.modules.web.primefaces.crudgenerator.util.LibraryUtil;
+import org.netbeans.modules.web.primefaces.crudgenerator.util.Version;
 import org.netbeans.spi.java.project.support.ui.PackageView;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -511,10 +512,10 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         ClassPath cp = ClassPath.getClassPath(getLocationValue().getRootFolder(), ClassPath.COMPILE);
         ClassLoader cl = cp.getClassLoader(true);
 
-        String pfVersion = LibraryUtil.getVersion(cl, "primefaces");
+        Version pfVersion = LibraryUtil.getVersion(cl, "primefaces");
         wizard.putProperty(WizardProperties.PRIMEFACES_VERSION, pfVersion);
 
-        String codiVersion = LibraryUtil.getVersion(cl, "MyFaces Extensions-CDI Core-API");
+        Version codiVersion = LibraryUtil.getVersion(cl, "MyFaces Extensions-CDI Core-API");
         wizard.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersion);
 
         if (Util.isContainerManaged(project)) {
@@ -627,8 +628,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         }
 
         boolean jsf2Generator = "true".equals(settings.getProperty(PersistenceClientIterator.JSF2_GENERATOR_PROPERTY));
-        String primeFacesVersion = (String) settings.getProperty(WizardProperties.PRIMEFACES_VERSION);
-        String codiVersion = (String) settings.getProperty(WizardProperties.MYFACES_CODI_VERSION);
+        String primeFacesVersion = ((Version) settings.getProperty(WizardProperties.PRIMEFACES_VERSION)).toString();
+        String codiVersion = ((Version) settings.getProperty(WizardProperties.MYFACES_CODI_VERSION)).toString();
         ajaxifyCheckbox.setVisible(!jsf2Generator);
         overrideExistingCheckBox.setVisible(jsf2Generator);
         customizeTemplatesLabel.setVisible(jsf2Generator);
@@ -651,8 +652,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         //2013-01-17 Kay Wrobel
         settings.putProperty(WizardProperties.DEFAULT_DATATABLE_ROWS, defaultRowsTextField.getText());
         settings.putProperty(WizardProperties.DEFAULT_DATATABLE_ROWSPERPAGETEMPLATE, defaultRowsPerPageTemplate.getText());
-        settings.putProperty(WizardProperties.PRIMEFACES_VERSION, primeFacesVersionLabel.getText());
-        settings.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersionLabel.getText());
+        settings.putProperty(WizardProperties.PRIMEFACES_VERSION, new Version(primeFacesVersionLabel.getText()));
+        settings.putProperty(WizardProperties.MYFACES_CODI_VERSION, new Version(codiVersionLabel.getText()));
         //2013-01-25 Kay Wrobel
         settings.putProperty(WizardProperties.SEARCH_LABEL_ARTIFACTS, searchLabelsTextBox.getText());
     }
