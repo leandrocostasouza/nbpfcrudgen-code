@@ -45,7 +45,6 @@ package org.netbeans.modules.web.primefaces.crudgenerator.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents a String-based Version that can be compared to other versions.
@@ -176,8 +175,8 @@ public final class Version implements Comparable<Version> {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 41 * hash + Objects.hashCode(this.version);
-        hash = 41 * hash + Objects.hashCode(this.delimiter);
+        hash = 53 * hash + (this.version != null ? this.version.hashCode() : 0);
+        hash = 53 * hash + (this.delimiter != null ? this.delimiter.hashCode() : 0);
         return hash;
     }
 }
