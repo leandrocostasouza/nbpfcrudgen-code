@@ -513,10 +513,12 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         ClassLoader cl = cp.getClassLoader(true);
 
         Version pfVersion = LibraryUtil.getVersion(cl, "primefaces");
-        wizard.putProperty(WizardProperties.PRIMEFACES_VERSION, pfVersion);
+        String pfVersionString = pfVersion != null ? pfVersion.toString() : "";
+        wizard.putProperty(WizardProperties.PRIMEFACES_VERSION, pfVersionString);
 
         Version codiVersion = LibraryUtil.getVersion(cl, "MyFaces Extensions-CDI Core-API");
-        wizard.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersion);
+        String codiVersionString = codiVersion != null ? codiVersion.toString() : "";
+        wizard.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersionString);
 
         if (Util.isContainerManaged(project)) {
             try {
@@ -628,8 +630,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         }
 
         boolean jsf2Generator = "true".equals(settings.getProperty(PersistenceClientIterator.JSF2_GENERATOR_PROPERTY));
-        String primeFacesVersion = ((Version) settings.getProperty(WizardProperties.PRIMEFACES_VERSION)).toString();
-        String codiVersion = ((Version) settings.getProperty(WizardProperties.MYFACES_CODI_VERSION)).toString();
+        String primeFacesVersion = (String) settings.getProperty(WizardProperties.PRIMEFACES_VERSION);
+        String codiVersion = (String) settings.getProperty(WizardProperties.MYFACES_CODI_VERSION);
         ajaxifyCheckbox.setVisible(!jsf2Generator);
         overrideExistingCheckBox.setVisible(jsf2Generator);
         customizeTemplatesLabel.setVisible(jsf2Generator);
@@ -652,8 +654,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         //2013-01-17 Kay Wrobel
         settings.putProperty(WizardProperties.DEFAULT_DATATABLE_ROWS, defaultRowsTextField.getText());
         settings.putProperty(WizardProperties.DEFAULT_DATATABLE_ROWSPERPAGETEMPLATE, defaultRowsPerPageTemplate.getText());
-        settings.putProperty(WizardProperties.PRIMEFACES_VERSION, new Version(primeFacesVersionLabel.getText()));
-        settings.putProperty(WizardProperties.MYFACES_CODI_VERSION, new Version(codiVersionLabel.getText()));
+        settings.putProperty(WizardProperties.PRIMEFACES_VERSION, primeFacesVersionLabel.getText());
+        settings.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersionLabel.getText());
         //2013-01-25 Kay Wrobel
         settings.putProperty(WizardProperties.SEARCH_LABEL_ARTIFACTS, searchLabelsTextBox.getText());
     }

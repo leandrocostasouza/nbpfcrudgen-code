@@ -155,10 +155,12 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final String defaultDataTableRows = (String) wizard.getProperty(WizardProperties.DEFAULT_DATATABLE_ROWS);
         final String defaultDataTableRowsPerPageTemplate = (String) wizard.getProperty(WizardProperties.DEFAULT_DATATABLE_ROWSPERPAGETEMPLATE);
         //2013-01-13 Kay Wrobel: Added support for specific versions of PrimeFaces and MyFaces CODI
-        final Version primeFacesVersion = (Version) wizard.getProperty(WizardProperties.PRIMEFACES_VERSION);
-        final Version myFacesCodiVersion = (Version) wizard.getProperty(WizardProperties.MYFACES_CODI_VERSION);
+        final String primeFacesVersionString = (String) wizard.getProperty(WizardProperties.PRIMEFACES_VERSION);
+        final String myFacesCodiVersionString = (String) wizard.getProperty(WizardProperties.MYFACES_CODI_VERSION);
+        final Version primeFacesVersion = primeFacesVersionString.isEmpty() ? null : new Version(primeFacesVersionString);
+        final Version myFacesCodiVersion = myFacesCodiVersionString.isEmpty() ? null : new Version(myFacesCodiVersionString);
         final String searchLabelArtifacts = (String) wizard.getProperty(WizardProperties.SEARCH_LABEL_ARTIFACTS);
-        
+                
         // add framework to project first:
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
         JSFFrameworkProvider fp = new JSFFrameworkProvider();

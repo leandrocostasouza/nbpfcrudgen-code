@@ -68,6 +68,9 @@
               <#assign relationLabelName = "">
             </#if>
         </#if>
+  <#if entityDescriptor.relationshipMany>
+                    <!-- Many-To-Many field ignored -->
+  <#else>
                     <p:column sortBy="${r"#{"}${entityDescriptor.name}${r"}"}">
                         <f:facet name="header">
                             <h:outputText value="${r"#{"}bundle.List${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
@@ -78,7 +81,7 @@
                         </h:outputText>
     <#elseif entityDescriptor.returnType?contains("boolean")>
                         <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> disabled="true"/>
-    <#elseif entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
+    <#elseif entityDescriptor.relationshipOne>
             <#if relationLabelName?? && relationLabelName != "">
                         <h:outputText value="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"/>
             </#if>
@@ -86,6 +89,7 @@
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}"/>
     </#if>
                     </p:column>
+  </#if>
 </#list>
                     <f:facet name="footer">
                         <p:commandButton id="createButton" icon="ui-icon-plus"   value="${r"#{"}bundle.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update="${r":createForm:display"}" oncomplete="${r"createDialog.show()"}"/>
