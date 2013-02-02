@@ -305,6 +305,15 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             if (javaPackageRoot.getFileObject((pkg + simpleControllerName).replace('.', '/') + ".java") != null) {
                 return true;
             }
+            //2013-02-02 Kay Wrobel: Test for converters as well
+            String simpleConverterName = getConverterFileName(entity);
+            String converterPkg = jpaControllerPkg;
+            if (converterPkg.length() > 0) {
+                converterPkg += ".";
+            }
+            if (javaPackageRoot.getFileObject((converterPkg + simpleConverterName).replace('.', '/') + ".java") != null) {
+                return true;
+            }
             String fileName = getJsfFileName(entity, jsfFolder, "");
             // For regular JSF
             if (webRoot.getFileObject(fileName + "View.xhtml") != null
@@ -367,6 +376,15 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             }
         }
 
+        FileObject[] converterFileObjects = new FileObject[entities.size()];
+        for (int i = 0; i < converterFileObjects.length; i++) {
+            String simpleConverterName = getConverterFileName(entities.get(i));
+            converterFileObjects[i] = targetFolder.getFileObject(simpleConverterName, JAVA_EXT);
+            if (converterFileObjects[i] == null) {
+                converterFileObjects[i] = targetFolder.createData(simpleConverterName, JAVA_EXT);
+            }
+        }
+
         Charset encoding = FileEncodingQuery.getEncoding(project.getProjectDirectory());
         if (webRoot.getFileObject(CSS_FOLDER + JSFClientGenerator.PRIMEFACES_CRUD_STYLESHEET) == null) {
             String content = JSFFrameworkProvider.readResource(JSFClientGenerator.class.getClassLoader().getResourceAsStream(JSFClientGenerator.RESOURCE_FOLDER + JSFClientGenerator.PRIMEFACES_CRUD_STYLESHEET), "UTF-8"); //NOI18N
@@ -392,7 +410,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             String entityClass = entities.get(i);
             String simpleClassName = JpaControllerUtil.simpleClassName(entityClass);
             String simpleJpaControllerName = simpleClassName + (genSessionBean ? FACADE_SUFFIX : "JpaController"); //NOI18N
-
+            
             progressMsg = NbBundle.getMessage(PersistenceClientIterator.class, "MSG_Progress_Jsf_Now_Generating", simpleClassName + "." + JAVA_EXT); //NOI18N
             progressContributor.progress(progressMsg, progressIndex++);
             progressPanel.setText(progressMsg);
@@ -401,8 +419,10 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             FileObject configRoot = FileUtil.getConfigRoot();
             FileObject abstractTemplate = configRoot.getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_ABSTRACTCONTROLLER_TEMPLATE);
             FileObject template = configRoot.getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_CONTROLLER_TEMPLATE);
+            FileObject converterTemplate = configRoot.getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_CONVERTER_TEMPLATE);
             Map<String, Object> params = new HashMap<String, Object>();
             String controllerClassName = controllerFileObjects[i].getName();
+            String converterClassName = converterFileObjects[i].getName();
             String managedBean = controllerClassName.substring(0, 1).toLowerCase() + controllerClassName.substring(1);
             params.put("managedBeanName", managedBean);
             params.put("cdiEnabled", isCdiEnabled(project));
@@ -437,14 +457,20 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                 JSFPaletteUtilities.expandJSFTemplate(abstractTemplate, params, abstractControllerFileObject);
             }
             JSFPaletteUtilities.expandJSFTemplate(template, params, controllerFileObjects[i]);
+            //2013-02-01 Kay Wrobel: Generate converter class
+            params.put("converterPackageName", controllerPkg);
+            params.put("converterClassName", converterClassName);
+            JSFPaletteUtilities.expandJSFTemplate(converterTemplate, params, converterFileObjects[i]);
 
             params = FromEntityBase.createFieldParameters(webRoot, entityClass, managedBean, managedBean + ".selected", false, true, null);
             bundleData.add(new TemplateData(simpleClassName, (List<FromEntityBase.TemplateData>) params.get("entityDescriptors")));
             params.put("controllerClassName", controllerClassName);
+            params.put("converterClassName", converterClassName);
             if (primeFacesVersion != null) {
                 params.put("primeFacesVersion", primeFacesVersion); //NOI18N
             }
             params.put("searchLabels",searchLabelArtifacts); //Default property artifacts to look for
+            params.put("cdiEnabled", isCdiEnabled(project));
 
             expandSingleJSFTemplate("create.ftl", entityClass, jsfFolder, webRoot, "Create", params, progressContributor, progressPanel, progressIndex++);
             expandSingleJSFTemplate("edit.ftl", entityClass, jsfFolder, webRoot, "Edit", params, progressContributor, progressPanel, progressIndex++);
@@ -452,12 +478,14 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
             params = FromEntityBase.createFieldParameters(webRoot, entityClass, managedBean, managedBean + ".items", true, true, null);
             params.put("controllerClassName", controllerClassName);
+            params.put("converterClassName", converterClassName);
             params.put("defaultDataTableRows", defaultDataTableRows);
             params.put("defaultDataTableRowsPerPageTemplate", defaultDataTableRowsPerPageTemplate);
             if (primeFacesVersion != null) {
                 params.put("primeFacesVersion", primeFacesVersion); //NOI18N
             }
             params.put("searchLabels",searchLabelArtifacts); //Default property artifacts to look for
+            params.put("cdiEnabled", isCdiEnabled(project));
             expandSingleJSFTemplate("list.ftl", entityClass, jsfFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
             expandSingleJSFTemplate("index.ftl", entityClass, jsfFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
 
@@ -615,6 +643,11 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     private static String getControllerFileName(String entityClass) {
         String simpleClassName = JpaControllerUtil.simpleClassName(entityClass);
         return simpleClassName + CONTROLLER_SUFFIX;
+    }
+
+    private static String getConverterFileName(String entityClass) {
+        String simpleClassName = JpaControllerUtil.simpleClassName(entityClass);
+        return simpleClassName + CONVERTER_SUFFIX;
     }
 
     private static String getFacadeFileName(String entityClass) {

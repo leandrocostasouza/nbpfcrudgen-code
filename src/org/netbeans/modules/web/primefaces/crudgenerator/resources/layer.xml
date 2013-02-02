@@ -77,6 +77,10 @@ made subject to such option by the copyright holder.
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
                     <attr name="template" boolvalue="true"/>
                 </file>
+                <file name="converter.ftl" url="templates/converter.ftl">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                    <attr name="template" boolvalue="true"/>
+                </file>
                 <file name="create.ftl" url="templates/create.ftl">
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
                     <attr name="template" boolvalue="true"/>

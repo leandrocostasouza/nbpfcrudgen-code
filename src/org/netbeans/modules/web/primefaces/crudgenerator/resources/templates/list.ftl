@@ -19,11 +19,14 @@
         primaryKey - is field a primary key field? (type: boolean)
         relationshipOne - does field represent one to one or many to one relationship (type: boolean)
         relationshipMany - does field represent one to many relationship (type: boolean)
+        relationshipOwner - does the field represent the owning side of a many:many relationship? (type: boolean)
         returnType - fully qualified data type of the field
         id - field id name (type: String)
         required - is field optional and nullable or it is not? (type: boolean)
-        valuesGetter - if item is of type 1:1 or 1:many relationship then use this
+        valuesListGetter - if item is of type 1:many or many:many relationship then use this
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
+        valuesConverter - if item is of type 1:many or many:many relationship then use this
+            for the converter binding of <h:selectOneMenu> or <h:selectManyMenu>
     defaultDataTableRows - will be used for DataTable Paging
     defaultDataTableRowsPerPageTemplate - will be used for DataTable Paging
     primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
@@ -61,16 +64,15 @@
                     <p:ajax event="rowUnselect" update="viewButton editButton"/>  
 
 <#list entityDescriptors as entityDescriptor>
-        <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
-            <#if entityDescriptor.getRelationsLabelName(searchLabels)??>
-              <#assign relationLabelName = entityDescriptor.getRelationsLabelName(searchLabels)>
-            <#else>
-              <#assign relationLabelName = "">
-            </#if>
+  <#-- Skip this field if we are dealing with many:many -->
+  <#if !entityDescriptor.relationshipMany>
+    <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
+        <#if entityDescriptor.getRelationsLabelName(searchLabels)??>
+          <#assign relationLabelName = entityDescriptor.getRelationsLabelName(searchLabels)>
+        <#else>
+          <#assign relationLabelName = "">
         </#if>
-  <#if entityDescriptor.relationshipMany>
-                    <!-- Many-To-Many field ignored -->
-  <#else>
+    </#if>
                     <p:column sortBy="${r"#{"}${entityDescriptor.name}${r"}"}">
                         <f:facet name="header">
                             <h:outputText value="${r"#{"}bundle.List${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>

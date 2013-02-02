@@ -101,6 +101,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     public static final String UTIL_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/JsfUtil.ftl"; // NOI18N
     public static final String BUNDLE_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/bundle.ftl"; // NOI18N
     public static final String PRIMEFACES_CONTROLLER_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/controller.ftl"; // NOI18N
+    public static final String PRIMEFACES_CONVERTER_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/converter.ftl"; // NOI18N
     public static final String PRIMEFACES_ABSTRACTCONTROLLER_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/abstractcontroller.ftl"; // NOI18N
     public static final String PRIMEFACES_TEMPLATE_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/template.ftl"; // NOI18N
     public static final String PRIMEFACES_APPMENU_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/appmenu.ftl"; // NOI18N

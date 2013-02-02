@@ -263,7 +263,8 @@ public abstract class FromEntityBase {
                         }
                     } else if (fd.getDateTimeFormat().length() > 0) {
                         fields.add(fd);
-                    } else if (relationship == JpaControllerUtil.REL_NONE || relationship == JpaControllerUtil.REL_TO_ONE) {
+                    } else if (relationship == JpaControllerUtil.REL_NONE || relationship == JpaControllerUtil.REL_TO_ONE 
+                            || relationship == JpaControllerUtil.REL_TO_MANY) {
                         fields.add(fd);
                     }
                 }
@@ -671,6 +672,20 @@ public abstract class FromEntityBase {
             return valuesListGetter;
         }
 
+        public String getValuesConverter() {
+            if (getRelationship() == JpaControllerUtil.REL_NONE) {
+                return null;
+            }
+            String name = getRelationClassName(controller, method, isFieldAccess());
+            if (name == null) {
+                valuesListGetter = "";
+            } else {
+                name = name.substring(0, 1).toLowerCase() + name.substring(1);
+                valuesListGetter = name + "Converter";
+            }
+            return valuesListGetter;
+        }
+
         public String getRelationsLabelName(String searchLabels) {
             if (getRelationship() == JpaControllerUtil.REL_NONE) {
                 return "";
@@ -702,6 +717,15 @@ public abstract class FromEntityBase {
         public String getReturnType() {
             return (String) method.getReturnType().toString();
         }
+
+        public boolean isRelationshipOwner() {
+            Element fieldElement = isFieldAccess() ? JpaControllerUtil.guessField(method) : method;
+            if (fieldElement == null) {
+                fieldElement = method;
+            }
+            return JpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.JoinTable"); // NOI18N
+        }
+
     }
 
     public static final class TemplateData {
@@ -764,8 +788,16 @@ public abstract class FromEntityBase {
             return fd.getValuesListGetter();
         }
 
+        public String getValuesConverter() {
+            return fd.getValuesConverter();
+        }
+
         public boolean isGeneratedValue() {
             return fd.isGeneratedValue();
+        }
+        
+        public boolean isRelationshipOwner() {
+            return fd.isRelationshipOwner();
         }
 
         public String getRelationsLabelName(String labelArtifacts) {

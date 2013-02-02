@@ -19,11 +19,14 @@
         primaryKey - is field a primary key field? (type: boolean)
         relationshipOne - does field represent one to one or many to one relationship (type: boolean)
         relationshipMany - does field represent one to many relationship (type: boolean)
+        relationshipOwner - does the field represent the owning side of a many:many relationship? (type: boolean)
         returnType - fully qualified data type of the field
         id - field id name (type: String)
         required - is field optional and nullable or it is not? (type: boolean)
-        valuesGetter - if item is of type 1:1 or 1:many relationship then use this
+        valuesListGetter - if item is of type 1:many or many:many relationship then use this
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
+        valuesConverter - if item is of type 1:many or many:many relationship then use this
+            for the converter binding of <h:selectOneMenu> or <h:selectManyMenu>
     primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
 
   This template is accessible via top level menu Tools->Templates and can
@@ -47,6 +50,9 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
     <#list entityDescriptors as entityDescriptor>
+     <#-- Skip this field if we are dealing with many:many -->
+     <#if !entityDescriptor.relationshipMany>
+
         <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
             <#if entityDescriptor.getRelationsLabelName(searchLabels)??>
               <#assign relationLabelName = entityDescriptor.getRelationsLabelName(searchLabels)>
@@ -54,9 +60,6 @@
               <#assign relationLabelName = "">
             </#if>
         </#if>
-      <#if entityDescriptor.relationshipMany>
-                        <!-- Many-To-Many field ignored -->
-      <#else>
                         <h:outputText value="${r"#{"}bundle.View${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
         <#if entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}">
@@ -71,7 +74,7 @@
         <#else>
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
         </#if>
-      </#if>
+     </#if>
     </#list>
                     </p:panelGrid>
                     <p:commandButton value="${r"#{bundle.Close}"}" onclick="${r"viewDialog.hide()"}"/>

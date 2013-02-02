@@ -20,11 +20,14 @@
         primaryKey - is field a primary key field? (type: boolean)
         relationshipOne - does field represent one to one or many to one relationship (type: boolean)
         relationshipMany - does field represent one to many relationship (type: boolean)
+        relationshipOwner - does the field represent the owning side of a many:many relationship? (type: boolean)
         returnType - fully qualified data type of the field
         id - field id name (type: String)
         required - is field optional and nullable or it is not? (type: boolean)
-        valuesGetter - if item is of type 1:1 or 1:many relationship then use this
+        valuesListGetter - if item is of type 1:many or many:many relationship then use this
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
+        valuesConverter - if item is of type 1:many or many:many relationship then use this
+            for the converter binding of <h:selectOneMenu> or <h:selectManyMenu>
     primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
 
   This template is accessible via top level menu Tools->Templates and can
@@ -52,6 +55,12 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
     <#list entityDescriptors as entityDescriptor>
+     <#-- Skip this field if it is an identity field that has an auto-generated value       -->
+     <#-- Skip this field if we are dealing with many:many and this entity is not the owner -->
+     <#if !entityDescriptor.generatedValue &&
+         !(entityDescriptor.relationshipMany && 
+          !entityDescriptor.relationshipOwner)> 
+
         <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
             <#if entityDescriptor.getRelationsLabelName(searchLabels)??>
               <#assign relationLabelName = entityDescriptor.getRelationsLabelName(searchLabels)>
@@ -59,7 +68,6 @@
               <#assign relationLabelName = "">
             </#if>
         </#if>
-      <#if entityDescriptor.generatedValue == false>
         <#if (primeFacesVersion.compareTo("3.3") >= 0)>
                         <p:outputLabel value="${r"#{"}bundle.Create${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
         <#else>
@@ -85,8 +93,14 @@
                                            itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r"}"}"
             </#if>
                             />
+<#if cdiEnabled?? && cdiEnabled == true>
+                            <f:converter binding="${r"#{"}${entityDescriptor.valuesConverter}${r"}"}"/>
+<#else>
+                            <f:converter converterId="${entityDescriptor.valuesConverter}"/>
+</#if>
                         </p:selectOneMenu>
         <#elseif entityDescriptor.relationshipMany>
+          <#if entityDescriptor.relationshipOwner>
                         <p:selectManyMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
                             <f:selectItems value="${r"#{"}${entityDescriptor.valuesListGetter}${r"}"}"
                                            var="${entityDescriptor.id?replace(".","_")}Item"
@@ -95,11 +109,17 @@
                                            itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r"}"}"
             </#if>
                             />
+<#if cdiEnabled?? && cdiEnabled == true>
+                            <f:converter binding="${r"#{"}${entityDescriptor.valuesConverter}${r"}"}"/>
+<#else>
+                            <f:converter converterId="${entityDescriptor.valuesConverter}"/>
+</#if>
                         </p:selectManyMenu>
+          </#if>
         <#else>
                         <p:inputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Create${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Create${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
         </#if>
-      </#if>
+     </#if>
     </#list>
                     </p:panelGrid>
                     <p:commandButton actionListener="${r"#{"}${managedBean}${r".saveNew}"}" value="${r"#{bundle.Save}"}" update="${r"display,messagePanel,:listForm:datalist"}" oncomplete="${r"if(!args.validationFailed){createDialog.hide();}"}"/>
