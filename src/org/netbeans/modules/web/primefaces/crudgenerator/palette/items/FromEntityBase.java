@@ -263,7 +263,7 @@ public abstract class FromEntityBase {
                         }
                     } else if (fd.getDateTimeFormat().length() > 0) {
                         fields.add(fd);
-                    } else if (relationship == JpaControllerUtil.REL_NONE || relationship == JpaControllerUtil.REL_TO_ONE 
+                    } else if (relationship == JpaControllerUtil.REL_NONE || relationship == JpaControllerUtil.REL_TO_ONE
                             || relationship == JpaControllerUtil.REL_TO_MANY) {
                         fields.add(fd);
                     }
@@ -505,7 +505,6 @@ public abstract class FromEntityBase {
         private String valuesListGetter;
         private boolean primaryKey;
         private boolean generatedValue;
-        private String relationsLabelName;
 
         public boolean isGeneratedValue() {
             return generatedValue;
@@ -691,23 +690,26 @@ public abstract class FromEntityBase {
                 return "";
             }
             String name = getRelationQualifiedClassName(controller, method, isFieldAccess());
-            if (name == null) {
-                relationsLabelName = "";
-            } else {
+            if (name != null) {
                 TypeElement relationEntity = controller.getElements().getTypeElement(name);
                 ExecutableElement[] relationMethods = JpaControllerUtil.getEntityMethods(relationEntity);
+                String idField = "";
                 for (ExecutableElement relationMethod : relationMethods) {
                     FieldDesc relfd = new FieldDesc(controller, relationMethod, relationEntity);
+                    boolean isPrimaryKey = EntityClass.isId(relationMethod, relfd.isFieldAccess());
                     String relPropertyName = relfd.getPropertyName();
+                    if (isPrimaryKey) {
+                        idField = relfd.getPropertyName();
+                    }
                     for (String searchLabel : searchLabels.split(",")) {
                         if (relPropertyName.contains(searchLabel)) {
-                            relationsLabelName = relPropertyName;
-                            return relationsLabelName;
+                            return relPropertyName;
                         }
                     }
+                    return idField; // Return primary key field name if no match was found
                 }
             }
-            return relationsLabelName;
+            return "";
         }
 
         private boolean isRequired() {
@@ -725,7 +727,6 @@ public abstract class FromEntityBase {
             }
             return JpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.JoinTable"); // NOI18N
         }
-
     }
 
     public static final class TemplateData {
@@ -795,7 +796,7 @@ public abstract class FromEntityBase {
         public boolean isGeneratedValue() {
             return fd.isGeneratedValue();
         }
-        
+
         public boolean isRelationshipOwner() {
             return fd.isRelationshipOwner();
         }

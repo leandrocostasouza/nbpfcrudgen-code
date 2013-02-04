@@ -20,6 +20,7 @@
         relationshipOne - does field represent one to one or many to one relationship (type: boolean)
         relationshipMany - does field represent one to many relationship (type: boolean)
         relationshipOwner - does the field represent the owning side of a many:many relationship? (type: boolean)
+        getRelationsLabelName(String) - field name of the foreign entity field matching String (type: String)
         returnType - fully qualified data type of the field
         id - field id name (type: String)
         required - is field optional and nullable or it is not? (type: boolean)
@@ -30,6 +31,8 @@
     defaultDataTableRows - will be used for DataTable Paging
     defaultDataTableRowsPerPageTemplate - will be used for DataTable Paging
     primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
+    searchLabels - Comma-seperated list of field name artifacts to search for labels (type: String)
+                   Use in conjunction with getRelationsLabelName.
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
@@ -70,10 +73,19 @@
         <#if entityDescriptor.getRelationsLabelName(searchLabels)??>
           <#assign relationLabelName = entityDescriptor.getRelationsLabelName(searchLabels)>
         <#else>
-          <#assign relationLabelName = "">
+              <#assign relationLabelName = "">
         </#if>
     </#if>
+<#if entityDescriptor.relationshipOne>
+                <#if relationLabelName?? && relationLabelName != "">
+                    <p:column sortBy="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}">
+                <#else>
+                    <#-- Disable sorting if we don't have a foreign field to sort by. -->
+                    <p:column>
+                </#if>
+<#else>
                     <p:column sortBy="${r"#{"}${entityDescriptor.name}${r"}"}">
+</#if>
                         <f:facet name="header">
                             <h:outputText value="${r"#{"}bundle.List${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
                         </f:facet>
@@ -86,6 +98,14 @@
     <#elseif entityDescriptor.relationshipOne>
             <#if relationLabelName?? && relationLabelName != "">
                         <h:outputText value="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"/>
+            <#else>
+                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}">
+<#if cdiEnabled?? && cdiEnabled == true>
+                            <f:converter binding="${r"#{"}${entityDescriptor.valuesConverter}${r"}"}"/>
+<#else>
+                            <f:converter converterId="${entityDescriptor.valuesConverter}"/>
+</#if>
+                        </h:outputText>
             </#if>
     <#else>
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}"/>

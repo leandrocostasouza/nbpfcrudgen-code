@@ -20,6 +20,7 @@
         relationshipOne - does field represent one to one or many to one relationship (type: boolean)
         relationshipMany - does field represent one to many relationship (type: boolean)
         relationshipOwner - does the field represent the owning side of a many:many relationship? (type: boolean)
+        getRelationsLabelName(String) - field name of the foreign entity field matching String (type: String)
         returnType - fully qualified data type of the field
         id - field id name (type: String)
         required - is field optional and nullable or it is not? (type: boolean)
@@ -28,6 +29,8 @@
         valuesConverter - if item is of type 1:many or many:many relationship then use this
             for the converter binding of <h:selectOneMenu> or <h:selectManyMenu>
     primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
+    searchLabels - Comma-seperated list of field name artifacts to search for labels (type: String)
+                   Use in conjunction with getRelationsLabelName.
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
@@ -89,7 +92,7 @@
                                            var="${entityDescriptor.id?replace(".","_")}Item"
                                            itemValue="${r"#{"}${entityDescriptor.id?replace(".","_")}Item${r"}"}"
             <#if relationLabelName != "">
-                                           itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r"}"}"
+                                           itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r".toString()}"}"
             </#if>
                             />
 <#if cdiEnabled?? && cdiEnabled == true>
@@ -105,7 +108,7 @@
                                            var="${entityDescriptor.id?replace(".","_")}Item"
                                            itemValue="${r"#{"}${entityDescriptor.id?replace(".","_")}Item${r"}"}"
             <#if relationLabelName != "">
-                                           itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r"}"}"
+                                           itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r".toString()}"}"
             </#if>
                             />
 <#if cdiEnabled?? && cdiEnabled == true>
