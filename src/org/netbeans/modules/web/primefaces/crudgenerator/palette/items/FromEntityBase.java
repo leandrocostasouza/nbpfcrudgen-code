@@ -699,15 +699,15 @@ public abstract class FromEntityBase {
                     boolean isPrimaryKey = EntityClass.isId(relationMethod, relfd.isFieldAccess());
                     String relPropertyName = relfd.getPropertyName();
                     if (isPrimaryKey) {
-                        idField = relfd.getPropertyName();
+                        idField = relPropertyName;
                     }
                     for (String searchLabel : searchLabels.split(",")) {
                         if (relPropertyName.contains(searchLabel)) {
                             return relPropertyName;
                         }
                     }
-                    return idField; // Return primary key field name if no match was found
                 }
+                return idField; // Return primary key field name if no match was found
             }
             return "";
         }
