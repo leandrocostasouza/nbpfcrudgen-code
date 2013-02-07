@@ -9,8 +9,10 @@
     controllerClassName - controller class name (type: String)
     controllerPackageName - controller package name (type: String)
     entityClassName - entity class name without package (type: String)
+    importEntityFullClassName - whether to import entityFullClassName or not
     entityFullClassName - fully qualified entity class name (type: String)
     ejbClassName - EJB class name (type: String)
+    importEjbFullClassName - whether to import ejbFullClassName or not
     ejbFullClassName - fully qualified EJB class name (type: String)
     managedBeanName - name of managed bean (type: String)
     myFacesCodiVersion - Apache MyFaces CODI Implementation (type: Version)
@@ -20,6 +22,7 @@
     keyStringBody - body of Controller.Converter.getStringKey() method
     keyGetter - entity getter method returning primaty key instance
     keySetter - entity setter method to set primary key instance
+    embeddedIdFields - contains information about embedded primary Ids
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category JavaServer Faces->JSF from Entity.
@@ -27,8 +30,12 @@
 </#if>
 package ${controllerPackageName};
 
+<#if importEntityFullClassName?? && importEntityFullClassName == true>
 import ${entityFullClassName};
+</#if>
+<#if importEjbFullClassName?? && importEjbFullClassName == true>
 import ${ejbFullClassName};
+</#if>
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 <#if managedBeanName??>
@@ -77,5 +84,22 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
     public void init() {
         super.setFacade(ejbFacade);
     }
+
+<#if embeddedIdFields??>
+    @Override
+    protected void setEmbeddableKeys() {
+  <#list embeddedIdFields as fields>
+        this.getSelected().${keyGetter}().${fields.getEmbeddedSetter()}(this.getSelected().${fields.getCodeToPopulate()});
+  </#list>
+    }
+</#if>        
+
+<#if keyEmbedded>
+    @Override
+    protected void initializeEmbeddableKey() {
+            this.getSelected().${keySetter}(new ${keyType}());
+    }
+</#if>
+
 
 }

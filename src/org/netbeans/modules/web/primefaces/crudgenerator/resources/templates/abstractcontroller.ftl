@@ -73,6 +73,14 @@ public abstract class ${abstractControllerClassName}<T> {
         this.selected = selected;
     }
 
+    protected void setEmbeddableKeys() {
+        // Nothing to do if entity does not have any embeddable key.
+    };
+
+    protected void initializeEmbeddableKey() {
+        // Nothing to do if entity does not have any embeddable key.
+    }
+
     /**
      * Returns all items in a List object
      *
@@ -87,15 +95,14 @@ public abstract class ${abstractControllerClassName}<T> {
 
     public void save(ActionEvent event) {
         if (selected != null) {
+                this.setEmbeddableKeys();
                 this.ejbFacade.edit(selected);
         }
     }
 
     public void saveNew(ActionEvent event) {
-        if (selected != null) {
-                this.ejbFacade.create(selected);
-                items = null; // Invalidate list of items to trigger requery.
-        }
+        save(event);
+        items = null; // Invalidate list of items to trigger re-query.
     }
 
     public void delete(ActionEvent event) {
@@ -115,6 +122,7 @@ public abstract class ${abstractControllerClassName}<T> {
         try {
             newItem = itemClass.newInstance();
             this.selected = newItem;
+            initializeEmbeddableKey();
             return newItem;
         } catch (InstantiationException ex) {
             Logger.getLogger(AbstractController.class.getName()).log(Level.SEVERE, null, ex);

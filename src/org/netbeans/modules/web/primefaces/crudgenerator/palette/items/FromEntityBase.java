@@ -46,10 +46,10 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -217,6 +217,7 @@ public abstract class FromEntityBase {
             TypeElement bean, String managedBeanProperty, boolean collectionComponent, boolean initValueGetters) {
         List<TemplateData> templateData = new ArrayList<TemplateData>();
         List<FieldDesc> fields = new ArrayList<FieldDesc>();
+        String idFieldName = "";
         if (bean != null) {
             ExecutableElement[] methods = JpaControllerUtil.getEntityMethods(bean);
             JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport = null;
@@ -235,6 +236,7 @@ public abstract class FromEntityBase {
 
                     if (EntityClass.isId(method, fd.isFieldAccess())) {
                         fd.setPrimaryKey();
+                        idFieldName = fd.getPropertyName();
                         TypeMirror rType = method.getReturnType();
                         if (TypeKind.DECLARED == rType.getKind()) {
                             DeclaredType rTypeDeclared = (DeclaredType) rType;
@@ -276,6 +278,7 @@ public abstract class FromEntityBase {
         params.put("entityDescriptors", templateData); // NOI18N
         params.put("item", ITEM_VAR); // NOI18N
         params.put("comment", Boolean.FALSE); // NOI18N
+        params.put("entityIdField", idFieldName); // 2013-02-07 Kay Wrobel: pass along the ID field.
     }
 
     private static ExecutableElement findPrimaryKeyGetter(CompilationController controller, TypeElement bean) {
@@ -300,20 +303,20 @@ public abstract class FromEntityBase {
     }
 
     public static void createParamsForConverterTemplate(final Map<String, Object> params, final FileObject targetJspFO,
-            final String entityClass) throws IOException {
+            final String entityClass, final JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport) throws IOException {
         JavaSource javaSource = JavaSource.create(EntityClass.createClasspathInfo(targetJspFO));
         javaSource.runUserActionTask(new Task<CompilationController>() {
             public void run(CompilationController controller) throws IOException {
                 controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 TypeElement typeElement = controller.getElements().getTypeElement(entityClass);
-                createParamsForConverterTemplate(params, controller, typeElement);
+                createParamsForConverterTemplate(params, controller, typeElement, embeddedPkSupport);
             }
         }, true);
     }
     private static final String INDENT = "            "; // TODO: jsut reformat generated code
 
     private static void createParamsForConverterTemplate(Map<String, Object> params, CompilationController controller,
-            TypeElement bean) throws IOException {
+            TypeElement bean, JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport) throws IOException {
         // primary key type:
         ExecutableElement primaryGetter = findPrimaryKeyGetter(controller, bean);
         StringBuffer key = new StringBuffer();
@@ -327,6 +330,7 @@ public abstract class FromEntityBase {
         String keyTypeValue = "UNDEFINED_PK_TYPE";
         Boolean keyEmbeddedValue = Boolean.FALSE;        //
         Boolean keyDerivedValue = Boolean.FALSE;
+        List<EmbeddedDesc> embeddedFields = new ArrayList<EmbeddedDesc>();
         if (primaryGetter != null) {
             TypeMirror idType = primaryGetter.getReturnType();
             ExecutableElement primaryGetterDerived = null;
@@ -358,6 +362,17 @@ public abstract class FromEntityBase {
                     if (embeddable) {
                         keyEmbeddedValue = Boolean.TRUE;
                         int index = 0;
+
+                        // embeddedPkSupport handling
+                        Set<ExecutableElement> methods = embeddedPkSupport.getPkAccessorMethods(bean);
+                        for (ExecutableElement pkMethod : methods) {
+                            if (embeddedPkSupport.isRedundantWithRelationshipField(bean, pkMethod)) {
+                                embeddedFields.add(new EmbeddedDesc(
+                                        "s" + pkMethod.getSimpleName().toString().substring(1),
+                                        embeddedPkSupport.getCodeToPopulatePkField(bean, pkMethod)));
+                            }
+                        }
+
                         for (ExecutableElement method : ElementFilter.methodsIn(idClass.getEnclosedElements())) {
                             if (method.getSimpleName().toString().startsWith("set")) {
                                 addParam(key, stringKey, method.getSimpleName().toString(), index,
@@ -401,6 +416,9 @@ public abstract class FromEntityBase {
         params.put("keyType", keyTypeValue);//NOI18N
         params.put("keyEmbedded", keyEmbeddedValue);//NOI18N
         params.put("keyDerived", keyDerivedValue);//NOI18N
+        if (embeddedFields.size() > 0) {
+            params.put("embeddedIdFields", embeddedFields);
+        }
     }
 
     private static void addParam(StringBuffer key, StringBuffer stringKey, String setter,
@@ -764,7 +782,7 @@ public abstract class FromEntityBase {
         public boolean isPrimaryKey() {
             return fd.isPrimaryKey();
         }
-
+        
         public boolean isRelationshipOne() {
             return fd.getRelationship() == JpaControllerUtil.REL_TO_ONE;
         }
@@ -808,6 +826,25 @@ public abstract class FromEntityBase {
         @Override
         public String toString() {
             return "TemplateData[fd=" + fd + ",prefix=" + prefix + "]"; // NOI18N
+        }
+    }
+
+    public static final class EmbeddedDesc {
+
+        private final String embeddedSetter;
+        private final String codeToPopulate;
+
+        public EmbeddedDesc(String embeddedSetter, String codeToPopulate) {
+            this.embeddedSetter = embeddedSetter;
+            this.codeToPopulate = codeToPopulate;
+        }
+
+        public String getEmbeddedSetter() {
+            return embeddedSetter;
+        }
+
+        public String getCodeToPopulate() {
+            return codeToPopulate;
         }
     }
 }

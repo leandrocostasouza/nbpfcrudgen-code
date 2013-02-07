@@ -430,7 +430,9 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("controllerClassName", controllerClassName);
             params.put("abstractControllerClassName", ABSTRACT_CONTROLLER_CLASSNAME);
             params.put("entityFullClassName", entityClass);
+            params.put("importEntityFullClassName", showImportStatement(controllerPkg, entityClass));
             params.put(genSessionBean ? "ejbFullClassName" : "jpaControllerFullClassName", jpaControllerPkg + "." + simpleJpaControllerName);
+            params.put("importEjbFullClassName", showImportStatement(controllerPkg, jpaControllerPkg+"."+simpleJpaControllerName));
             params.put(genSessionBean ? "ejbClassName" : "jpaControllerClassName", simpleJpaControllerName);
             if (genSessionBean) {
                 params.put("ejbFacadeFullClassName", jpaControllerPkg + ".Abstract" + FACADE_SUFFIX);
@@ -450,7 +452,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             if (myFacesCodiVersion != null) {
                 params.put("myFacesCodiVersion", myFacesCodiVersion); //NOI18N
             }
-            FromEntityBase.createParamsForConverterTemplate(params, targetFolder, entityClass);
+            FromEntityBase.createParamsForConverterTemplate(params, targetFolder, entityClass, embeddedPkSupport);
 
             //Generate abstract controller on first loop
             if (i == 0) {
@@ -576,6 +578,11 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             saveFacesConfig(fo);
         }
 
+    }
+
+    private static boolean showImportStatement(String packageName, String fqn) {
+        String simpleName = JpaControllerUtil.simpleClassName(fqn);
+        return !(packageName + "." + simpleName).equals(fqn); //NOI18N
     }
 
     private static boolean isCdiEnabled(Project project) {

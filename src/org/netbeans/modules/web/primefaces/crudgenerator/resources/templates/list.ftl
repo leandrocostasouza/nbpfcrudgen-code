@@ -51,11 +51,9 @@
             <p:panel header="${r"#{"}bundle.List${entityName}Title${r"}"}">
                 <p:dataTable id="datalist" value="${r"#{"}${managedBeanProperty}${r"}"}" var="${item}"
                              selectionMode="single" selection="${r"#{"}${managedBean}${r".selected}"}"
-<#list entityDescriptors as entityDescriptor>
-    <#if entityDescriptor.primaryKey>
-                             rowKey="${r"#{"}${entityDescriptor.name}${r"}"}"
-    </#if>
-</#list>
+<#if entityIdField?? && entityIdField != "">
+                             rowKey="${r"#{"}${item}.${entityIdField}${r"}"}"
+</#if>
 <#if defaultDataTableRows?? && defaultDataTableRows != "">
                              paginator="true"
                              rows="${defaultDataTableRows}"
