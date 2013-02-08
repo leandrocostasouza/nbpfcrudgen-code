@@ -52,6 +52,7 @@ public class WizardProperties {
     public static final String ENTITY_CLASS = "EntityClass"; //NOI18N
     public static final String JSF_FOLDER = "JSFFolder"; //NOI18N
     public static final String JSF_CLASSES_PACKAGE = "JsfClassesPackage"; //NOI18N
+    public static final String JSF_CONVERTER_PACKAGE = "JsfConverterPackage"; //NOI18N
     public static final String JPA_CLASSES_PACKAGE = "JpaClassesPackage"; //NOI18N
     public static final String JAVA_PACKAGE_ROOT_FILE_OBJECT = "JavaPackageRootFileObject"; //NOI18N
     public static final String AJAXIFY_JSF_CRUD = "AjaxifyJsfCrud"; //NOI18N

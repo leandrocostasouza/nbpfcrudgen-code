@@ -37,7 +37,7 @@
       template="/template.xhtml">
 
         <ui:define name="title">
-            <h:outputText value="${r"#{"}bundle.${entityName}Title${r"}"}"></h:outputText>
+            <h:outputText value="${r"#{"}bundle.${entityName}Title${r"}"}"/>
         </ui:define>
 
         <ui:define name="body">

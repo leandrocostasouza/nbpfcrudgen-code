@@ -147,6 +147,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final FileObject javaPackageRoot = (FileObject) wizard.getProperty(WizardProperties.JAVA_PACKAGE_ROOT_FILE_OBJECT);
         final String jpaControllerPkg = (String) wizard.getProperty(WizardProperties.JPA_CLASSES_PACKAGE);
         final String controllerPkg = (String) wizard.getProperty(WizardProperties.JSF_CLASSES_PACKAGE);
+        final String converterPkg = (String) wizard.getProperty(WizardProperties.JSF_CONVERTER_PACKAGE);
         SourceGroup[] sgs = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES);
         final FileObject resourcePackageRoot = (sgs.length > 0) ? sgs[0].getRootFolder() : javaPackageRoot;
         Boolean ajaxifyBoolean = (Boolean) wizard.getProperty(WizardProperties.AJAXIFY_JSF_CRUD);
@@ -222,11 +223,12 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                                         embeddedPkSupport, false);
                             }
                             FileObject jsfControllerPackageFileObject = FileUtil.createFolder(javaPackageRoot, controllerPkg.replace('.', '/'));
+                            FileObject jsfConverterPackageFileObject = FileUtil.createFolder(javaPackageRoot, converterPkg.replace('.', '/'));
                             // 2013-01-17 Kay Wrobel: removed calls to regular JSF generators since this is a fork specifically for PrimeFaces
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jpaControllerPkg, entities, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion,searchLabelArtifacts);
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion,searchLabelArtifacts);
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }
@@ -286,7 +288,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     }
 
     public static boolean doesSomeFileExistAlready(FileObject javaPackageRoot, FileObject webRoot,
-            String jpaControllerPkg, String jsfControllerPkg, String jsfFolder, List<String> entities,
+            String jpaControllerPkg, String jsfControllerPkg, String jsfConverterPkg, String jsfFolder, List<String> entities,
             String bundleName) {
         for (String entity : entities) {
             String simpleControllerName = getFacadeFileName(entity);
@@ -307,7 +309,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             }
             //2013-02-02 Kay Wrobel: Test for converters as well
             String simpleConverterName = getConverterFileName(entity);
-            String converterPkg = jpaControllerPkg;
+            String converterPkg = jsfControllerPkg;
             if (converterPkg.length() > 0) {
                 converterPkg += ".";
             }
@@ -338,8 +340,10 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     private static void generatePrimeFacesControllers(
             ProgressContributor progressContributor,
             final ProgressPanel progressPanel,
-            FileObject targetFolder,
+            FileObject controllerTargetFolder,
             String controllerPkg,
+            FileObject converterTargetFolder,
+            String converterPkg,
             String jpaControllerPkg,
             List<String> entities,
             Project project,
@@ -361,27 +365,27 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
         //Create an abstract controller class file
         FileObject abstractControllerFileObject;
-        abstractControllerFileObject = targetFolder.getFileObject(ABSTRACT_CONTROLLER_CLASSNAME, JAVA_EXT);
+        abstractControllerFileObject = controllerTargetFolder.getFileObject(ABSTRACT_CONTROLLER_CLASSNAME, JAVA_EXT);
         if (abstractControllerFileObject == null) {
-            abstractControllerFileObject = targetFolder.createData(ABSTRACT_CONTROLLER_CLASSNAME, JAVA_EXT);
+            abstractControllerFileObject = controllerTargetFolder.createData(ABSTRACT_CONTROLLER_CLASSNAME, JAVA_EXT);
         }
 
         //int[] nameAttemptIndices = new int[entities.size()];
         FileObject[] controllerFileObjects = new FileObject[entities.size()];
         for (int i = 0; i < controllerFileObjects.length; i++) {
             String simpleControllerName = getControllerFileName(entities.get(i));
-            controllerFileObjects[i] = targetFolder.getFileObject(simpleControllerName, JAVA_EXT);
+            controllerFileObjects[i] = controllerTargetFolder.getFileObject(simpleControllerName, JAVA_EXT);
             if (controllerFileObjects[i] == null) {
-                controllerFileObjects[i] = targetFolder.createData(simpleControllerName, JAVA_EXT);
+                controllerFileObjects[i] = controllerTargetFolder.createData(simpleControllerName, JAVA_EXT);
             }
         }
 
         FileObject[] converterFileObjects = new FileObject[entities.size()];
         for (int i = 0; i < converterFileObjects.length; i++) {
             String simpleConverterName = getConverterFileName(entities.get(i));
-            converterFileObjects[i] = targetFolder.getFileObject(simpleConverterName, JAVA_EXT);
+            converterFileObjects[i] = converterTargetFolder.getFileObject(simpleConverterName, JAVA_EXT);
             if (converterFileObjects[i] == null) {
-                converterFileObjects[i] = targetFolder.createData(simpleConverterName, JAVA_EXT);
+                converterFileObjects[i] = converterTargetFolder.createData(simpleConverterName, JAVA_EXT);
             }
         }
 
@@ -452,7 +456,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             if (myFacesCodiVersion != null) {
                 params.put("myFacesCodiVersion", myFacesCodiVersion); //NOI18N
             }
-            FromEntityBase.createParamsForConverterTemplate(params, targetFolder, entityClass, embeddedPkSupport);
+            FromEntityBase.createParamsForConverterTemplate(params, controllerTargetFolder, entityClass, embeddedPkSupport);
 
             //Generate abstract controller on first loop
             if (i == 0) {
@@ -460,7 +464,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             }
             JSFPaletteUtilities.expandJSFTemplate(template, params, controllerFileObjects[i]);
             //2013-02-01 Kay Wrobel: Generate converter class
-            params.put("converterPackageName", controllerPkg);
+            params.put("converterPackageName", converterPkg);
             params.put("converterClassName", converterClassName);
             JSFPaletteUtilities.expandJSFTemplate(converterTemplate, params, converterFileObjects[i]);
 
@@ -497,7 +501,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         progressContributor.progress(progressMsg, progressIndex++);
         progressPanel.setText(progressMsg);
 
-        FileObject template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.BUNDLE_TEMPLATE);
+        FileObject template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_BUNDLE_TEMPLATE);
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("entities", bundleData);
         params.put("comment", Boolean.FALSE);

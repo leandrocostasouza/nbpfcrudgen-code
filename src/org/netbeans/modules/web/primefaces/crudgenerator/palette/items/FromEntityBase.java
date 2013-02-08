@@ -252,6 +252,7 @@ public abstract class FromEntityBase {
                                         fd = new FieldDesc(controller, pkMethod, bean);
                                         fd.setLabel(pkMethodName.substring(3));
                                         fd.setPropertyName(propName + "." + JpaControllerUtil.getPropNameFromMethod(pkMethodName));
+                                        fd.setEmbeddedKey();
                                         fields.add(fd);
                                     }
                                 }
@@ -265,8 +266,16 @@ public abstract class FromEntityBase {
                         }
                     } else if (fd.getDateTimeFormat().length() > 0) {
                         fields.add(fd);
-                    } else if (relationship == JpaControllerUtil.REL_NONE || relationship == JpaControllerUtil.REL_TO_ONE
+                    } else if (relationship == JpaControllerUtil.REL_TO_ONE
                             || relationship == JpaControllerUtil.REL_TO_MANY) {
+                        if (embeddedPkSupport == null) {
+                            embeddedPkSupport = new JpaControllerUtil.EmbeddedPkSupport();
+                        }
+                        if (embeddedPkSupport.isRedundantWithPkFields(bean, method)) {
+                            fd.setEmbeddedKey();
+                        }
+                        fields.add(fd);
+                    } else if (relationship == JpaControllerUtil.REL_NONE) {
                         fields.add(fd);
                     }
                 }
@@ -523,6 +532,7 @@ public abstract class FromEntityBase {
         private String valuesListGetter;
         private boolean primaryKey;
         private boolean generatedValue;
+        private boolean embeddedKey;
 
         public boolean isGeneratedValue() {
             return generatedValue;
@@ -556,6 +566,14 @@ public abstract class FromEntityBase {
             this.primaryKey = true;
         }
 
+        public boolean isEmbeddedKey() {
+            return embeddedKey;
+        }
+
+        public void setEmbeddedKey() {
+            this.embeddedKey = true;
+        }
+        
         public String getMethodName() {
             return methodName;
         }
@@ -821,6 +839,10 @@ public abstract class FromEntityBase {
 
         public String getRelationsLabelName(String labelArtifacts) {
             return fd.getRelationsLabelName(labelArtifacts);
+        }
+        
+        public boolean isEmbeddedKey() {
+            return fd.embeddedKey;
         }
 
         @Override

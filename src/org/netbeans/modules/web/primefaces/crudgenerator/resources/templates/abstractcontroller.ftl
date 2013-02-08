@@ -108,6 +108,8 @@ public abstract class ${abstractControllerClassName}<T> {
     public void delete(ActionEvent event) {
         if (selected != null) {
             this.ejbFacade.remove(selected);
+            selected = null; // Remove selection
+            items = null; // Invalidate list of items to trigger re-query.
         }
     }
 

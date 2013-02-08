@@ -49,6 +49,11 @@
         <h:form id="listForm">
 
             <p:panel header="${r"#{"}bundle.List${entityName}Title${r"}"}">
+
+                <h:panelGroup id="messagePanel">
+                    <p:messages id="listMessages"/>
+                </h:panelGroup>
+
                 <p:dataTable id="datalist" value="${r"#{"}${managedBeanProperty}${r"}"}" var="${item}"
                              selectionMode="single" selection="${r"#{"}${managedBean}${r".selected}"}"
 <#if entityIdField?? && entityIdField != "">
@@ -61,8 +66,8 @@
 </#if>
             >
 
-                    <p:ajax event="rowSelect" update="viewButton editButton"/>  
-                    <p:ajax event="rowUnselect" update="viewButton editButton"/>  
+                    <p:ajax event="rowSelect"   update="viewButton editButton deleteButton"/>
+                    <p:ajax event="rowUnselect" update="viewButton editButton deleteButton"/>
 
 <#list entityDescriptors as entityDescriptor>
   <#-- Skip this field if we are dealing with many:many -->
@@ -115,6 +120,7 @@
                         <p:commandButton id="createButton" icon="ui-icon-plus"   value="${r"#{"}bundle.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update="${r":createForm:display"}" oncomplete="${r"createDialog.show()"}"/>
                         <p:commandButton id="viewButton"   icon="ui-icon-search" value="${r"#{"}bundle.View${r"}"}" update=":viewForm:display" oncomplete="viewDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
                         <p:commandButton id="editButton"   icon="ui-icon-pencil" value="${r"#{"}bundle.Edit${r"}"}" update=":editForm:display" oncomplete="editDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="${r"#{"}bundle.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${r":listForm:messagePanel,datalist"}" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
                     </f:facet>
 
                 </p:dataTable>

@@ -31,6 +31,37 @@
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
+                      <Component id="searchLabelsLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="searchLabelsTextBox" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="customizeTemplatesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="ajaxifyCheckbox" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="defaultRowsPerPageTemplateLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="defaultRowsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="defaultRowsTextField" min="-2" max="-2" attributes="0"/>
+                          <Component id="defaultRowsPerPageTemplate" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="primeFacesVersionForLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="primeFacesVersionLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="codiVersionForLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="codiVersionLabel" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="overrideExistingCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="projectLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="locationLabel" min="-2" max="-2" attributes="0"/>
@@ -38,9 +69,11 @@
                           <Component id="jsfPackageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="localizationBundleLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="converterPackageLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="converterPackageComboBox" max="32767" attributes="0"/>
                           <Component id="projectTextField" alignment="0" max="32767" attributes="1"/>
                           <Component id="locationComboBox" alignment="0" max="32767" attributes="1"/>
                           <Component id="jpaPackageComboBox" alignment="0" max="32767" attributes="0"/>
@@ -50,42 +83,6 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="browseFolderButton" min="-2" max="-2" attributes="1"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="searchLabelsTextBox" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="customizeTemplatesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="ajaxifyCheckbox" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="defaultRowsTextField" min="-2" max="-2" attributes="0"/>
-                                  <Component id="defaultRowsPerPageTemplate" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="primeFacesVersionForLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="primeFacesVersionLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="codiVersionForLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="codiVersionLabel" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="overrideExistingCheckBox" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -116,6 +113,11 @@
                   <Component id="jsfPackageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jsfPackageComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="converterPackageComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="converterPackageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -136,16 +138,16 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="defaultRowsTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="defaultRowsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="defaultRowsPerPageTemplateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="defaultRowsPerPageTemplate" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="searchLabelsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="searchLabelsTextBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -319,7 +321,7 @@
       </Properties>
       <AccessibilityProperties>
         <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org.netbeans.modules.web.primefaces.crudgenerator.wizards.Bundle.properties" key="ACSD_Package" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle.properties" key="ACSD_Package" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </AccessibilityProperties>
     </Component>
@@ -378,6 +380,11 @@
       <Properties>
         <Property name="editable" type="boolean" value="true"/>
       </Properties>
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle.properties" key="ACSD_Package" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </AccessibilityProperties>
     </Component>
     <Component class="javax.swing.JCheckBox" name="overrideExistingCheckBox">
       <Properties>
@@ -411,7 +418,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="localizationBundleTextField">
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel1">
+    <Component class="javax.swing.JLabel" name="defaultRowsLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Default Rows Displayed:"/>
       </Properties>
@@ -421,7 +428,7 @@
         <Property name="text" type="java.lang.String" value="Specify some default paging information for data lists"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel5">
+    <Component class="javax.swing.JLabel" name="defaultRowsPerPageTemplateLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Default Page Selector:"/>
       </Properties>
@@ -456,7 +463,7 @@
         <Property name="text" type="java.lang.String" value="jLabel7"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel7">
+    <Component class="javax.swing.JLabel" name="searchLabelsLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Field name artifacts for foreign fields:"/>
       </Properties>
@@ -465,6 +472,24 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="descr,name"/>
         <Property name="toolTipText" type="java.lang.String" value="Comma-separated list of field name artifacts to look for"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="converterPackageComboBox">
+      <Properties>
+        <Property name="editable" type="boolean" value="true"/>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
+        </Property>
+      </Properties>
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle.properties" key="ACSD_Package" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </AccessibilityProperties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="converterPackageLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Converter Package:"/>
       </Properties>
     </Component>
   </SubComponents>
