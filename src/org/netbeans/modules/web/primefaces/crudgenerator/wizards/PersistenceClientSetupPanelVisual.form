@@ -35,32 +35,6 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="searchLabelsTextBox" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="customizeTemplatesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="ajaxifyCheckbox" min="-2" max="-2" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="defaultRowsPerPageTemplateLabel" min="-2" max="-2" attributes="0"/>
-                          <Component id="defaultRowsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="defaultRowsTextField" min="-2" max="-2" attributes="0"/>
-                          <Component id="defaultRowsPerPageTemplate" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="primeFacesVersionForLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="primeFacesVersionLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="codiVersionForLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="codiVersionLabel" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="overrideExistingCheckBox" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="projectLabel" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -83,6 +57,50 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="browseFolderButton" min="-2" max="-2" attributes="1"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="customizeTemplatesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="ajaxifyCheckbox" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="defaultRowsPerPageTemplateLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="defaultRowsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="defaultRowsTextField" min="-2" max="-2" attributes="0"/>
+                                  <Component id="defaultRowsPerPageTemplate" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="primeFacesVersionForLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="primeFacesVersionLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="codiVersionForLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="codiVersionLabel" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="overrideExistingCheckBox" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="createFunctionCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="updateFunctionCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="deleteFunctionCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="readFunctionCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="sortFunctionCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="filterFunctionCheckBox" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -150,7 +168,16 @@
                   <Component id="searchLabelsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="searchLabelsTextBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="createFunctionCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="updateFunctionCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="deleteFunctionCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="readFunctionCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="sortFunctionCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="filterFunctionCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
               <Component id="ajaxifyCheckbox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="overrideExistingCheckBox" min="-2" max="-2" attributes="0"/>
@@ -490,6 +517,45 @@
     <Component class="javax.swing.JLabel" name="converterPackageLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Converter Package:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="createFunctionCheckBox">
+      <Properties>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" value="Create"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="createFunctionCheckBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="updateFunctionCheckBox">
+      <Properties>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" value="Edit"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="deleteFunctionCheckBox">
+      <Properties>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" value="Delete"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="readFunctionCheckBox">
+      <Properties>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" value="View"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="sortFunctionCheckBox">
+      <Properties>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" value="Sort"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="filterFunctionCheckBox">
+      <Properties>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" value="Filter"/>
       </Properties>
     </Component>
   </SubComponents>

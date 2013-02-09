@@ -43,12 +43,15 @@
         <ui:define name="body">
 
             <ui:include src="List.xhtml"/>
-
+<#if doRead>
             <ui:include src="View.xhtml"/>
-
+</#if>
+<#if doUpdate>
             <ui:include src="Edit.xhtml"/>
-
+</#if>
+<#if doCreate>
             <ui:include src="Create.xhtml"/>
+</#if>
 
         </ui:define>
 

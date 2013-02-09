@@ -62,8 +62,15 @@ public class WizardProperties {
     public static final String DEFAULT_DATATABLE_ROWS = "DefaultDataTableRows"; //NOI18N
     public static final String DEFAULT_DATATABLE_ROWSPERPAGETEMPLATE = "DefaultDataTableRowsPerPageTemplate"; //NOI18N
     //2013-01-23 Kay Wrobel
-    public static final String PRIMEFACES_VERSION = "PrimeFacesVersion";
-    public static final String MYFACES_CODI_VERSION = "MyFacesCODIVersion";
+    public static final String PRIMEFACES_VERSION = "PrimeFacesVersion"; //NOI18N
+    public static final String MYFACES_CODI_VERSION = "MyFacesCODIVersion"; //NOI18N
     //2013-01-25 Kay Wrobel
-    public static final String SEARCH_LABEL_ARTIFACTS = "SearchLabelArtifacts";
+    public static final String SEARCH_LABEL_ARTIFACTS = "SearchLabelArtifacts"; //NOI18N
+    //2013-02-09 Kay Wrobel: Add some switches for C/R/U/D
+    public static final String CREATE_FUNCTION = "CreateFunction"; //NOI18N
+    public static final String READ_FUNCTION = "ReadFunction"; //NOI18N
+    public static final String UPDATE_FUNCTION = "UpdateFunction"; //NOI18N
+    public static final String DELETE_FUNCTION = "DeleteFunction"; //NOI18N
+    public static final String SORT_FUNCTION = "SortFunction"; //NOI18N
+    public static final String FILTER_FUNCTION = "FilterFunction"; //NOI18N
 }

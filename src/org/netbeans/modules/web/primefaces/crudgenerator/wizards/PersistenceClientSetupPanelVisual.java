@@ -160,6 +160,12 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         searchLabelsTextBox = new javax.swing.JTextField();
         converterPackageComboBox = new javax.swing.JComboBox();
         converterPackageLabel = new javax.swing.JLabel();
+        createFunctionCheckBox = new javax.swing.JCheckBox();
+        updateFunctionCheckBox = new javax.swing.JCheckBox();
+        deleteFunctionCheckBox = new javax.swing.JCheckBox();
+        readFunctionCheckBox = new javax.swing.JCheckBox();
+        sortFunctionCheckBox = new javax.swing.JCheckBox();
+        filterFunctionCheckBox = new javax.swing.JCheckBox();
 
         jTextField2.setText("jTextField2");
 
@@ -260,6 +266,29 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         converterPackageLabel.setText("Converter Package:");
 
+        createFunctionCheckBox.setSelected(true);
+        createFunctionCheckBox.setText("Create");
+        createFunctionCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createFunctionCheckBoxActionPerformed(evt);
+            }
+        });
+
+        updateFunctionCheckBox.setSelected(true);
+        updateFunctionCheckBox.setText("Edit");
+
+        deleteFunctionCheckBox.setSelected(true);
+        deleteFunctionCheckBox.setText("Delete");
+
+        readFunctionCheckBox.setSelected(true);
+        readFunctionCheckBox.setText("View");
+
+        sortFunctionCheckBox.setSelected(true);
+        sortFunctionCheckBox.setText("Sort");
+
+        filterFunctionCheckBox.setSelected(true);
+        filterFunctionCheckBox.setText("Filter");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -270,28 +299,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                         .addComponent(searchLabelsLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(searchLabelsTextBox))
-                    .addComponent(customizeTemplatesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel6)
-                    .addComponent(ajaxifyCheckbox)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(defaultRowsPerPageTemplateLabel)
-                            .addComponent(defaultRowsLabel))
-                        .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(defaultRowsPerPageTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(primeFacesVersionForLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(primeFacesVersionLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(codiVersionForLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(codiVersionLabel))
-                    .addComponent(overrideExistingCheckBox)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(projectLabel)
@@ -311,7 +318,44 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                             .addComponent(jsfFolder)
                             .addComponent(localizationBundleTextField))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(browseFolderButton)))
+                        .addComponent(browseFolderButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(customizeTemplatesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel6)
+                            .addComponent(ajaxifyCheckbox)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(defaultRowsPerPageTemplateLabel)
+                                    .addComponent(defaultRowsLabel))
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(defaultRowsPerPageTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(primeFacesVersionForLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(primeFacesVersionLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(codiVersionForLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(codiVersionLabel))
+                            .addComponent(overrideExistingCheckBox)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(createFunctionCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(updateFunctionCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(deleteFunctionCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(readFunctionCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sortFunctionCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(filterFunctionCheckBox)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -364,7 +408,15 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchLabelsLabel)
                     .addComponent(searchLabelsTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(createFunctionCheckBox)
+                    .addComponent(updateFunctionCheckBox)
+                    .addComponent(deleteFunctionCheckBox)
+                    .addComponent(readFunctionCheckBox)
+                    .addComponent(sortFunctionCheckBox)
+                    .addComponent(filterFunctionCheckBox))
+                .addGap(9, 9, 9)
                 .addComponent(ajaxifyCheckbox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(overrideExistingCheckBox)
@@ -448,6 +500,12 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
     }//GEN-LAST:event_customizeTemplatesLabelMouseClicked
 
+    private void createFunctionCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createFunctionCheckBoxActionPerformed
+        if (createFunctionCheckBox.isSelected()) {
+            updateFunctionCheckBox.setSelected(true);
+        }
+    }//GEN-LAST:event_createFunctionCheckBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox ajaxifyCheckbox;
     private javax.swing.JButton browseFolderButton;
@@ -455,11 +513,14 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JLabel codiVersionLabel;
     private javax.swing.JComboBox converterPackageComboBox;
     private javax.swing.JLabel converterPackageLabel;
+    private javax.swing.JCheckBox createFunctionCheckBox;
     private javax.swing.JLabel customizeTemplatesLabel;
     private javax.swing.JLabel defaultRowsLabel;
     private javax.swing.JTextField defaultRowsPerPageTemplate;
     private javax.swing.JLabel defaultRowsPerPageTemplateLabel;
     private javax.swing.JTextField defaultRowsTextField;
+    private javax.swing.JCheckBox deleteFunctionCheckBox;
+    private javax.swing.JCheckBox filterFunctionCheckBox;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -479,8 +540,11 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JLabel primeFacesVersionLabel;
     private javax.swing.JLabel projectLabel;
     private javax.swing.JTextField projectTextField;
+    private javax.swing.JCheckBox readFunctionCheckBox;
     private javax.swing.JLabel searchLabelsLabel;
     private javax.swing.JTextField searchLabelsTextBox;
+    private javax.swing.JCheckBox sortFunctionCheckBox;
+    private javax.swing.JCheckBox updateFunctionCheckBox;
     // End of variables declaration//GEN-END:variables
 
     public void addChangeListener(ChangeListener listener) {
@@ -675,6 +739,13 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         settings.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersionLabel.getText());
         //2013-01-25 Kay Wrobel
         settings.putProperty(WizardProperties.SEARCH_LABEL_ARTIFACTS, searchLabelsTextBox.getText());
+        //2013-02-09 Kay Wrobel
+        settings.putProperty(WizardProperties.CREATE_FUNCTION, Boolean.valueOf(createFunctionCheckBox.isSelected()));
+        settings.putProperty(WizardProperties.READ_FUNCTION, Boolean.valueOf(readFunctionCheckBox.isSelected()));
+        settings.putProperty(WizardProperties.UPDATE_FUNCTION, Boolean.valueOf(updateFunctionCheckBox.isSelected()));
+        settings.putProperty(WizardProperties.DELETE_FUNCTION, Boolean.valueOf(deleteFunctionCheckBox.isSelected()));
+        settings.putProperty(WizardProperties.SORT_FUNCTION, Boolean.valueOf(sortFunctionCheckBox.isSelected()));
+        settings.putProperty(WizardProperties.FILTER_FUNCTION, Boolean.valueOf(filterFunctionCheckBox.isSelected()));
     }
 
     private void updateSourceGroupPackages() {

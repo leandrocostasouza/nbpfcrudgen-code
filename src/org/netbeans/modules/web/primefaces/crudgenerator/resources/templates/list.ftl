@@ -33,11 +33,25 @@
     primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
     searchLabels - Comma-seperated list of field name artifacts to search for labels (type: String)
                    Use in conjunction with getRelationsLabelName.
+    doCreate - Provide CREATE functionality (type: boolean)
+    doRead - Provide READ functionality (type: boolean)
+    doUpdate - Provide UPDATE functionality (type: boolean)
+    doDelete - Provide DELETE functionality (type: boolean)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
 
 </#if>
+<#assign createButton  = "createButton"/>
+<#assign readButton    = "viewButton"/>
+<#assign updateButton  = "editButton"/>
+<#assign deleteButton  = "deleteButton"/>
+<#assign ajaxUpdateIds = "">
+<#if doCreate><#assign ajaxUpdateIds = ajaxUpdateIds + " " + createButton/></#if>
+<#if doRead><#assign ajaxUpdateIds = ajaxUpdateIds + " " + readButton/></#if>
+<#if doUpdate><#assign ajaxUpdateIds = ajaxUpdateIds + " " + updateButton/></#if>
+<#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " " + deleteButton/></#if>
+<#assign ajaxUpdateIds = ajaxUpdateIds?trim>
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
@@ -66,8 +80,10 @@
 </#if>
             >
 
-                    <p:ajax event="rowSelect"   update="viewButton editButton deleteButton"/>
-                    <p:ajax event="rowUnselect" update="viewButton editButton deleteButton"/>
+<#if ajaxUpdateIds?? && ajaxUpdateIds != "">
+                    <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"/>
+                    <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"/>
+</#if>
 
 <#list entityDescriptors as entityDescriptor>
   <#-- Skip this field if we are dealing with many:many -->
@@ -81,13 +97,13 @@
     </#if>
 <#if entityDescriptor.relationshipOne>
                 <#if relationLabelName?? && relationLabelName != "">
-                    <p:column sortBy="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}">
+                    <p:column<#if doSort> sortBy="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"</#if><#if doFilter> filterBy="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"</#if>>
                 <#else>
                     <#-- Disable sorting if we don't have a foreign field to sort by. -->
                     <p:column>
                 </#if>
 <#else>
-                    <p:column sortBy="${r"#{"}${entityDescriptor.name}${r"}"}">
+                    <p:column<#if doSort> sortBy="${r"#{"}${entityDescriptor.name}${r"}"}"</#if><#if doFilter> filterBy="${r"#{"}${entityDescriptor.name}${r"}"}"</#if>>
 </#if>
                         <f:facet name="header">
                             <h:outputText value="${r"#{"}bundle.List${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
@@ -117,10 +133,18 @@
   </#if>
 </#list>
                     <f:facet name="footer">
-                        <p:commandButton id="createButton" icon="ui-icon-plus"   value="${r"#{"}bundle.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update="${r":createForm:display"}" oncomplete="${r"createDialog.show()"}"/>
-                        <p:commandButton id="viewButton"   icon="ui-icon-search" value="${r"#{"}bundle.View${r"}"}" update=":viewForm:display" oncomplete="viewDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
-                        <p:commandButton id="editButton"   icon="ui-icon-pencil" value="${r"#{"}bundle.Edit${r"}"}" update=":editForm:display" oncomplete="editDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
-                        <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="${r"#{"}bundle.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${r":listForm:messagePanel,datalist"}" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+<#if doCreate>
+                        <p:commandButton id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}bundle.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update="${r":createForm:display"}" oncomplete="${r"createDialog.show()"}"/>
+</#if>
+<#if doRead>
+                        <p:commandButton id="${readButton}"   icon="ui-icon-search" value="${r"#{"}bundle.View${r"}"}" update=":viewForm:display" oncomplete="viewDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+</#if>
+<#if doUpdate>
+                        <p:commandButton id="${updateButton}"   icon="ui-icon-pencil" value="${r"#{"}bundle.Edit${r"}"}" update=":editForm:display" oncomplete="editDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+</#if>
+<#if doDelete>
+                        <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}bundle.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${r":listForm:messagePanel,datalist"}" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+</#if>
                     </f:facet>
 
                 </p:dataTable>

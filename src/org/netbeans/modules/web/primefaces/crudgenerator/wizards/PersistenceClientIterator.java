@@ -161,7 +161,20 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final Version primeFacesVersion = primeFacesVersionString.isEmpty() ? null : new Version(primeFacesVersionString);
         final Version myFacesCodiVersion = myFacesCodiVersionString.isEmpty() ? null : new Version(myFacesCodiVersionString);
         final String searchLabelArtifacts = (String) wizard.getProperty(WizardProperties.SEARCH_LABEL_ARTIFACTS);
-                
+        //2013-02-09 Kay Wrobel
+        Boolean createBoolean = (Boolean) wizard.getProperty(WizardProperties.CREATE_FUNCTION);
+        final boolean doCreate = createBoolean == null ? true : createBoolean.booleanValue();
+        Boolean readBoolean = (Boolean) wizard.getProperty(WizardProperties.READ_FUNCTION);
+        final boolean doRead = readBoolean == null ? true : readBoolean.booleanValue();
+        Boolean updateBoolean = (Boolean) wizard.getProperty(WizardProperties.UPDATE_FUNCTION);
+        final boolean doUpdate = updateBoolean == null ? true : updateBoolean.booleanValue();
+        Boolean deleteBoolean = (Boolean) wizard.getProperty(WizardProperties.DELETE_FUNCTION);
+        final boolean doDelete = deleteBoolean == null ? true : deleteBoolean.booleanValue();
+        Boolean sortBoolean = (Boolean) wizard.getProperty(WizardProperties.SORT_FUNCTION);
+        final boolean doSort = sortBoolean == null ? true : sortBoolean.booleanValue();
+        Boolean filterBoolean = (Boolean) wizard.getProperty(WizardProperties.FILTER_FUNCTION);
+        final boolean doFilter = filterBoolean == null ? true : filterBoolean.booleanValue();
+
         // add framework to project first:
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
         JSFFrameworkProvider fp = new JSFFrameworkProvider();
@@ -228,7 +241,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion,searchLabelArtifacts);
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter);
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }
@@ -360,7 +373,13 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             String defaultDataTableRowsPerPageTemplate,
             Version primeFacesVersion,
             Version myFacesCodiVersion,
-            String searchLabelArtifacts) throws IOException {
+            String searchLabelArtifacts,
+            boolean doCreate,
+            boolean doRead,
+            boolean doUpdate,
+            boolean doDelete,
+            boolean doSort,
+            boolean doFilter) throws IOException {
         String progressMsg;
 
         //Create an abstract controller class file
@@ -414,7 +433,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             String entityClass = entities.get(i);
             String simpleClassName = JpaControllerUtil.simpleClassName(entityClass);
             String simpleJpaControllerName = simpleClassName + (genSessionBean ? FACADE_SUFFIX : "JpaController"); //NOI18N
-            
+
             progressMsg = NbBundle.getMessage(PersistenceClientIterator.class, "MSG_Progress_Jsf_Now_Generating", simpleClassName + "." + JAVA_EXT); //NOI18N
             progressContributor.progress(progressMsg, progressIndex++);
             progressPanel.setText(progressMsg);
@@ -436,7 +455,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("entityFullClassName", entityClass);
             params.put("importEntityFullClassName", showImportStatement(controllerPkg, entityClass));
             params.put(genSessionBean ? "ejbFullClassName" : "jpaControllerFullClassName", jpaControllerPkg + "." + simpleJpaControllerName);
-            params.put("importEjbFullClassName", showImportStatement(controllerPkg, jpaControllerPkg+"."+simpleJpaControllerName));
+            params.put("importEjbFullClassName", showImportStatement(controllerPkg, jpaControllerPkg + "." + simpleJpaControllerName));
             params.put(genSessionBean ? "ejbClassName" : "jpaControllerClassName", simpleJpaControllerName);
             if (genSessionBean) {
                 params.put("ejbFacadeFullClassName", jpaControllerPkg + ".Abstract" + FACADE_SUFFIX);
@@ -475,12 +494,18 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             if (primeFacesVersion != null) {
                 params.put("primeFacesVersion", primeFacesVersion); //NOI18N
             }
-            params.put("searchLabels",searchLabelArtifacts); //Default property artifacts to look for
+            params.put("searchLabels", searchLabelArtifacts); //Default property artifacts to look for
             params.put("cdiEnabled", isCdiEnabled(project));
 
-            expandSingleJSFTemplate("create.ftl", entityClass, jsfFolder, webRoot, "Create", params, progressContributor, progressPanel, progressIndex++);
-            expandSingleJSFTemplate("edit.ftl", entityClass, jsfFolder, webRoot, "Edit", params, progressContributor, progressPanel, progressIndex++);
-            expandSingleJSFTemplate("view.ftl", entityClass, jsfFolder, webRoot, "View", params, progressContributor, progressPanel, progressIndex++);
+            if (doCreate) {
+                expandSingleJSFTemplate("create.ftl", entityClass, jsfFolder, webRoot, "Create", params, progressContributor, progressPanel, progressIndex++);
+            }
+            if (doUpdate) {
+                expandSingleJSFTemplate("edit.ftl", entityClass, jsfFolder, webRoot, "Edit", params, progressContributor, progressPanel, progressIndex++);
+            }
+            if (doRead) {
+                expandSingleJSFTemplate("view.ftl", entityClass, jsfFolder, webRoot, "View", params, progressContributor, progressPanel, progressIndex++);
+            }
 
             params = FromEntityBase.createFieldParameters(webRoot, entityClass, managedBean, managedBean + ".items", true, true, null);
             params.put("controllerClassName", controllerClassName);
@@ -490,8 +515,14 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             if (primeFacesVersion != null) {
                 params.put("primeFacesVersion", primeFacesVersion); //NOI18N
             }
-            params.put("searchLabels",searchLabelArtifacts); //Default property artifacts to look for
+            params.put("searchLabels", searchLabelArtifacts); //Default property artifacts to look for
             params.put("cdiEnabled", isCdiEnabled(project));
+            params.put("doCreate", doCreate);
+            params.put("doRead", doRead);
+            params.put("doUpdate", doUpdate);
+            params.put("doDelete", doDelete);
+            params.put("doSort", doSort);
+            params.put("doFilter", doFilter);
             expandSingleJSFTemplate("list.ftl", entityClass, jsfFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
             expandSingleJSFTemplate("index.ftl", entityClass, jsfFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
 
