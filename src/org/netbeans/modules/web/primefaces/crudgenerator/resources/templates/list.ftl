@@ -60,7 +60,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-        <h:form id="listForm">
+        <h:form id="${entityName}ListForm">
 
             <p:panel header="${r"#{"}bundle.List${entityName}Title${r"}"}">
 
@@ -134,16 +134,16 @@
 </#list>
                     <f:facet name="footer">
 <#if doCreate>
-                        <p:commandButton id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}bundle.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update="${r":createForm:display"}" oncomplete="${r"createDialog.show()"}"/>
+                        <p:commandButton id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}bundle.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm:display" oncomplete="${r"${entityName}CreateDialog.show()"}"/>
 </#if>
 <#if doRead>
-                        <p:commandButton id="${readButton}"   icon="ui-icon-search" value="${r"#{"}bundle.View${r"}"}" update=":viewForm:display" oncomplete="viewDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${readButton}"   icon="ui-icon-search" value="${r"#{"}bundle.View${r"}"}" update=":${entityName}ViewForm:display" oncomplete="${entityName}ViewDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
 <#if doUpdate>
-                        <p:commandButton id="${updateButton}"   icon="ui-icon-pencil" value="${r"#{"}bundle.Edit${r"}"}" update=":editForm:display" oncomplete="editDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${updateButton}"   icon="ui-icon-pencil" value="${r"#{"}bundle.Edit${r"}"}" update=":${entityName}EditForm:display" oncomplete="${entityName}EditDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
 <#if doDelete>
-                        <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}bundle.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${r":listForm:messagePanel,datalist"}" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}bundle.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update=":${entityName}ListForm:messagePanel,datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
                     </f:facet>
 

@@ -46,12 +46,12 @@
 
     <ui:composition>
 
-        <p:dialog id="editDlg" widgetVar="editDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}bundle.Edit${entityName}Title${r"}"}">
+        <p:dialog id="${entityName}EditDlg" widgetVar="${entityName}EditDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}bundle.Edit${entityName}Title${r"}"}">
 
-            <h:form id="editForm">
+            <h:form id="${entityName}EditForm">
 
                 <h:panelGroup id="messagePanel">
-                    <p:messages id="editMessages"/>
+                    <p:messages id="${entityName}EditMessages"/>
                 </h:panelGroup>
 
                 <h:panelGroup id="display">
@@ -128,8 +128,8 @@
      </#if>
     </#list>
                     </p:panelGrid>
-                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{bundle.Save}"}" update="${r"display,messagePanel,:listForm:datalist"}" oncomplete="${r"if(!args.validationFailed) {editDialog.hide();}"}"/>
-                    <p:commandButton value="${r"#{bundle.Cancel}"}" onclick="${r"editDialog.hide()"}"/>
+                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{bundle.Save}"}" update="display,messagePanel,:${entityName}ListForm:datalist" oncomplete="${r"if(!args.validationFailed) {${entityName}EditDialog.hide();}"}"/>
+                    <p:commandButton value="${r"#{bundle.Cancel}"}" onclick="${entityName}EditDialog.hide()"/>
                 </h:panelGroup>
 
             </h:form>

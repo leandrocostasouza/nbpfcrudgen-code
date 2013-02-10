@@ -46,9 +46,9 @@
 
     <ui:composition>
 
-        <p:dialog id="viewDlg" widgetVar="viewDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}bundle.View${entityName}Title${r"}"}">
+        <p:dialog id="${entityName}ViewDlg" widgetVar="${entityName}ViewDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}bundle.View${entityName}Title${r"}"}">
 
-            <h:form id="viewForm">
+            <h:form id="${entityName}ViewForm">
 
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
@@ -88,7 +88,7 @@
      </#if>
     </#list>
                     </p:panelGrid>
-                    <p:commandButton value="${r"#{bundle.Close}"}" onclick="${r"viewDialog.hide()"}"/>
+                    <p:commandButton value="${r"#{bundle.Close}"}" onclick="${entityName}ViewDialog.hide()"/>
                 </h:panelGroup>
 
             </h:form>

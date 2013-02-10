@@ -47,9 +47,9 @@
 
     <ui:composition>
 
-        <p:dialog id="createDlg" widgetVar="createDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}bundle.Create${entityName}Title${r"}"}">
+        <p:dialog id="${entityName}CreateDlg" widgetVar="${entityName}CreateDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}bundle.Create${entityName}Title${r"}"}">
 
-            <h:form id="createForm">
+            <h:form id="${entityName}CreateForm">
 
                 <h:panelGroup id="messagePanel">
                     <p:messages/>
@@ -125,8 +125,8 @@
      </#if>
     </#list>
                     </p:panelGrid>
-                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".saveNew}"}" value="${r"#{bundle.Save}"}" update="${r"display,messagePanel,:listForm:datalist"}" oncomplete="${r"if(!args.validationFailed){createDialog.hide();}"}"/>
-                    <p:commandButton value="${r"#{bundle.Cancel}"}" onclick="${r"createDialog.hide()"}"/>
+                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".saveNew}"}" value="${r"#{bundle.Save}"}" update="display,messagePanel,:${entityName}ListForm:datalist" oncomplete="${r"if(!args.validationFailed){${entityName}CreateDialog.hide();}"}"/>
+                    <p:commandButton value="${r"#{bundle.Cancel}"}" onclick="${entityName}CreateDialog.hide()"/>
                 </h:panelGroup>
 
             </h:form>
