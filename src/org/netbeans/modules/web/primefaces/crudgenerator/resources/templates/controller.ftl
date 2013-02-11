@@ -50,7 +50,7 @@ import javax.enterprise.context.SessionScoped;
 <#else>
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 </#if>
 </#if>
 
@@ -64,7 +64,7 @@ import javax.faces.bean.SessionScoped;
 </#if>
 <#else>
 @ManagedBean(name="${managedBeanName}")
-@SessionScoped
+@ViewScoped
 </#if>
 </#if>
 public class ${controllerClassName} extends ${abstractControllerClassName}<${entityClassName}> implements Serializable {

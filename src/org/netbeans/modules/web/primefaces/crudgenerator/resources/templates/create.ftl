@@ -125,7 +125,7 @@
      </#if>
     </#list>
                     </p:panelGrid>
-                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".saveNew}"}" value="${r"#{bundle.Save}"}" update="display,messagePanel,:${entityName}ListForm:datalist" oncomplete="${r"if(!args.validationFailed){${entityName}CreateDialog.hide();}"}"/>
+                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".saveNew}"}" value="${r"#{bundle.Save}"}" update="display,messagePanel,:${entityName}ListForm:datalist" oncomplete="if(!args.validationFailed) {${entityName}CreateDialog.hide();}"/>
                     <p:commandButton value="${r"#{bundle.Cancel}"}" onclick="${entityName}CreateDialog.hide()"/>
                 </h:panelGroup>
 

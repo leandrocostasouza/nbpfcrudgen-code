@@ -128,7 +128,7 @@
      </#if>
     </#list>
                     </p:panelGrid>
-                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{bundle.Save}"}" update="display,messagePanel,:${entityName}ListForm:datalist" oncomplete="${r"if(!args.validationFailed) {${entityName}EditDialog.hide();}"}"/>
+                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{bundle.Save}"}" update="display,messagePanel,:${entityName}ListForm:datalist" oncomplete="if(!args.validationFailed) {${entityName}EditDialog.hide();}"/>
                     <p:commandButton value="${r"#{bundle.Cancel}"}" onclick="${entityName}EditDialog.hide()"/>
                 </h:panelGroup>
 
