@@ -62,59 +62,60 @@ import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.api.queries.FileEncodingQuery;
+import org.netbeans.modules.j2ee.common.J2eeProjectCapabilities;
 import org.netbeans.modules.j2ee.core.api.support.wizard.Wizards;
+import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
+import org.netbeans.modules.j2ee.ejbcore.ejb.wizard.jpa.dao.AppServerValidationPanel;
+import org.netbeans.modules.j2ee.ejbcore.ejb.wizard.jpa.dao.EjbFacadeWizardIterator;
+import org.netbeans.modules.j2ee.persistence.dd.PersistenceUtils;
 import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
 import org.netbeans.modules.j2ee.persistence.provider.InvalidPersistenceXmlException;
 import org.netbeans.modules.j2ee.persistence.provider.ProviderUtil;
 import org.netbeans.modules.j2ee.persistence.wizard.PersistenceClientEntitySelection;
-import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil;
-import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.ProgressReporter;
-import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.ProgressReporterDelegate;
-import org.netbeans.spi.project.ui.templates.support.Templates;
-import org.openide.WizardDescriptor;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataFolder;
-import org.openide.loaders.TemplateWizard;
-import org.openide.util.HelpCtx;
-import org.openide.util.NbBundle;
-import org.netbeans.api.progress.aggregate.ProgressContributor;
-import org.netbeans.api.queries.FileEncodingQuery;
-import org.netbeans.modules.j2ee.common.J2eeProjectCapabilities;
-import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
-import org.netbeans.modules.j2ee.ejbcore.ejb.wizard.jpa.dao.EjbFacadeWizardIterator;
-import org.netbeans.modules.j2ee.ejbcore.ejb.wizard.jpa.dao.AppServerValidationPanel;
-import org.netbeans.modules.j2ee.persistence.dd.PersistenceUtils;
 import org.netbeans.modules.j2ee.persistence.wizard.Util;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.ProgressPanel;
 import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerIterator;
+import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil;
+import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.ProgressReporter;
+import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.ProgressReporterDelegate;
 import org.netbeans.modules.j2ee.persistence.wizard.unit.PersistenceUnitWizardDescriptor;
 import org.netbeans.modules.j2ee.persistence.wizard.unit.PersistenceUnitWizardPanel.TableGeneration;
 import org.netbeans.modules.web.api.webmodule.ExtenderController;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.api.webmodule.WebProjectConstants;
 import org.netbeans.modules.web.beans.CdiUtil;
-import org.netbeans.modules.web.primefaces.crudgenerator.JSFFrameworkProvider;
-import org.netbeans.modules.web.primefaces.crudgenerator.JSFUtils;
-import org.netbeans.modules.web.primefaces.crudgenerator.api.ConfigurationUtils;
-import org.netbeans.modules.web.primefaces.crudgenerator.api.facesmodel.Application;
-import org.netbeans.modules.web.primefaces.crudgenerator.api.facesmodel.JSFConfigModel;
-import org.netbeans.modules.web.primefaces.crudgenerator.api.facesmodel.ResourceBundle;
-import org.netbeans.modules.web.primefaces.crudgenerator.palette.JSFPaletteUtilities;
+import org.netbeans.modules.web.jsf.JSFFrameworkProvider;
+import org.netbeans.modules.web.jsf.JSFUtils;
+import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
+import org.netbeans.modules.web.jsf.api.facesmodel.Application;
+import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigModel;
+import org.netbeans.modules.web.jsf.api.facesmodel.ResourceBundle;
+import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
+import org.netbeans.modules.web.jsf.wizards.FacesConfigIterator;
 import org.netbeans.modules.web.primefaces.crudgenerator.palette.items.FromEntityBase;
 import org.netbeans.modules.web.primefaces.crudgenerator.util.Version;
 import org.netbeans.modules.web.spi.webmodule.WebModuleExtender;
+import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.WizardDescriptor;
 import org.openide.cookies.SaveCookie;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
+import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.loaders.TemplateWizard;
 import org.openide.util.Exceptions;
+import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -124,6 +125,19 @@ import org.openide.util.RequestProcessor;
  */
 // JAN2013 - Kay - Modified for supporting extra templates for PrimeFaces JSF pages.
 public class PersistenceClientIterator implements TemplateWizard.Iterator {
+    
+    static final String PRIMEFACES_CRUD_STYLESHEET = "pfcrud.css"; //NOI18N
+    public static final String JSFCRUD_STYLESHEET = "jsfcrud.css"; //NOI18N
+    //2013-01-08 Kay Wrobel: PrimeFaces additions
+    static final String PRIMEFACES_TEMPLATE_PAGE = "template.xhtml"; //NOI18N
+    static final String RESOURCE_FOLDER = "org/netbeans/modules/web/primefaces/crudgenerator/resources/"; //NOI18N
+    static final String PRIMEFACES_APPMENU_PAGE = "appmenu.xhtml"; //NOI18N
+    static final String FL_RESOURCE_FOLDER = "org/netbeans/modules/web/primefaces/crudgenerator/facelets/resources/templates/"; //NOI18N
+    static final String PRIMEFACES_APPINDEX_PAGE = "index.xhtml"; //NOI18N
+    static final int PROGRESS_STEP_COUNT = 8;
+    // 2013-01-08 Kay Wrobel: removed private scope to allow package members access
+    static final String WELCOME_JSF_FL_PAGE = "index.xhtml"; //NOI18N
+    static final String TEMPLATE_JSF_FL_PAGE = "template.xhtml"; //NOI18N
 
     private int index;
     private transient WizardDescriptor.Panel[] panels;
@@ -140,6 +154,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     private transient WebModuleExtender wme;
     private transient ExtenderController ec;
 
+    @Override
     public Set instantiate(TemplateWizard wizard) throws IOException {
         final List<String> entities = (List<String>) wizard.getProperty(WizardProperties.ENTITY_CLASS);
         final String jsfFolder = (String) wizard.getProperty(WizardProperties.JSF_FOLDER);
@@ -223,7 +238,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             handle.start();
                             int jpaProgressStepCount = genSessionBean ? EjbFacadeWizardIterator.getProgressStepCount(entities.size()) : JpaControllerIterator.getProgressStepCount(entities.size());
                             int progressStepCount = jpaProgressStepCount + getProgressStepCount(ajaxify, jsf2Generator);
-                            progressStepCount += ((jsf2Generator ? 5 : JSFClientGenerator.PROGRESS_STEP_COUNT) * entities.size());
+                            progressStepCount += ((jsf2Generator ? 5 : PersistenceClientIterator.PROGRESS_STEP_COUNT) * entities.size());
                             progressContributor.start(progressStepCount);
                             FileObject jpaControllerPackageFileObject = FileUtil.createFolder(javaPackageRoot, jpaControllerPkg.replace('.', '/'));
                             if (genSessionBean) {
@@ -413,9 +428,9 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         }
 
         Charset encoding = FileEncodingQuery.getEncoding(project.getProjectDirectory());
-        if (webRoot.getFileObject(CSS_FOLDER + JSFClientGenerator.PRIMEFACES_CRUD_STYLESHEET) == null) {
-            String content = JSFFrameworkProvider.readResource(JSFClientGenerator.class.getClassLoader().getResourceAsStream(JSFClientGenerator.RESOURCE_FOLDER + JSFClientGenerator.PRIMEFACES_CRUD_STYLESHEET), "UTF-8"); //NOI18N
-            FileObject target = FileUtil.createData(webRoot, CSS_FOLDER + JSFClientGenerator.PRIMEFACES_CRUD_STYLESHEET);
+        if (webRoot.getFileObject(CSS_FOLDER + PRIMEFACES_CRUD_STYLESHEET) == null) {
+            String content = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(RESOURCE_FOLDER + PRIMEFACES_CRUD_STYLESHEET), "UTF-8"); //NOI18N
+            FileObject target = FileUtil.createData(webRoot, CSS_FOLDER + PRIMEFACES_CRUD_STYLESHEET);
             JSFFrameworkProvider.createFile(target, content, encoding.name());
             progressMsg = NbBundle.getMessage(PersistenceClientIterator.class, "MSG_Progress_Jsf_Now_Generating", target.getNameExt()); //NOI18N
             progressContributor.progress(progressMsg, progressIndex++);
@@ -551,33 +566,33 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
         // Add PrimeFaces Application Menu to be included in main template
         template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_APPMENU_TEMPLATE);
-        target = webRoot.getFileObject(JSFClientGenerator.PRIMEFACES_APPMENU_PAGE);
+        target = webRoot.getFileObject(PRIMEFACES_APPMENU_PAGE);
 
-        params.put("appIndex", JSFClientGenerator.PRIMEFACES_APPINDEX_PAGE.replace(".xhtml", ""));
+        params.put("appIndex", PRIMEFACES_APPINDEX_PAGE.replace(".xhtml", ""));
         params.put("servletMapping", servletMapping);
         if (primeFacesVersion != null) {
             params.put("primeFacesVersion", primeFacesVersion); //NOI18N
         }
         if (target == null) {
-            target = FileUtil.createData(webRoot, JSFClientGenerator.PRIMEFACES_APPMENU_PAGE);
+            target = FileUtil.createData(webRoot, PRIMEFACES_APPMENU_PAGE);
         }
         JSFPaletteUtilities.expandJSFTemplate(template, params, target);
 
         // Add PrimeFaces Application Home Page to be overwritten as index.xhtml
         template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_APPINDEX_TEMPLATE);
-        target = webRoot.getFileObject(JSFClientGenerator.WELCOME_JSF_FL_PAGE);
+        target = webRoot.getFileObject(WELCOME_JSF_FL_PAGE);
         if (target == null) {
-            target = FileUtil.createData(webRoot, JSFClientGenerator.WELCOME_JSF_FL_PAGE);
+            target = FileUtil.createData(webRoot, WELCOME_JSF_FL_PAGE);
         }
         JSFPaletteUtilities.expandJSFTemplate(template, params, target);
 
         // Add PrimeFaces Application Home Page to be overwritten as index.xhtml
         template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_TEMPLATE_TEMPLATE);
-        target = webRoot.getFileObject(JSFClientGenerator.PRIMEFACES_TEMPLATE_PAGE);
-        params.put("appMenu", JSFClientGenerator.PRIMEFACES_APPMENU_PAGE);
-        params.put("styleFile", JSFClientGenerator.PRIMEFACES_CRUD_STYLESHEET);
+        target = webRoot.getFileObject(PRIMEFACES_TEMPLATE_PAGE);
+        params.put("appMenu", PRIMEFACES_APPMENU_PAGE);
+        params.put("styleFile", PRIMEFACES_CRUD_STYLESHEET);
         if (target == null) {
-            target = FileUtil.createData(webRoot, JSFClientGenerator.PRIMEFACES_TEMPLATE_PAGE);
+            target = FileUtil.createData(webRoot, PRIMEFACES_TEMPLATE_PAGE);
         }
         JSFPaletteUtilities.expandJSFTemplate(template, params, target);
 
@@ -828,13 +843,15 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         namesList.add(NbBundle.getMessage(PersistenceClientIterator.class, "LBL_EntityClasses"));
         namesList.add(NbBundle.getMessage(PersistenceClientIterator.class, "LBL_JSFPagesAndClasses"));
 
-        if (!fp.isInWebModule(wm)) {
-            updateWebModuleExtender(project, wm, fp);
-            JSFConfigurationWizardPanel jsfWizPanel = new JSFConfigurationWizardPanel(wme, ec);
-            thirdPanel.setFinishPanel(false);
-            panelsList.add(jsfWizPanel);
-            namesList.add(NbBundle.getMessage(PersistenceClientIterator.class, "LBL_JSF_Config_CRUD"));
-        }
+//2013-02-11 Kay Wrobel: Code commented out because JSFConfigurationWizardPanel is protected to package in JSF Support!
+//We will at this point assume that JSF Framework has been added to the project!        
+//        if (!fp.isInWebModule(wm)) {
+//            updateWebModuleExtender(project, wm, fp);
+//            JSFConfigurationWizardPanel jsfWizPanel = new JSFConfigurationWizardPanel(wme, ec);
+//            thirdPanel.setFinishPanel(false);
+//            panelsList.add(jsfWizPanel);
+//            namesList.add(NbBundle.getMessage(PersistenceClientIterator.class, "LBL_JSF_Config_CRUD"));
+//        }
 
         boolean noPuNeeded = true;
         try {

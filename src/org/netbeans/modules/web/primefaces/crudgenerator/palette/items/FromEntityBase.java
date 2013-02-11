@@ -41,10 +41,7 @@
  */
 package org.netbeans.modules.web.primefaces.crudgenerator.palette.items;
 
-import java.awt.Dialog;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,23 +55,13 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Caret;
-import javax.swing.text.JTextComponent;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
-import org.netbeans.api.project.FileOwnerQuery;
-import org.netbeans.api.project.Project;
-import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil;
-import org.netbeans.modules.web.primefaces.crudgenerator.palette.JSFPaletteUtilities;
+import org.netbeans.modules.web.jsf.palette.items.JsfLibrariesSupport;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
-import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 public abstract class FromEntityBase {
@@ -95,104 +82,13 @@ public abstract class FromEntityBase {
         return readOnly;
     }
 
-    public boolean handleTransfer(JTextComponent targetComponent) {
-        Project p = null;
-        FileObject fo = JSFPaletteUtilities.getFileObject(targetComponent);
-        jsfLibrariesSupport = JsfLibrariesSupport.get(targetComponent);
-        if (fo != null) {
-            p = FileOwnerQuery.getOwner(fo);
-        }
-        if (p == null) {
-            return false;
-        }
-
-        ManagedBeanCustomizer mbc = new ManagedBeanCustomizer(p, isCollectionComponent(), showReadOnlyFormFlag());
-        DialogDescriptor dd = new DialogDescriptor(mbc,
-                getDialogTitle(),
-                true, DialogDescriptor.OK_CANCEL_OPTION, DialogDescriptor.OK_OPTION, DialogDescriptor.DEFAULT_ALIGN, null, null);
-        Dialog dlg = null;
-        try {
-            dlg = DialogDisplayer.getDefault().createDialog(dd);
-            mbc.setDialog(dlg, dd);
-            dlg.setVisible(true);
-        } finally {
-            if (dlg != null) {
-                dlg.dispose();
-            }
-        }
-
-        boolean accept = (dd.getValue() == DialogDescriptor.OK_OPTION && !mbc.isCancelled());
-        readOnly = mbc.isReadOnly();
-        if (accept) {
-            try {
-                boolean containsFView = isInViewTag(targetComponent);
-                String managedBean = mbc.getManagedBeanProperty();
-                if (managedBean != null && managedBean.lastIndexOf(".") != -1) {
-                    managedBean = managedBean.substring(0, managedBean.lastIndexOf("."));
-                }
-                String body = expandTemplate(targetComponent, !containsFView, FileEncodingQuery.getEncoding(fo),
-                        mbc.getBeanClass(), managedBean, mbc.getManagedBeanProperty());
-                JSFPaletteUtilities.insert(body, targetComponent);
-                jsfLibrariesSupport.importLibraries(DefaultLibraryInfo.HTML);
-                jsfLibrariesSupport.importLibraries(DefaultLibraryInfo.JSF_CORE);
-            } catch (IOException ioe) {
-                Exceptions.printStackTrace(ioe);
-                accept = false;
-            } catch (BadLocationException ble) {
-                Exceptions.printStackTrace(ble);
-                accept = false;
-            }
-        }
-        return accept;
-    }
-
-    public static boolean isInViewTag(JTextComponent targetComponent) {
-        try {
-            Caret caret = targetComponent.getCaret();
-            int position0 = Math.min(caret.getDot(), caret.getMark());
-            int position1 = Math.max(caret.getDot(), caret.getMark());
-            int len = targetComponent.getDocument().getLength() - position1;
-            return targetComponent.getText(0, position0).contains(PaletteUtils.createViewTag(targetComponent, false))
-                    && targetComponent.getText(position1, len).contains(PaletteUtils.createViewTag(targetComponent, true));
-        } catch (BadLocationException ble) {
-            Exceptions.printStackTrace(ble);
-            // we don't know; let's assume we are:
-            return true;
-        }
-    }
-
-    public void insert(JTextComponent component) {
-        handleTransfer(component);
-    }
-
-    private String expandTemplate(JTextComponent target, boolean surroundWithFView,
-            Charset encoding, final String entityClass, final String managedBean,
-            final String managedBeanProperty) throws IOException {
-        final StringBuffer stringBuffer = new StringBuffer();
-        if (surroundWithFView) {
-            stringBuffer.append(PaletteUtils.createViewTag(target, false)).append("\n"); // NOI18N
-        }
-        FileObject targetJspFO = EntityClass.getFO(target);
-        final Map<String, Object> params = createFieldParameters(targetJspFO, entityClass,
-                managedBean, managedBeanProperty, isCollectionComponent(), false, jsfLibrariesSupport);
-
-        FileObject tableTemplate = FileUtil.getConfigRoot().getFileObject(getTemplate());
-        StringWriter w = new StringWriter();
-        JSFPaletteUtilities.expandJSFTemplate(tableTemplate, params, encoding, w);
-        stringBuffer.append(w.toString());
-
-        if (surroundWithFView) {
-            stringBuffer.append(PaletteUtils.createViewTag(target, true)).append("\n"); // NOI18N
-        }
-        return stringBuffer.toString();
-    }
-
     public static Map<String, Object> createFieldParameters(FileObject targetJspFO, final String entityClass,
             final String managedBean, final String managedBeanProperty, final boolean collectionComponent,
             final boolean initValueGetters, JsfLibrariesSupport jls) throws IOException {
         final Map<String, Object> params = new HashMap<String, Object>();
         JavaSource javaSource = JavaSource.create(EntityClass.createClasspathInfo(targetJspFO));
         javaSource.runUserActionTask(new Task<CompilationController>() {
+            @Override
             public void run(CompilationController controller) throws IOException {
                 controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 TypeElement typeElement = controller.getElements().getTypeElement(entityClass);
@@ -315,6 +211,7 @@ public abstract class FromEntityBase {
             final String entityClass, final JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport) throws IOException {
         JavaSource javaSource = JavaSource.create(EntityClass.createClasspathInfo(targetJspFO));
         javaSource.runUserActionTask(new Task<CompilationController>() {
+            @Override
             public void run(CompilationController controller) throws IOException {
                 controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 TypeElement typeElement = controller.getElements().getTypeElement(entityClass);
