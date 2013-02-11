@@ -23,6 +23,8 @@
         required - is field optional and nullable or it is not? (type: boolean)
         valuesGetter - if item is of type 1:1 or 1:many relationship then use this
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
+    primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
+    servletMapping - Prefix mapping of the JSF servlet inside web.xml (type: String)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category JavaServer Faces->JSF from Entity.

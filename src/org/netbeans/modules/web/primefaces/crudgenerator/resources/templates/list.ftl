@@ -31,12 +31,15 @@
     defaultDataTableRows - will be used for DataTable Paging
     defaultDataTableRowsPerPageTemplate - will be used for DataTable Paging
     primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
+    primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
     searchLabels - Comma-seperated list of field name artifacts to search for labels (type: String)
                    Use in conjunction with getRelationsLabelName.
     doCreate - Provide CREATE functionality (type: boolean)
-    doRead - Provide READ functionality (type: boolean)
+    doRead   - Provide READ functionality   (type: boolean)
     doUpdate - Provide UPDATE functionality (type: boolean)
     doDelete - Provide DELETE functionality (type: boolean)
+    doSort   - Provide SORT functionality   (type: boolean)
+    doFilter - Provide FILTER functionality (type: boolean)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
@@ -134,7 +137,7 @@
 </#list>
                     <f:facet name="footer">
 <#if doCreate>
-                        <p:commandButton id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}bundle.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm:display" oncomplete="${r"${entityName}CreateDialog.show()"}"/>
+                        <p:commandButton id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}bundle.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm:display" oncomplete="${entityName}CreateDialog.show()"/>
 </#if>
 <#if doRead>
                         <p:commandButton id="${readButton}"   icon="ui-icon-search" value="${r"#{"}bundle.View${r"}"}" update=":${entityName}ViewForm:display" oncomplete="${entityName}ViewDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>

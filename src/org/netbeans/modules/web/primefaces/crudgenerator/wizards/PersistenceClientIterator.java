@@ -382,6 +382,10 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             boolean doFilter) throws IOException {
         String progressMsg;
 
+        //2013-02-11 Kay Wrobel: Retrieve the servlet mapping from the web.xml file
+        WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
+        String servletMapping = getServletMapping(wm);
+
         //Create an abstract controller class file
         FileObject abstractControllerFileObject;
         abstractControllerFileObject = controllerTargetFolder.getFileObject(ABSTRACT_CONTROLLER_CLASSNAME, JAVA_EXT);
@@ -491,6 +495,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             bundleData.add(new TemplateData(simpleClassName, (List<FromEntityBase.TemplateData>) params.get("entityDescriptors")));
             params.put("controllerClassName", controllerClassName);
             params.put("converterClassName", converterClassName);
+            params.put("servletMapping", servletMapping);
             if (primeFacesVersion != null) {
                 params.put("primeFacesVersion", primeFacesVersion); //NOI18N
             }
@@ -512,6 +517,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("converterClassName", converterClassName);
             params.put("defaultDataTableRows", defaultDataTableRows);
             params.put("defaultDataTableRowsPerPageTemplate", defaultDataTableRowsPerPageTemplate);
+            params.put("servletMapping", servletMapping);
             if (primeFacesVersion != null) {
                 params.put("primeFacesVersion", primeFacesVersion); //NOI18N
             }
@@ -546,7 +552,12 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         // Add PrimeFaces Application Menu to be included in main template
         template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_APPMENU_TEMPLATE);
         target = webRoot.getFileObject(JSFClientGenerator.PRIMEFACES_APPMENU_PAGE);
-        params.put("appIndex", JSFClientGenerator.PRIMEFACES_APPINDEX_PAGE);
+
+        params.put("appIndex", JSFClientGenerator.PRIMEFACES_APPINDEX_PAGE.replace(".xhtml", ""));
+        params.put("servletMapping", servletMapping);
+        if (primeFacesVersion != null) {
+            params.put("primeFacesVersion", primeFacesVersion); //NOI18N
+        }
         if (target == null) {
             target = FileUtil.createData(webRoot, JSFClientGenerator.PRIMEFACES_APPMENU_PAGE);
         }
@@ -570,7 +581,6 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         }
         JSFPaletteUtilities.expandJSFTemplate(template, params, target);
 
-        WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
         FileObject[] configFiles = ConfigurationUtils.getFacesConfigFiles(wm);
         FileObject fo;
         if (configFiles.length == 0) {
@@ -922,5 +932,15 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     }
 
     public void removeChangeListener(ChangeListener l) {
+    }
+
+    private static String getServletMapping(WebModule wm) {
+        String servletMapping = ConfigurationUtils.getFacesServletMapping(wm);
+        int wildCardPos = servletMapping.indexOf("*");
+        if (wildCardPos > 0 && servletMapping.charAt(wildCardPos - 1) == '/') {
+            wildCardPos -= 1;
+        }
+        servletMapping = servletMapping.substring(0, wildCardPos);
+        return servletMapping;
     }
 }

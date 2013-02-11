@@ -23,6 +23,8 @@
         required - is field optional and nullable or it is not? (type: boolean)
         valuesGetter - if item is of type 1:1 or 1:many relationship then use this
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
+    primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
+    servletMapping - Prefix mapping of the JSF servlet inside web.xml (type: String)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category JavaServer Faces->JSF from Entity.
@@ -39,10 +41,18 @@
     <ui:composition>
         <h:form id="menuForm">
             <p:menubar>
-                <p:menuitem value="${r"#{bundle.Home}"}" url="${r"/"}${appIndex}" icon="ui-icon-home"/>
+    <#if (primeFacesVersion.compareTo("3.4") >= 0)>
+                <p:menuitem value="${r"#{bundle.Home}"}" outcome="${r"/"}${appIndex}" icon="ui-icon-home"/>
+    <#else>
+                <p:menuitem value="${r"#{bundle.Home}"}" url="${servletMapping}${r"/"}${appIndex}.xhtml" icon="ui-icon-home"/>
+    </#if>
                 <p:submenu label="${r"#{bundle.Maintenance}"}">
 <#list entities as entity>
-                    <p:menuitem value="${entity.entityClassName}" url="${r"/"}${entity.entityClassName?uncap_first}${r"/"}" />
+    <#if (primeFacesVersion.compareTo("3.4") >= 0)>
+                    <p:menuitem value="${entity.entityClassName}" outcome="${r"/"}${entity.entityClassName?uncap_first}${r"/index"}" />
+    <#else>
+                    <p:menuitem value="${entity.entityClassName}" url="${servletMapping}${r"/"}${entity.entityClassName?uncap_first}${r"/index.xhtml"}" />
+    </#if>
 </#list>
                 </p:submenu>
             </p:menubar>

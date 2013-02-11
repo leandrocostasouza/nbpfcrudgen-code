@@ -29,6 +29,7 @@
         valuesConverter - if item is of type 1:many or many:many relationship then use this
             for the converter binding of <h:selectOneMenu> or <h:selectManyMenu>
     primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
+    servletMapping - Prefix mapping of the JSF servlet inside web.xml (type: String)
     searchLabels - Comma-seperated list of field name artifacts to search for labels (type: String)
                    Use in conjunction with getRelationsLabelName.
 
