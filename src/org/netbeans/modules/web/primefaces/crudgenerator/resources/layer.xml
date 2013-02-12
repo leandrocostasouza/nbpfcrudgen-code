@@ -116,7 +116,7 @@ made subject to such option by the copyright holder.
                 <attr name="template" boolvalue="true"/>
                 <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/primefaces/crudgenerator/resources/PrimeFacesFromDB.html"/>
                 <attr name="templateWizardIterator" newvalue="org.netbeans.modules.web.primefaces.crudgenerator.wizards.PersistenceClientIterator"/>
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/web/primefaces/crudgenerator/resources/jsp16.gif"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/web/primefaces/crudgenerator/resources/primefaces-icon-16x16.png"/>
             </file>
         </folder>
     </folder>

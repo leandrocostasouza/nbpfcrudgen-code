@@ -43,6 +43,7 @@
  */
 package org.netbeans.modules.web.primefaces.crudgenerator.wizards;
 
+import java.awt.Image;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -115,6 +116,7 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.loaders.TemplateWizard;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
@@ -870,6 +872,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
         wizard.putProperty("NewFileWizard_Title",
                 NbBundle.getMessage(PersistenceClientIterator.class, "Templates/Persistence/JsfFromDB"));
+        Image pfLogo = ImageUtilities.loadImage("org/netbeans/modules/web/primefaces/crudgenerator/resources/primefaces-logo.png", true);
+        wizard.putProperty(WizardDescriptor.PROP_IMAGE, pfLogo);
         Wizards.mergeSteps(wizard, panels, names);
     }
 
