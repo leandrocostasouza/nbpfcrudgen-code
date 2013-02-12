@@ -1,2 +1,0 @@
-<%@taglib prefix="jsfExt" uri="http://java.sun.com/jsf/extensions/dynafaces" %>
-<jsfExt:scripts />
