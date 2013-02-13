@@ -69,7 +69,7 @@
               <#assign relationLabelName = "">
             </#if>
         </#if>
-        <#if (primeFacesVersion.compareTo("3.3") >= 0)>
+        <#if (primeFacesVersion.compareTo("3.3") >= 0 && !entityDescriptor.primaryKey && !entityDescriptor.embeddedKey)>
                         <p:outputLabel value="${r"#{"}bundle.Edit${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
         <#else>
                         <h:outputLabel value="${r"#{"}bundle.Edit${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
