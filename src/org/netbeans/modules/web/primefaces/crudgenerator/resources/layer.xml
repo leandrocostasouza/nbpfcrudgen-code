@@ -57,6 +57,11 @@ made subject to such option by the copyright holder.
                 <attr name="position" intvalue="93"/>
                 <attr name="templateCategory" stringvalue="always-hidden"/>
 
+                <file name="JsfUtil.ftl" url="templates/JsfUtil.ftl">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                    <attr name="template" boolvalue="true"/>
+                </file>
+
                 <file name="abstractcontroller.ftl" url="templates/abstractcontroller.ftl">
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
                     <attr name="template" boolvalue="true"/>

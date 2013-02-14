@@ -98,6 +98,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     public static final String PRIMEFACES_TEMPLATE_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/template.ftl"; // NOI18N
     public static final String PRIMEFACES_APPMENU_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/appmenu.ftl"; // NOI18N
     public static final String PRIMEFACES_APPINDEX_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/appindex.ftl"; // NOI18N
+    public static final String UTIL_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/JsfUtil.ftl"; // NOI18N
     private WizardDescriptor wizard;
     private Project project;
     private JTextComponent jpaPackageComboBoxEditor, jsfPackageComboBoxEditor, converterPackageComboBoxEditor;
@@ -485,7 +486,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private void customizeTemplatesLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_customizeTemplatesLabelMouseClicked
         JPopupMenu menu = new JPopupMenu();
         menu.add(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.allTemplates"),
-                PRIMEFACES_VIEW_TEMPLATE, PRIMEFACES_EDIT_TEMPLATE, PRIMEFACES_CREATE_TEMPLATE, PRIMEFACES_LIST_TEMPLATE, PRIMEFACES_BUNDLE_TEMPLATE,PRIMEFACES_ABSTRACTCONTROLLER_TEMPLATE,PRIMEFACES_CONTROLLER_TEMPLATE,PRIMEFACES_CONVERTER_TEMPLATE,PRIMEFACES_APPMENU_TEMPLATE,PRIMEFACES_APPINDEX_TEMPLATE,PRIMEFACES_TEMPLATE_TEMPLATE));
+                PRIMEFACES_VIEW_TEMPLATE, PRIMEFACES_EDIT_TEMPLATE, PRIMEFACES_CREATE_TEMPLATE, PRIMEFACES_LIST_TEMPLATE, PRIMEFACES_BUNDLE_TEMPLATE,PRIMEFACES_ABSTRACTCONTROLLER_TEMPLATE,PRIMEFACES_CONTROLLER_TEMPLATE,PRIMEFACES_CONVERTER_TEMPLATE,PRIMEFACES_APPMENU_TEMPLATE,PRIMEFACES_APPINDEX_TEMPLATE,PRIMEFACES_TEMPLATE_TEMPLATE, UTIL_TEMPLATE));
         menu.add(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.viewTemplate"), PRIMEFACES_VIEW_TEMPLATE));
         menu.add(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.editTemplate"), PRIMEFACES_EDIT_TEMPLATE));
         menu.add(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.createTemplate"), PRIMEFACES_CREATE_TEMPLATE));
@@ -496,6 +497,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         menu.add(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.controllerTemplate"), PRIMEFACES_CONTROLLER_TEMPLATE));
         menu.add(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.converterTemplate"), PRIMEFACES_CONVERTER_TEMPLATE));
         menu.add(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.bundleTemplate"), PRIMEFACES_BUNDLE_TEMPLATE));
+        menu.add(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.utilTemplate"), UTIL_TEMPLATE));
         menu.show(customizeTemplatesLabel, evt.getX(), evt.getY());
 
     }//GEN-LAST:event_customizeTemplatesLabelMouseClicked

@@ -32,11 +32,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
-<#if cdiEnabled?? && cdiEnabled == true>
-import javax.inject.Inject;
-<#else>
-import javax.ejb.EJB;
-</#if>
+
+import ${controllerPackageName}.util.JsfUtil;
+import java.util.ResourceBundle;
+import javax.ejb.EJBException;
 
 /**
  * Represents an abstract shell of to be used as JSF Controller to be used in
@@ -95,8 +94,25 @@ public abstract class ${abstractControllerClassName}<T> {
 
     public void save(ActionEvent event) {
         if (selected != null) {
-                this.setEmbeddableKeys();
+            this.setEmbeddableKeys();
+            try {
                 this.ejbFacade.edit(selected);
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("${bundle}").getString("${entityClassName}Created"));
+            } catch (EJBException ex) {
+                String msg = "";
+                Throwable cause = JsfUtil.getRootCause(ex.getCause());
+                if (cause != null) {
+                    msg = cause.getLocalizedMessage();
+                }
+                if (msg.length() > 0) {
+                    JsfUtil.addErrorMessage(msg);
+                } else {
+                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("${bundle}").getString("PersistenceErrorOccured"));
+            }
         }
     }
 
@@ -127,9 +143,9 @@ public abstract class ${abstractControllerClassName}<T> {
             initializeEmbeddableKey();
             return newItem;
         } catch (InstantiationException ex) {
-            Logger.getLogger(AbstractController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(AbstractController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

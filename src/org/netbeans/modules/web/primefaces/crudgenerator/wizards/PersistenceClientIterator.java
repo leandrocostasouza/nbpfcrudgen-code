@@ -144,7 +144,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     private int index;
     private transient WizardDescriptor.Panel[] panels;
     static final String[] UTIL_CLASS_NAMES = {"JsfCrudELResolver", "JsfUtil", "PagingInfo"}; //NOI18N
-    static final String[] UTIL_CLASS_NAMES2 = {"JsfUtil", "PaginationHelper"}; //NOI18N
+    static final String[] UTIL_CLASS_NAMES2 = {"JsfUtil"}; //NOI18N
     static final String UTIL_FOLDER_NAME = "util"; //NOI18N
     private static final String FACADE_SUFFIX = "Facade"; //NOI18N
     private static final String ABSTRACT_CONTROLLER_CLASSNAME = "AbstractController";  //NOI18N
@@ -398,6 +398,28 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             boolean doSort,
             boolean doFilter) throws IOException {
         String progressMsg;
+
+        //copy util classes
+        FileObject utilFolder = controllerTargetFolder.getFileObject(UTIL_FOLDER_NAME);
+        if (utilFolder == null) {
+            utilFolder = FileUtil.createFolder(controllerTargetFolder, UTIL_FOLDER_NAME);
+        }
+        String utilPackage = controllerPkg == null || controllerPkg.length() == 0 ? UTIL_FOLDER_NAME : controllerPkg + "." + UTIL_FOLDER_NAME;
+        for (int i = 0; i < UTIL_CLASS_NAMES2.length; i++){
+            if (utilFolder.getFileObject(UTIL_CLASS_NAMES2[i], JAVA_EXT) == null) {
+                progressMsg = NbBundle.getMessage(org.netbeans.modules.web.jsf.wizards.PersistenceClientIterator.class, "MSG_Progress_Jsf_Now_Generating", UTIL_CLASS_NAMES2[i] + "."+JAVA_EXT); //NOI18N
+                progressContributor.progress(progressMsg, progressIndex++);
+                progressPanel.setText(progressMsg);
+                FileObject tableTemplate = FileUtil.getConfigRoot().getFileObject("/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/"+UTIL_CLASS_NAMES2[i] + ".ftl");
+                FileObject target = FileUtil.createData(utilFolder, UTIL_CLASS_NAMES2[i] + "."+JAVA_EXT);//NOI18N
+                HashMap<String, Object> params = new HashMap<String, Object>();
+                params.put("packageName", utilPackage);
+                params.put("comment", Boolean.FALSE); // NOI18N
+                JSFPaletteUtilities.expandJSFTemplate(tableTemplate, params, target);
+            } else {
+                progressContributor.progress(progressIndex++);
+            }
+        }
 
         //2013-02-11 Kay Wrobel: Retrieve the servlet mapping from the web.xml file
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
