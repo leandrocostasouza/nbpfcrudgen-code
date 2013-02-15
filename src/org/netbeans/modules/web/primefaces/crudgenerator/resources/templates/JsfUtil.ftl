@@ -60,5 +60,9 @@ public class JsfUtil {
         }
         return null;
     }
+
+    public static boolean isValidationFailed() {
+        return FacesContext.getCurrentInstance().isValidationFailed();
+    }
     
 }

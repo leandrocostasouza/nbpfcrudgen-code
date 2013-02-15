@@ -40,6 +40,8 @@
     doDelete - Provide DELETE functionality (type: boolean)
     doSort   - Provide SORT functionality   (type: boolean)
     doFilter - Provide FILTER functionality (type: boolean)
+    growlMessages - Indicates whether to utilize Growl widget or traditional messages (type: Boolean)
+    growlLife - Default display life time in ms for Growl widget (type: Integer)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
@@ -55,6 +57,11 @@
 <#if doUpdate><#assign ajaxUpdateIds = ajaxUpdateIds + " " + updateButton/></#if>
 <#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " " + deleteButton/></#if>
 <#assign ajaxUpdateIds = ajaxUpdateIds?trim>
+<#if growlMessages>
+  <#assign messageUpdate = ":growl">
+<#else>
+  <#assign messageUpdate = ":" + entityName + "ListForm:messagePanel">
+</#if>
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
@@ -67,10 +74,12 @@
 
             <p:panel header="${r"#{"}bundle.List${entityName}Title${r"}"}">
 
+<#if !growlMessages>
                 <h:panelGroup id="messagePanel">
-                    <p:messages id="listMessages"/>
+                    <p:messages id="listMessages" rendered="${r"#{"}!${managedBean}.validationFailed${r"}"}"/>
                 </h:panelGroup>
 
+</#if>
                 <p:dataTable id="datalist" value="${r"#{"}${managedBeanProperty}${r"}"}" var="${item}"
                              selectionMode="single" selection="${r"#{"}${managedBean}${r".selected}"}"
 <#if entityIdField?? && entityIdField != "">
@@ -137,16 +146,16 @@
 </#list>
                     <f:facet name="footer">
 <#if doCreate>
-                        <p:commandButton id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}bundle.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm:display" oncomplete="${entityName}CreateDialog.show()"/>
+                        <p:commandButton id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}bundle.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="${entityName}CreateDialog.show()"/>
 </#if>
 <#if doRead>
-                        <p:commandButton id="${readButton}"   icon="ui-icon-search" value="${r"#{"}bundle.View${r"}"}" update=":${entityName}ViewForm:display" oncomplete="${entityName}ViewDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${readButton}"   icon="ui-icon-search" value="${r"#{"}bundle.View${r"}"}" update=":${entityName}ViewForm" oncomplete="${entityName}ViewDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
 <#if doUpdate>
-                        <p:commandButton id="${updateButton}"   icon="ui-icon-pencil" value="${r"#{"}bundle.Edit${r"}"}" update=":${entityName}EditForm:display" oncomplete="${entityName}EditDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${updateButton}"   icon="ui-icon-pencil" value="${r"#{"}bundle.Edit${r"}"}" update=":${entityName}EditForm" oncomplete="${entityName}EditDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
 <#if doDelete>
-                        <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}bundle.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update=":${entityName}ListForm:messagePanel,datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}bundle.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
                     </f:facet>
 

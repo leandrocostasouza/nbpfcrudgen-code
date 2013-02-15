@@ -32,10 +32,17 @@
     servletMapping - Prefix mapping of the JSF servlet inside web.xml (type: String)
     searchLabels - Comma-seperated list of field name artifacts to search for labels (type: String)
                    Use in conjunction with getRelationsLabelName.
+    growlMessages - Indicates whether to utilize Growl widget or traditional messages (type: Boolean)
+    growlLife - Default display life time in ms for Growl widget (type: Integer)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
 
+</#if>
+<#if growlMessages>
+  <#assign messageUpdate = ":growl">
+<#else>
+  <#assign messageUpdate = ":" + entityName + "ListForm:messagePanel,messages">
 </#if>
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -51,10 +58,12 @@
 
             <h:form id="${entityName}EditForm">
 
+<#if !growlMessages>
                 <h:panelGroup id="messagePanel">
-                    <p:messages id="${entityName}EditMessages"/>
+                    <p:messages id="messages"/>
                 </h:panelGroup>
 
+</#if>
                 <h:panelGroup id="display">
                     <p:panelGrid  columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
     <#list entityDescriptors as entityDescriptor>
@@ -129,7 +138,7 @@
      </#if>
     </#list>
                     </p:panelGrid>
-                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{bundle.Save}"}" update="display,messagePanel,:${entityName}ListForm:datalist" oncomplete="if(!args.validationFailed) {${entityName}EditDialog.hide();}"/>
+                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{bundle.Save}"}" update="display,:${entityName}ListForm:datalist,${messageUpdate}" oncomplete="handleSubmit(xhr,status,args,${entityName}EditDialog);"/>
                     <p:commandButton value="${r"#{bundle.Cancel}"}" onclick="${entityName}EditDialog.hide()"/>
                 </h:panelGroup>
 

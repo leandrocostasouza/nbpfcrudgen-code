@@ -73,4 +73,6 @@ public class WizardProperties {
     public static final String DELETE_FUNCTION = "DeleteFunction"; //NOI18N
     public static final String SORT_FUNCTION = "SortFunction"; //NOI18N
     public static final String FILTER_FUNCTION = "FilterFunction"; //NOI18N
+    public static final String GROWL_MESSAGES = "GrowlMessages"; //NOI18N
+    public static final String GROWL_LIFE = "GrowlLife"; //NOI18N
 }

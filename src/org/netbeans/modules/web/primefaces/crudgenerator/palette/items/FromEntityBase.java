@@ -541,7 +541,7 @@ public abstract class FromEntityBase {
                     ",field=" + isFieldAccess() + // NOI18N
                     ",relationship=" + getRelationship() + // NOI18N
                     ",datetime=" + getDateTimeFormat() + // NOI18N
-                    ",valuesGetter=" + getValuesGetter() + // NOI18N
+                    ",valuesListGetter=" + getValuesListGetter() + // NOI18N
                     "]"; // NOI18N
         }
 
@@ -571,23 +571,6 @@ public abstract class FromEntityBase {
             }
             TypeElement passedReturnTypeStrippedElement = (TypeElement) types.asElement(passedReturnTypeStripped);
             return passedReturnTypeStrippedElement.getQualifiedName().toString();
-        }
-
-        public String getValuesGetter() {
-            if (getRelationship() == JpaControllerUtil.REL_NONE) {
-                return null;
-            }
-            if (valuesGetter == null) {
-                String name = getRelationClassName(controller, method, isFieldAccess());
-                if (name == null) {
-                    valuesGetter = "";
-                } else {
-                    name = name.substring(0, 1).toLowerCase() + name.substring(1);
-                    valuesGetter = name + "Controller."
-                            + (getRelationship() == JpaControllerUtil.REL_TO_ONE ? "itemsAvailableSelectOne" : "itemsAvailableSelectMany");
-                }
-            }
-            return valuesGetter;
         }
 
         public String getValuesListGetter() {
@@ -712,10 +695,6 @@ public abstract class FromEntityBase {
 
         public boolean isRequired() {
             return fd.isRequired();
-        }
-
-        public String getValuesGetter() {
-            return fd.getValuesGetter();
         }
 
         public String getValuesListGetter() {

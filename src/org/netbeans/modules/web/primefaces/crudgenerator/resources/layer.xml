@@ -48,8 +48,8 @@ made subject to such option by the copyright holder.
 
     <folder name="Templates">
         <attr name="displayName" bundlevalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle#Templates"/>
-        <folder name="MyCRUDGen">
-            <attr name="displayName" bundlevalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle#Templates/MyCRUDGen"/>
+        <folder name="PrimeFacesCRUDGenerator">
+            <attr name="displayName" bundlevalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle#Templates/PrimeFacesCRUDGenerator"/>
             <attr name="position" intvalue="700"/>
             <!-- JSF From Entity Templates -->
             <folder name="PrimeFaces_From_Entity_Wizard">
@@ -114,7 +114,7 @@ made subject to such option by the copyright holder.
             </folder>
             
             <file name="PrimeFaces_From_Entity" url="templates/dummy.template">
-                <attr name="displayName" bundlevalue="org.netbeans.modules.web.primefaces.crudgenerator.wizards.Bundle#Templates/MyCRUDGen/JsfFromDB"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.web.primefaces.crudgenerator.wizards.Bundle#Templates/PrimeFacesCRUDGenerator/PrimeFacesFromDB"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.wizards.Bundle"/>
                 <attr name="position" intvalue="250"/>
                 <attr name="templateCategory" stringvalue="web-types-server"/>

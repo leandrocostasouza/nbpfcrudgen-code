@@ -32,6 +32,8 @@
     servletMapping - Prefix mapping of the JSF servlet inside web.xml (type: String)
     searchLabels - Comma-seperated list of field name artifacts to search for labels (type: String)
                    Use in conjunction with getRelationsLabelName.
+    growlMessages - Indicates whether to utilize Growl widget or traditional messages (type: Boolean)
+    growlLife - Default display life time in ms for Growl widget (type: Integer)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.

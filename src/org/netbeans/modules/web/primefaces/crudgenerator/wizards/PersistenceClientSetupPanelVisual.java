@@ -87,18 +87,18 @@ import org.openide.util.NbBundle;
  */
 public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implements DocumentListener, CancellableDialog {
 
-    public static final String PRIMEFACES_VIEW_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/view.ftl"; // NOI18N
-    public static final String PRIMEFACES_LIST_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/list.ftl"; // NOI18N
-    public static final String PRIMEFACES_CREATE_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/create.ftl"; // NOI18N
-    public static final String PRIMEFACES_EDIT_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/edit.ftl"; // NOI18N
-    public static final String PRIMEFACES_BUNDLE_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/bundle.ftl"; // NOI18N
-    public static final String PRIMEFACES_CONTROLLER_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/controller.ftl"; // NOI18N
-    public static final String PRIMEFACES_CONVERTER_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/converter.ftl"; // NOI18N
-    public static final String PRIMEFACES_ABSTRACTCONTROLLER_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/abstractcontroller.ftl"; // NOI18N
-    public static final String PRIMEFACES_TEMPLATE_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/template.ftl"; // NOI18N
-    public static final String PRIMEFACES_APPMENU_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/appmenu.ftl"; // NOI18N
-    public static final String PRIMEFACES_APPINDEX_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/appindex.ftl"; // NOI18N
-    public static final String UTIL_TEMPLATE = "/Templates/MyCRUDGen/PrimeFaces_From_Entity_Wizard/JsfUtil.ftl"; // NOI18N
+    public static final String PRIMEFACES_VIEW_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/view.ftl"; // NOI18N
+    public static final String PRIMEFACES_LIST_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/list.ftl"; // NOI18N
+    public static final String PRIMEFACES_CREATE_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/create.ftl"; // NOI18N
+    public static final String PRIMEFACES_EDIT_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/edit.ftl"; // NOI18N
+    public static final String PRIMEFACES_BUNDLE_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/bundle.ftl"; // NOI18N
+    public static final String PRIMEFACES_CONTROLLER_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/controller.ftl"; // NOI18N
+    public static final String PRIMEFACES_CONVERTER_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/converter.ftl"; // NOI18N
+    public static final String PRIMEFACES_ABSTRACTCONTROLLER_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/abstractcontroller.ftl"; // NOI18N
+    public static final String PRIMEFACES_TEMPLATE_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/template.ftl"; // NOI18N
+    public static final String PRIMEFACES_APPMENU_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/appmenu.ftl"; // NOI18N
+    public static final String PRIMEFACES_APPINDEX_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/appindex.ftl"; // NOI18N
+    public static final String UTIL_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/JsfUtil.ftl"; // NOI18N
     private WizardDescriptor wizard;
     private Project project;
     private JTextComponent jpaPackageComboBoxEditor, jsfPackageComboBoxEditor, converterPackageComboBoxEditor;
@@ -140,7 +140,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         locationComboBox = new javax.swing.JComboBox();
         jsfPackageLabel = new javax.swing.JLabel();
         jsfPackageComboBox = new javax.swing.JComboBox();
-        ajaxifyCheckbox = new javax.swing.JCheckBox();
         jLabel6 = new javax.swing.JLabel();
         jpaPackageLabel = new javax.swing.JLabel();
         jpaPackageComboBox = new javax.swing.JComboBox();
@@ -167,6 +166,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         readFunctionCheckBox = new javax.swing.JCheckBox();
         sortFunctionCheckBox = new javax.swing.JCheckBox();
         filterFunctionCheckBox = new javax.swing.JCheckBox();
+        growlCheckBox = new javax.swing.JCheckBox();
+        growlLifeSpinner = new javax.swing.JSpinner();
 
         jTextField2.setText("jTextField2");
 
@@ -208,13 +209,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         jsfPackageLabel.setText(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Package")); // NOI18N
 
         jsfPackageComboBox.setEditable(true);
-
-        ajaxifyCheckbox.setText(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_AJAXIFY_APP")); // NOI18N
-        ajaxifyCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ajaxifyCheckboxActionPerformed(evt);
-            }
-        });
 
         jLabel6.setText(bundle.getString("MSG_Jpa_Jsf_Packages")); // NOI18N
 
@@ -290,6 +284,16 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         filterFunctionCheckBox.setSelected(true);
         filterFunctionCheckBox.setText("Filter");
 
+        growlCheckBox.setSelected(true);
+        growlCheckBox.setText("Growl");
+        growlCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                growlCheckBoxActionPerformed(evt);
+            }
+        });
+
+        growlLifeSpinner.setValue(3000);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -326,7 +330,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
                             .addComponent(jLabel6)
-                            .addComponent(ajaxifyCheckbox)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(defaultRowsPerPageTemplateLabel)
@@ -355,7 +358,11 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(sortFunctionCheckBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(filterFunctionCheckBox)))
+                                .addComponent(filterFunctionCheckBox))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(growlCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -405,7 +412,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(defaultRowsPerPageTemplateLabel)
                     .addComponent(defaultRowsPerPageTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchLabelsLabel)
                     .addComponent(searchLabelsTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -417,11 +424,13 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                     .addComponent(readFunctionCheckBox)
                     .addComponent(sortFunctionCheckBox)
                     .addComponent(filterFunctionCheckBox))
-                .addGap(9, 9, 9)
-                .addComponent(ajaxifyCheckbox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(growlCheckBox)
+                    .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(overrideExistingCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(primeFacesVersionForLabel)
                     .addComponent(primeFacesVersionLabel)
@@ -446,8 +455,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         jsfPackageLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Package")); // NOI18N
         jsfPackageLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Package")); // NOI18N
         jsfPackageComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_Package")); // NOI18N
-        ajaxifyCheckbox.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_AJAXIFY_APP")); // NOI18N
-        ajaxifyCheckbox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_AJAXIFY_APP")); // NOI18N
         jLabel6.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "MSG_Jpa_Jsf_Packages")); // NOI18N
         jLabel6.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "MSG_Jpa_Jsf_Packages")); // NOI18N
         jpaPackageLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Jpa_Controller_Package")); // NOI18N
@@ -470,11 +477,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         }
     }//GEN-LAST:event_browseFolderButtonActionPerformed
 
-    private void ajaxifyCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajaxifyCheckboxActionPerformed
-        // TODO add your handling code here:
-        changeSupport.fireChange();
-}//GEN-LAST:event_ajaxifyCheckboxActionPerformed
-
     private void supportPrimeFacesCheckboxActionPerformed(java.awt.event.ActionEvent evt) {
         changeSupport.fireChange();
     }
@@ -486,7 +488,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private void customizeTemplatesLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_customizeTemplatesLabelMouseClicked
         JPopupMenu menu = new JPopupMenu();
         menu.add(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.allTemplates"),
-                PRIMEFACES_VIEW_TEMPLATE, PRIMEFACES_EDIT_TEMPLATE, PRIMEFACES_CREATE_TEMPLATE, PRIMEFACES_LIST_TEMPLATE, PRIMEFACES_BUNDLE_TEMPLATE,PRIMEFACES_ABSTRACTCONTROLLER_TEMPLATE,PRIMEFACES_CONTROLLER_TEMPLATE,PRIMEFACES_CONVERTER_TEMPLATE,PRIMEFACES_APPMENU_TEMPLATE,PRIMEFACES_APPINDEX_TEMPLATE,PRIMEFACES_TEMPLATE_TEMPLATE, UTIL_TEMPLATE));
+                PRIMEFACES_VIEW_TEMPLATE, PRIMEFACES_EDIT_TEMPLATE, PRIMEFACES_CREATE_TEMPLATE, PRIMEFACES_LIST_TEMPLATE, PRIMEFACES_BUNDLE_TEMPLATE, PRIMEFACES_ABSTRACTCONTROLLER_TEMPLATE, PRIMEFACES_CONTROLLER_TEMPLATE, PRIMEFACES_CONVERTER_TEMPLATE, PRIMEFACES_APPMENU_TEMPLATE, PRIMEFACES_APPINDEX_TEMPLATE, PRIMEFACES_TEMPLATE_TEMPLATE, UTIL_TEMPLATE));
         menu.add(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.viewTemplate"), PRIMEFACES_VIEW_TEMPLATE));
         menu.add(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.editTemplate"), PRIMEFACES_EDIT_TEMPLATE));
         menu.add(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.createTemplate"), PRIMEFACES_CREATE_TEMPLATE));
@@ -508,8 +510,10 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         }
     }//GEN-LAST:event_createFunctionCheckBoxActionPerformed
 
+    private void growlCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_growlCheckBoxActionPerformed
+        this.growlLifeSpinner.setEnabled(this.growlCheckBox.isSelected());
+    }//GEN-LAST:event_growlCheckBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox ajaxifyCheckbox;
     private javax.swing.JButton browseFolderButton;
     private javax.swing.JLabel codiVersionForLabel;
     private javax.swing.JLabel codiVersionLabel;
@@ -523,6 +527,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JTextField defaultRowsTextField;
     private javax.swing.JCheckBox deleteFunctionCheckBox;
     private javax.swing.JCheckBox filterFunctionCheckBox;
+    private javax.swing.JCheckBox growlCheckBox;
+    private javax.swing.JSpinner growlLifeSpinner;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -585,6 +591,13 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         //        }
         //        wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, null); // NOI18N
 
+        //2013-0215 Kay Wrobel: Stop the wizard if JSF is not 2.0
+        boolean jsf2Generator = "true".equals(wizard.getProperty(PersistenceClientIterator.JSF2_GENERATOR_PROPERTY));
+        if (!jsf2Generator) {
+            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ERR_Not_JSF20"));
+            return false;
+        }
+
         ClassPath cp = ClassPath.getClassPath(getLocationValue().getRootFolder(), ClassPath.COMPILE);
         ClassLoader cl = cp.getClassLoader(true);
 
@@ -595,6 +608,11 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         Version codiVersion = LibraryUtil.getVersion(cl, "MyFaces Extensions-CDI Core-API");
         String codiVersionString = codiVersion != null ? codiVersion.toString() : "";
         wizard.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersionString);
+
+        if (pfVersion == null) {
+            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ERR_PrimeFaces_NotFound"));
+            return false;
+        }
 
         if (Util.isContainerManaged(project)) {
             try {
@@ -655,13 +673,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
             return false;
         }
 
-        if (ajaxifyCheckbox.isSelected()) {
-            if (LibraryManager.getDefault().getLibrary("jsf-extensions") == null) { //NOI18N
-                wizard.putProperty(WizardDescriptor.PROP_WARNING_MESSAGE,
-                        NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "MSG_JsfExtensionsLibraryRequired"));
-                return true;
-            }
-        }
         wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, null); // NOI18N
         return true;
     }
@@ -677,7 +688,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     public String getJpaPackage() {
         return jpaPackageComboBoxEditor.getText();
     }
-    
+
     public String getConverterPackage() {
         return converterPackageComboBoxEditor.getText();
     }
@@ -710,14 +721,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
             localizationBundleTextField.setText(NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.defaultBundleName")); // NOI18N
         }
 
-        boolean jsf2Generator = "true".equals(settings.getProperty(PersistenceClientIterator.JSF2_GENERATOR_PROPERTY));
         String primeFacesVersion = (String) settings.getProperty(WizardProperties.PRIMEFACES_VERSION);
         String codiVersion = (String) settings.getProperty(WizardProperties.MYFACES_CODI_VERSION);
-        ajaxifyCheckbox.setVisible(!jsf2Generator);
-        overrideExistingCheckBox.setVisible(jsf2Generator);
-        customizeTemplatesLabel.setVisible(jsf2Generator);
-        localizationBundleLabel.setVisible(jsf2Generator);
-        localizationBundleTextField.setVisible(jsf2Generator);
         primeFacesVersionLabel.setText(primeFacesVersion);
         codiVersionLabel.setText(codiVersion);
 
@@ -731,7 +736,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         settings.putProperty(WizardProperties.JPA_CLASSES_PACKAGE, jpaPkg);
         settings.putProperty(WizardProperties.JSF_CLASSES_PACKAGE, jsfPkg);
         settings.putProperty(WizardProperties.JSF_CONVERTER_PACKAGE, cnvPkg);
-        settings.putProperty(WizardProperties.AJAXIFY_JSF_CRUD, Boolean.valueOf(ajaxifyCheckbox.isSelected()));
         settings.putProperty(WizardProperties.JAVA_PACKAGE_ROOT_FILE_OBJECT, getLocationValue().getRootFolder());
         settings.putProperty(WizardProperties.LOCALIZATION_BUNDLE_NAME, localizationBundleTextField.getText());
         //2013-01-17 Kay Wrobel
@@ -748,6 +752,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         settings.putProperty(WizardProperties.DELETE_FUNCTION, Boolean.valueOf(deleteFunctionCheckBox.isSelected()));
         settings.putProperty(WizardProperties.SORT_FUNCTION, Boolean.valueOf(sortFunctionCheckBox.isSelected()));
         settings.putProperty(WizardProperties.FILTER_FUNCTION, Boolean.valueOf(filterFunctionCheckBox.isSelected()));
+        settings.putProperty(WizardProperties.GROWL_MESSAGES, Boolean.valueOf(growlCheckBox.isSelected()));
+        settings.putProperty(WizardProperties.GROWL_LIFE, growlLifeSpinner.getValue());
     }
 
     private void updateSourceGroupPackages() {

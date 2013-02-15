@@ -27,13 +27,12 @@
 package ${controllerPackageName};
 
 import ${ejbFacadeFullClassName};
+import ${controllerPackageName}.util.JsfUtil;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.event.ActionEvent;
-import javax.faces.model.SelectItem;
 
-import ${controllerPackageName}.util.JsfUtil;
 import java.util.ResourceBundle;
 import javax.ejb.EJBException;
 
@@ -48,6 +47,12 @@ public abstract class ${abstractControllerClassName}<T> {
     private Class<T> itemClass;
     private T selected;
     private List<T> items;
+
+    private enum PersistAction {
+        CREATE,
+        DELETE,
+        UPDATE
+    }
 
     public ${abstractControllerClassName}() {
     }
@@ -93,11 +98,37 @@ public abstract class ${abstractControllerClassName}<T> {
     }
 
     public void save(ActionEvent event) {
+        String msg = ResourceBundle.getBundle("/Bundle").getString(itemClass.getSimpleName() + "Updated");
+        persist(PersistAction.UPDATE, msg);
+    }
+
+    public void saveNew(ActionEvent event) {
+        String msg = ResourceBundle.getBundle("/Bundle").getString(itemClass.getSimpleName() + "Created");
+        persist(PersistAction.CREATE, msg);
+        if (!isValidationFailed()) {
+            items = null; // Invalidate list of items to trigger re-query.
+        }
+    }
+
+    public void delete(ActionEvent event) {
+        String msg = ResourceBundle.getBundle("/Bundle").getString(itemClass.getSimpleName() + "Deleted");
+        persist(PersistAction.DELETE, msg);
+        if (!isValidationFailed()) {
+            selected = null; // Remove selection
+            items = null; // Invalidate list of items to trigger re-query.
+        }
+    }
+
+    private void persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
             this.setEmbeddableKeys();
             try {
-                this.ejbFacade.edit(selected);
-                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("${bundle}").getString("${entityClassName}Created"));
+                if (persistAction != PersistAction.DELETE) {
+                    this.ejbFacade.edit(selected);
+                } else {
+                    this.ejbFacade.remove(selected);
+                }
+                JsfUtil.addSuccessMessage(successMessage);
             } catch (EJBException ex) {
                 String msg = "";
                 Throwable cause = JsfUtil.getRootCause(ex.getCause());
@@ -111,21 +142,8 @@ public abstract class ${abstractControllerClassName}<T> {
                 }
             } catch (Exception ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("${bundle}").getString("PersistenceErrorOccured"));
+                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
             }
-        }
-    }
-
-    public void saveNew(ActionEvent event) {
-        save(event);
-        items = null; // Invalidate list of items to trigger re-query.
-    }
-
-    public void delete(ActionEvent event) {
-        if (selected != null) {
-            this.ejbFacade.remove(selected);
-            selected = null; // Remove selection
-            items = null; // Invalidate list of items to trigger re-query.
         }
     }
 
@@ -150,28 +168,8 @@ public abstract class ${abstractControllerClassName}<T> {
         return null;
     }
 
-
-    public SelectItem[] getItemsAvailableSelectMany() {
-        return getSelectItems(ejbFacade.findAll(), false);
-    }
-
-    public SelectItem[] getItemsAvailableSelectOne() {
-        return getSelectItems(ejbFacade.findAll(), true);
-    }
-
-    private SelectItem[] getSelectItems(List<T> entities, boolean selectOne) {
-        int size = selectOne ? entities.size() + 1 : entities.size();
-        SelectItem[] items = new SelectItem[size];
-        int i = 0;
-        if (selectOne) {
-            items[0] = new SelectItem("", "---");
-            i++;
-        }
-        for (Object x : entities) {
-            items[i++] = new SelectItem(x, x.toString());
-        }
-        return items;
+    public boolean isValidationFailed() {
+        return JsfUtil.isValidationFailed();
     }
 
 }
-

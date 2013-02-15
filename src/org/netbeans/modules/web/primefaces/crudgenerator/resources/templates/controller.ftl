@@ -20,7 +20,7 @@
     keyType - fully qualified class name of entity primary key
     keyBody - body of Controller.Converter.getKey() method
     keyStringBody - body of Controller.Converter.getStringKey() method
-    keyGetter - entity getter method returning primaty key instance
+    keyGetter - entity getter method returning primary key instance
     keySetter - entity setter method to set primary key instance
     embeddedIdFields - contains information about embedded primary Ids
 
