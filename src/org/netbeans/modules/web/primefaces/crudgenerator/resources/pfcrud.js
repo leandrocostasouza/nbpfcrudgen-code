@@ -1,6 +1,7 @@
 function handleSubmit(xhr, status, args, dialog) {
+    var jqDialog = jQuery('#'+dialog.id);
     if(args.validationFailed) {
-        dialog.effect('shake', { times:3 }, 100);
+        jqDialog.effect('shake', { times:3 }, 100);
     } else {
         dialog.hide();
     }
