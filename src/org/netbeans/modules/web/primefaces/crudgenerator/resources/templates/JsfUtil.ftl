@@ -18,6 +18,8 @@ package ${packageName};
 
 import java.util.List;
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UISelectItem;
 import javax.faces.context.FacesContext;
 
 public class JsfUtil {
@@ -65,4 +67,17 @@ public class JsfUtil {
         return FacesContext.getCurrentInstance().isValidationFailed();
     }
     
+    public static boolean isDummySelectItem(UIComponent component, String value) {
+        for (UIComponent children : component.getChildren()) {
+            if (children instanceof UISelectItem) {
+                UISelectItem item = (UISelectItem) children;
+                if (item.getItemValue() == null && item.getItemLabel().equals(value)) {
+                    return true;
+                }
+                break;
+            }
+        }
+        return false;
+    }
+
 }

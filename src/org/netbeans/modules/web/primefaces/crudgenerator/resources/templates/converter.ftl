@@ -29,37 +29,35 @@ package ${converterPackageName};
 
 import ${entityFullClassName};
 import ${ejbFullClassName};
+import ${controllerPackageName}.util.JsfUtil;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+<#if ejbClassName??>
 <#if cdiEnabled?? && cdiEnabled == true>
 import javax.inject.Named;
 import javax.inject.Inject;
+<#else>
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+</#if>
 </#if>
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-<#if !cdiEnabled?? || cdiEnabled == false>
-import javax.faces.convert.FacesConverter;
-</#if>
-<#if !cdiEnabled?? || !cdiEnabled>
-<#if ejbClassName??>
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.servlet.ServletContext;
-</#if>
-</#if>
-
 
 <#if cdiEnabled?? && cdiEnabled == true>
-@Named(value = "${converterClassName?uncap_first}")
+@Named
 <#else>
-@FacesConverter("${converterClassName?uncap_first}")
+@ManagedBean
 </#if>
 public class ${converterClassName?cap_first} implements Converter {
 
+<#if ejbClassName??>
 <#if cdiEnabled?? && cdiEnabled == true>
     @Inject
+<#elseif ejbClassName??>
+    @EJB
+</#if>
     private ${ejbClassName} ejbFacade;
 </#if>
 
@@ -70,52 +68,15 @@ public class ${converterClassName?cap_first} implements Converter {
 
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
-        if (value == null || value.length() == 0) {
+        if (value == null || value.length() == 0 || JsfUtil.isDummySelectItem(component, value)) {
             return null;
         }
-<#if cdiEnabled?? && cdiEnabled == true>
-        return this.ejbFacade.find(getKey(value));
-<#else>
-<#-- If EJB session beans are used, try to look up the EJB via the application context.
-     This will allow us to move converter classes into different packages and not depend
-     on the controller class' getFacade method, which is currently set to protected access.
-     One could theoretically expose the facade to the public within the controller, but
-     getting a straight handle to the EJB seems to be a cleaner solution.
--->
 <#if ejbClassName??>
-        ServletContext servletContext = (ServletContext) facesContext.getExternalContext().getContext();
-        Context ctx = null;
-        ${ejbClassName} facade = null;
-        try {
-            ctx = new InitialContext();
-        } catch (NamingException ex) {
-            Logger.getLogger(${converterClassName?cap_first}.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (ctx != null) {
-            try {
-                String lookupString;
-                if (servletContext != null) {
-                    lookupString = "java:global" + servletContext.getContextPath() + "/" + ${ejbClassName}.class.getSimpleName();
-                } else {
-                    lookupString = "java:global/" + ${ejbClassName}.class.getSimpleName();
-                }
-                facade = (${ejbClassName}) ctx.lookup(lookupString);
-            } catch (NamingException ex) {
-                Logger.getLogger(${converterClassName?cap_first}.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        if (facade != null) {
-            return facade.find(getKey(value));
-        }
-        return null;
-<#-- Finally, if JPA controller classes are being used, fall back to original behavior of
-     retrieving the controller class via EL and the using its getJpaController method.
--->
+        return this.ejbFacade.find(getKey(value));
 <#elseif jpaControllerClassName??>
         ${abstractControllerClassName}<${entityClassName}> controller = (${abstractControllerClassName}<${entityClassName}>)facesContext.getApplication().getELResolver().
                 getValue(facesContext.getELContext(), null, "${managedBeanName}");
         return controller.getJpaController().find${entityClassName}(getKey(value));
-</#if>
 </#if>
     }
 
@@ -133,7 +94,8 @@ ${keyStringBody}
 
     @Override
     public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
-        if (object == null) {
+        if (object == null || 
+            (object instanceof String && ((String) object).length() == 0)) {
             return null;
         }
         if (object instanceof ${entityClassName}) {

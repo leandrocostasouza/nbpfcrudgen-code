@@ -101,7 +101,7 @@
                         <p:inputTextarea rows="4" cols="30" id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
         <#elseif entityDescriptor.relationshipOne>
                         <p:selectOneMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
-                            <f:selectItem itemValue="" itemLabel="${r"#{bundle.SelectOneMessage}"}"/>
+                            <f:selectItem itemLabel="${r"#{bundle.SelectOneMessage}"}"/>
                             <f:selectItems value="${r"#{"}${entityDescriptor.valuesListGetter}${r"}"}"
                                            var="${entityDescriptor.id?replace(".","_")}Item"
                                            itemValue="${r"#{"}${entityDescriptor.id?replace(".","_")}Item${r"}"}"
@@ -109,11 +109,7 @@
                                            itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r".toString()}"}"
             </#if>
                             />
-<#if cdiEnabled?? && cdiEnabled == true>
                             <f:converter binding="${r"#{"}${entityDescriptor.valuesConverter}${r"}"}"/>
-<#else>
-                            <f:converter converterId="${entityDescriptor.valuesConverter}"/>
-</#if>
                         </p:selectOneMenu>
         <#elseif entityDescriptor.relationshipMany>
           <#if entityDescriptor.relationshipOwner>
@@ -125,11 +121,7 @@
                                            itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r".toString()}"}"
             </#if>
                             />
-<#if cdiEnabled?? && cdiEnabled == true>
                             <f:converter binding="${r"#{"}${entityDescriptor.valuesConverter}${r"}"}"/>
-<#else>
-                            <f:converter converterId="${entityDescriptor.valuesConverter}"/>
-</#if>
                         </p:selectManyMenu>
           </#if>
         <#else>
