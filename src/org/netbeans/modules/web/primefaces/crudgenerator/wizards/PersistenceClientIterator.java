@@ -41,6 +41,10 @@
  * Version 2 license, then the option applies only if the new code is
  * made subject to such option by the copyright holder.
  */
+/*
+ * Kay Wrobel elects to include this software in this distribution under the
+ * GPL Version 2 license.
+ */
 package org.netbeans.modules.web.primefaces.crudgenerator.wizards;
 
 import java.awt.Image;
@@ -599,6 +603,15 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
         params.put("appIndex", PRIMEFACES_APPINDEX_PAGE.replace(".xhtml", ""));
         params.put("servletMapping", servletMapping);
+        if (jsfFolder.length() > 0) {
+            if (jsfFolder.startsWith("/")) {
+                params.put("jsfFolder", jsfFolder);
+            } else {
+                params.put("jsfFolder", "/" + jsfFolder);
+            }
+        } else {
+            params.put("jsfFolder", "");
+        }
         if (target == null) {
             target = FileUtil.createData(webRoot, PRIMEFACES_APPMENU_PAGE);
         }

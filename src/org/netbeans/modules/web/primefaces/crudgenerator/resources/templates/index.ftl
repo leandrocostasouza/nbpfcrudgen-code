@@ -29,7 +29,7 @@
     growlLife - Default display life time in ms for Growl widget (type: Integer)
 
   This template is accessible via top level menu Tools->Templates and can
-  be found in category JavaServer Faces->JSF from Entity.
+  be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
 
 </#if>
 <#setting number_format="0">

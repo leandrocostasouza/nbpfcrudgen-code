@@ -25,9 +25,10 @@
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
     primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
     servletMapping - Prefix mapping of the JSF servlet inside web.xml (type: String)
+    jsfFolder - URL portion that holds the jsf pages, if any (type: String)
 
   This template is accessible via top level menu Tools->Templates and can
-  be found in category JavaServer Faces->JSF from Entity.
+  be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
 
 </#if>
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -49,9 +50,9 @@
                 <p:submenu label="${r"#{bundle.Maintenance}"}">
 <#list entities as entity>
     <#if (primeFacesVersion.compareTo("3.4") >= 0)>
-                    <p:menuitem value="${entity.entityClassName}" outcome="${r"/"}${entity.entityClassName?uncap_first}${r"/index"}" />
+                    <p:menuitem value="${entity.entityClassName}" outcome="${jsfFolder}${r"/"}${entity.entityClassName?uncap_first}${r"/index"}" />
     <#else>
-                    <p:menuitem value="${entity.entityClassName}" url="${servletMapping}${r"/"}${entity.entityClassName?uncap_first}${r"/index.xhtml"}" />
+                    <p:menuitem value="${entity.entityClassName}" url="${servletMapping}${jsfFolder}${r"/"}${entity.entityClassName?uncap_first}${r"/index.xhtml"}" />
     </#if>
 </#list>
                 </p:submenu>

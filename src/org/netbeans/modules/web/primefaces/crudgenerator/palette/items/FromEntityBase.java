@@ -39,6 +39,10 @@
  *
  * Portions Copyrighted 2009 Sun Microsystems, Inc.
  */
+/*
+ * Kay Wrobel elects to include this software in this distribution under the
+ * GPL Version 2 license.
+ */
 package org.netbeans.modules.web.primefaces.crudgenerator.palette.items;
 
 import java.io.IOException;

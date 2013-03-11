@@ -22,7 +22,7 @@
     keySetter - entity setter method to set primary key instance
 
   This template is accessible via top level menu Tools->Templates and can
-  be found in category JavaServer Faces->JSF from Entity.
+  be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
 
 </#if>
 package ${converterPackageName};
