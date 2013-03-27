@@ -56,8 +56,6 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
     <#list entityDescriptors as entityDescriptor>
-     <#-- Skip this field if we are dealing with many:many -->
-     <#if !entityDescriptor.relationshipMany>
 
         <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
             <#if entityDescriptor.getRelationsLabelName(searchLabels)??>
@@ -85,10 +83,22 @@
 </#if>
                         </h:outputText>
             </#if>
+        <#elseif entityDescriptor.relationshipMany>
+          <#if entityDescriptor.relationshipOwner>
+                        <h:selectManyMenu>
+                            <f:selectItems value="${r"#{"}${entityDescriptor.name}${r"}"}"
+                                           var="${entityDescriptor.id?replace(".","_")}Item"
+                                           itemValue="${r"#{"}${entityDescriptor.id?replace(".","_")}Item${r"}"}"
+            <#if relationLabelName != "">
+                                           itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r".toString()}"}"
+            </#if>
+                            />
+                            <f:converter binding="${r"#{"}${entityDescriptor.valuesConverter}${r"}"}"/>
+                        </h:selectManyMenu>
+          </#if>
         <#else>
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
         </#if>
-     </#if>
     </#list>
                     </p:panelGrid>
                     <p:commandButton value="${r"#{bundle.Close}"}" onclick="${entityName}ViewDialog.hide()"/>
