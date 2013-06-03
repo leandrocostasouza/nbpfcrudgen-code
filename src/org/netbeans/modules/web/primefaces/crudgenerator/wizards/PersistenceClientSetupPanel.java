@@ -76,6 +76,7 @@ final class PersistenceClientSetupPanel implements WizardDescriptor.Panel, Wizar
         this.wizardDescriptor = wizardDescriptor;
     }
     
+    @Override
     public boolean isFinishPanel() {
         return finishPanel;
     }
@@ -84,6 +85,7 @@ final class PersistenceClientSetupPanel implements WizardDescriptor.Panel, Wizar
         this.finishPanel = finishPanel;
     }
 
+    @Override
     public Component getComponent() {
         if (component == null) {
             component = new PersistenceClientSetupPanelVisual(wizardDescriptor);
@@ -92,10 +94,12 @@ final class PersistenceClientSetupPanel implements WizardDescriptor.Panel, Wizar
         return component;
     }
     
+    @Override
     public HelpCtx getHelp() {
         return new HelpCtx("framework_jsf_fromentity_setup"); // NOI18N
     }
     
+    @Override
     public boolean isValid() {
         getComponent();
         return component.valid(wizardDescriptor);
@@ -103,11 +107,13 @@ final class PersistenceClientSetupPanel implements WizardDescriptor.Panel, Wizar
     
     private final Set/*<ChangeListener>*/ listeners = new HashSet(1);
     
+    @Override
     public final void addChangeListener(ChangeListener l) {
         synchronized (listeners) {
             listeners.add(l);
         }
     }
+    @Override
     public final void removeChangeListener(ChangeListener l) {
         synchronized (listeners) {
             listeners.remove(l);
@@ -124,6 +130,7 @@ final class PersistenceClientSetupPanel implements WizardDescriptor.Panel, Wizar
         }
     }
     
+    @Override
     public void readSettings(Object settings) {
         wizardDescriptor = (WizardDescriptor) settings;
         component.read(wizardDescriptor);
@@ -135,6 +142,7 @@ final class PersistenceClientSetupPanel implements WizardDescriptor.Panel, Wizar
             wizardDescriptor.putProperty("NewProjectWizard_Title", substitute); // NOI18N
     }
     
+    @Override
     public void storeSettings(Object settings) {
         WizardDescriptor d = (WizardDescriptor) settings;
         component.store(d);
@@ -152,6 +160,7 @@ final class PersistenceClientSetupPanel implements WizardDescriptor.Panel, Wizar
         }
     }
     
+    @Override
     public void stateChanged(ChangeEvent e) {
         fireChangeEvent(e);
     }

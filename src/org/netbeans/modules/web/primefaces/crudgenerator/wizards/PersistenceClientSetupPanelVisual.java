@@ -64,7 +64,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.modules.j2ee.common.J2eeProjectCapabilities;
 import org.netbeans.modules.j2ee.core.api.support.SourceGroups;
 import org.netbeans.modules.j2ee.core.api.support.java.JavaIdentifiers;
@@ -472,7 +471,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     }//GEN-LAST:event_locationComboBoxActionPerformed
 
     private void browseFolderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseFolderButtonActionPerformed
-        Sources s = (Sources) Templates.getProject(wizard).getLookup().lookup(Sources.class);
+        Sources s = (Sources) ProjectUtils.getSources(Templates.getProject(wizard));
         org.netbeans.api.project.SourceGroup[] groups = s.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
         org.openide.filesystems.FileObject fo = BrowseFolders.showDialog(groups);
         if (fo != null) {
@@ -603,7 +602,10 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         }
 
         ClassPath cp = ClassPath.getClassPath(getLocationValue().getRootFolder(), ClassPath.COMPILE);
-        ClassLoader cl = cp.getClassLoader(true);
+        ClassLoader cl = null;
+        if (cp != null) {
+            cl = cp.getClassLoader(true);
+        }
 
         Version pfVersion = LibraryUtil.getVersion(cl, "primefaces");
         String pfVersionString = pfVersion != null ? pfVersion.toString() : "";
@@ -629,7 +631,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
             }
         }
 
-        Sources srcs = (Sources) project.getLookup().lookup(Sources.class);
+        Sources srcs = (Sources) ProjectUtils.getSources(project);
         SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
         FileObject pagesRootFolder = sgWeb[0].getRootFolder();
         File pagesRootFolderAsFile = FileUtil.toFile(pagesRootFolder);
@@ -773,18 +775,22 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         }
     }
 
+    @Override
     public void insertUpdate(DocumentEvent e) {
         changeSupport.fireChange();
     }
 
+    @Override
     public void removeUpdate(DocumentEvent e) {
         changeSupport.fireChange();
     }
 
+    @Override
     public void changedUpdate(DocumentEvent e) {
         changeSupport.fireChange();
     }
 
+    @Override
     public void cancel() {
         cancelled = true;
     }
