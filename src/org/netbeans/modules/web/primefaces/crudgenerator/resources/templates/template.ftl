@@ -6,6 +6,7 @@
   Templating is performed using FreeMaker (http://freemarker.org/) - see its documentation
   for full syntax. Variables available for templating are:
 
+    bundle - name of the bundle variable set in faces-config.xml (type: String)
     comment - always set to "false" (type: Boolean)
     primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
     servletMapping - Prefix mapping of the JSF servlet inside web.xml (type: String)
@@ -37,7 +38,7 @@
 
 </#if>
         <p:layout fullPage="true">
-            <p:layoutUnit position="north" size="100" header="${r"#{bundle.AppName}"}">
+            <p:layoutUnit position="north" size="100" header="${r"#{"}${bundle}.AppName${r"}"}">
                 <!-- Menu here. Also a layout and a way to log a user out -->
                 <ui:include src="${r"/"}${appMenu}"/>
             </p:layoutUnit>

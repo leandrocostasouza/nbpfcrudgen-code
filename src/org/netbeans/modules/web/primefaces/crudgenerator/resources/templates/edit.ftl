@@ -6,6 +6,7 @@
   is performed using FreeMaker (http://freemarker.org/) - see its documentation
   for full syntax. Variables available for templating are:
 
+    bundle - name of the bundle variable set in faces-config.xml (type: String)
     entityName - name of entity being modified (type: String)
     managedBean - name of managed choosen in UI (type: String)
     managedBeanProperty - name of managed bean property choosen in UI (type: String)
@@ -54,7 +55,7 @@
 
     <ui:composition>
 
-        <p:dialog id="${entityName}EditDlg" widgetVar="${entityName}EditDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}bundle.Edit${entityName}Title${r"}"}">
+        <p:dialog id="${entityName}EditDlg" widgetVar="${entityName}EditDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}${bundle}.Edit${entityName}Title${r"}"}">
 
             <h:form id="${entityName}EditForm">
 
@@ -79,9 +80,9 @@
             </#if>
         </#if>
         <#if (primeFacesVersion.compareTo("3.3") >= 0 && !entityDescriptor.primaryKey && !entityDescriptor.embeddedKey)>
-                        <p:outputLabel value="${r"#{"}bundle.Edit${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
+                        <p:outputLabel value="${r"#{"}${bundle}.Edit${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
         <#else>
-                        <h:outputLabel value="${r"#{"}bundle.Edit${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
+                        <h:outputLabel value="${r"#{"}${bundle}.Edit${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
         </#if>
         <#if entityDescriptor.primaryKey || entityDescriptor.embeddedKey>
             <#if relationLabelName?? && relationLabelName != "">
@@ -90,18 +91,18 @@
                         <h:outputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" />
             </#if>
         <#elseif entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
-                        <p:calendar id="${entityDescriptor.id?replace(".","_")}" pattern="${entityDescriptor.dateTimeFormat}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> showOn="button"/>
+                        <p:calendar id="${entityDescriptor.id?replace(".","_")}" pattern="${entityDescriptor.dateTimeFormat}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}${bundle}.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> showOn="button"/>
         <#elseif entityDescriptor.returnType?contains("boolean")>
           <#if (primeFacesVersion.compareTo("3") >= 0)>
-                        <p:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
+                        <p:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}${bundle}.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
           <#else>
-                        <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
+                        <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}${bundle}.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
           </#if>
         <#elseif entityDescriptor.blob>
-                        <p:inputTextarea rows="4" cols="30" id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
+                        <p:inputTextarea rows="4" cols="30" id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}${bundle}.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
         <#elseif entityDescriptor.relationshipOne>
-                        <p:selectOneMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
-                            <f:selectItem itemLabel="${r"#{bundle.SelectOneMessage}"}"/>
+                        <p:selectOneMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}${bundle}.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
+                            <f:selectItem itemLabel="${r"#{"}${bundle}.SelectOneMessage${r"}"}"/>
                             <f:selectItems value="${r"#{"}${entityDescriptor.valuesListGetter}${r"}"}"
                                            var="${entityDescriptor.id?replace(".","_")}Item"
                                            itemValue="${r"#{"}${entityDescriptor.id?replace(".","_")}Item${r"}"}"
@@ -113,7 +114,7 @@
                         </p:selectOneMenu>
         <#elseif entityDescriptor.relationshipMany>
           <#if entityDescriptor.relationshipOwner>
-                        <p:selectManyMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
+                        <p:selectManyMenu id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}${bundle}.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>>
                             <f:selectItems value="${r"#{"}${entityDescriptor.valuesListGetter}${r"}"}"
                                            var="${entityDescriptor.id?replace(".","_")}Item"
                                            itemValue="${r"#{"}${entityDescriptor.id?replace(".","_")}Item${r"}"}"
@@ -125,13 +126,13 @@
                         </p:selectManyMenu>
           </#if>
         <#else>
-                        <p:inputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
+                        <p:inputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}${bundle}.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if>/>
         </#if>
      </#if>
     </#list>
                     </p:panelGrid>
-                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{bundle.Save}"}" update="display,:${entityName}ListForm:datalist,${messageUpdate}" oncomplete="handleSubmit(xhr,status,args,${entityName}EditDialog);"/>
-                    <p:commandButton value="${r"#{bundle.Cancel}"}" onclick="${entityName}EditDialog.hide()"/>
+                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListForm:datalist,${messageUpdate}" oncomplete="handleSubmit(xhr,status,args,${entityName}EditDialog);"/>
+                    <p:commandButton value="${r"#{"}${bundle}.Cancel${r"}"}" onclick="${entityName}EditDialog.hide()"/>
                 </h:panelGroup>
 
             </h:form>

@@ -6,6 +6,7 @@
   is performed using FreeMaker (http://freemarker.org/) - see its documentation
   for full syntax. Variables available for templating are:
 
+    bundle - name of the bundle set in faces-config.xml (type: String)
     controllerClassName - controller class name (type: String)
     controllerPackageName - controller package name (type: String)
     entityClassName - entity class name without package (type: String)
@@ -98,12 +99,12 @@ public abstract class ${abstractControllerClassName}<T> {
     }
 
     public void save(ActionEvent event) {
-        String msg = ResourceBundle.getBundle("/Bundle").getString(itemClass.getSimpleName() + "Updated");
+        String msg = ResourceBundle.getBundle("${bundle}").getString(itemClass.getSimpleName() + "Updated");
         persist(PersistAction.UPDATE, msg);
     }
 
     public void saveNew(ActionEvent event) {
-        String msg = ResourceBundle.getBundle("/Bundle").getString(itemClass.getSimpleName() + "Created");
+        String msg = ResourceBundle.getBundle("${bundle}").getString(itemClass.getSimpleName() + "Created");
         persist(PersistAction.CREATE, msg);
         if (!isValidationFailed()) {
             items = null; // Invalidate list of items to trigger re-query.
@@ -111,7 +112,7 @@ public abstract class ${abstractControllerClassName}<T> {
     }
 
     public void delete(ActionEvent event) {
-        String msg = ResourceBundle.getBundle("/Bundle").getString(itemClass.getSimpleName() + "Deleted");
+        String msg = ResourceBundle.getBundle("${bundle}").getString(itemClass.getSimpleName() + "Deleted");
         persist(PersistAction.DELETE, msg);
         if (!isValidationFailed()) {
             selected = null; // Remove selection
@@ -138,11 +139,11 @@ public abstract class ${abstractControllerClassName}<T> {
                 if (msg.length() > 0) {
                     JsfUtil.addErrorMessage(msg);
                 } else {
-                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("${bundle}").getString("PersistenceErrorOccured"));
                 }
             } catch (Exception ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("${bundle}").getString("PersistenceErrorOccured"));
             }
         }
     }

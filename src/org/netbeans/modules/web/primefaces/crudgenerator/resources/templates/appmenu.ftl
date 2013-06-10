@@ -6,6 +6,7 @@
   is performed using FreeMaker (http://freemarker.org/) - see its documentation
   for full syntax. Variables available for templating are:
 
+    bundle - name of the bundle variable set in faces-config.xml (type: String)
     entityName - name of entity being modified (type: String)
     managedBean - name of managed choosen in UI (type: String)
     managedBeanProperty - name of managed bean property choosen in UI (type: String)
@@ -43,11 +44,11 @@
         <h:form id="menuForm">
             <p:menubar>
     <#if (primeFacesVersion.compareTo("3.4") >= 0)>
-                <p:menuitem value="${r"#{bundle.Home}"}" outcome="${r"/"}${appIndex}" icon="ui-icon-home"/>
+                <p:menuitem value="${r"#{"}${bundle}.Home${r"}"}" outcome="${r"/"}${appIndex}" icon="ui-icon-home"/>
     <#else>
-                <p:menuitem value="${r"#{bundle.Home}"}" url="${servletMapping}${r"/"}${appIndex}.xhtml" icon="ui-icon-home"/>
+                <p:menuitem value="${r"#{"}${bundle}.Home${r"}"}" url="${servletMapping}${r"/"}${appIndex}.xhtml" icon="ui-icon-home"/>
     </#if>
-                <p:submenu label="${r"#{bundle.Maintenance}"}">
+                <p:submenu label="${r"#{"}${bundle}.Maintenance${r"}"}">
 <#list entities as entity>
     <#if (primeFacesVersion.compareTo("3.4") >= 0)>
                     <p:menuitem value="${entity.entityClassName}" outcome="${jsfFolder}${r"/"}${entity.entityClassName?uncap_first}${r"/index"}" />

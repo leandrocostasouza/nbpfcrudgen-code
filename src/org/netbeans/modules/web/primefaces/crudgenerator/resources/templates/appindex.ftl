@@ -8,11 +8,11 @@
 
     <ui:composition template="/template.xhtml">
         <ui:define name="title">
-            <h:outputText value="${r"#{bundle.AppName}"}"></h:outputText>
+            <h:outputText value="${r"#{"}${bundle}.AppName${r"}"}"></h:outputText>
         </ui:define>
         <ui:define name="body">
-            <p:panel header="${r"#{bundle.Welcome}"}">
-                <p><h:outputText value="${r"#{bundle.WelcomeMessage}"}"></h:outputText></p>
+            <p:panel header="${r"#{"}${bundle}.Welcome${r"}"}">
+                <p><h:outputText value="${r"#{"}${bundle}.WelcomeMessage${r"}"}"></h:outputText></p>
             </p:panel>
 
         </ui:define>

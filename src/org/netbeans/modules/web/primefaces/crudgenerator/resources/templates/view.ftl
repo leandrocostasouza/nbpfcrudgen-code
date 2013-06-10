@@ -6,6 +6,7 @@
   is performed using FreeMaker (http://freemarker.org/) - see its documentation
   for full syntax. Variables available for templating are:
 
+    bundle - name of the bundle variable set in faces-config.xml (type: String)
     entityName - name of entity being modified (type: String)
     managedBean - name of managed choosen in UI (type: String)
     managedBeanProperty - name of managed bean property choosen in UI (type: String)
@@ -49,7 +50,7 @@
 
     <ui:composition>
 
-        <p:dialog id="${entityName}ViewDlg" widgetVar="${entityName}ViewDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}bundle.View${entityName}Title${r"}"}">
+        <p:dialog id="${entityName}ViewDlg" widgetVar="${entityName}ViewDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}${bundle}.View${entityName}Title${r"}"}">
 
             <h:form id="${entityName}ViewForm">
 
@@ -64,13 +65,13 @@
               <#assign relationLabelName = "">
             </#if>
         </#if>
-                        <h:outputText value="${r"#{"}bundle.View${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
+                        <h:outputText value="${r"#{"}${bundle}.View${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
         <#if entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
-                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}">
+                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}">
                             <f:convertDateTime pattern="${entityDescriptor.dateTimeFormat}" />
                         </h:outputText>
         <#elseif entityDescriptor.returnType?contains("boolean")>
-                        <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> disabled="true"/>
+                        <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}${bundle}.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> disabled="true"/>
         <#elseif entityDescriptor.relationshipOne>
             <#if relationLabelName?? && relationLabelName != "">
                         <h:outputText value="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"/>
@@ -97,11 +98,11 @@
                         </h:selectManyMenu>
           </#if>
         <#else>
-                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
+                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
         </#if>
     </#list>
                     </p:panelGrid>
-                    <p:commandButton value="${r"#{bundle.Close}"}" onclick="${entityName}ViewDialog.hide()"/>
+                    <p:commandButton value="${r"#{"}${bundle}.Close${r"}"}" onclick="${entityName}ViewDialog.hide()"/>
                 </h:panelGroup>
 
             </h:form>

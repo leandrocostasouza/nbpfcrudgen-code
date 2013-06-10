@@ -6,6 +6,7 @@
   is performed using FreeMaker (http://freemarker.org/) - see its documentation
   for full syntax. Variables available for templating are:
 
+    bundle - name of the bundle variable set in faces-config.xml (type: String)
     entityName - name of entity being modified (type: String)
     managedBean - name of managed choosen in UI (type: String)
     managedBeanProperty - name of managed bean property choosen in UI (type: String)
@@ -72,7 +73,7 @@
 
         <h:form id="${entityName}ListForm">
 
-            <p:panel header="${r"#{"}bundle.List${entityName}Title${r"}"}">
+            <p:panel header="${r"#{"}${bundle}.List${entityName}Title${r"}"}">
 
 <#if !growlMessages>
                 <h:panelGroup id="messagePanel">
@@ -118,14 +119,14 @@
                     <p:column<#if doSort> sortBy="${r"#{"}${entityDescriptor.name}${r"}"}"</#if><#if doFilter> filterBy="${r"#{"}${entityDescriptor.name}${r"}"}"</#if>>
 </#if>
                         <f:facet name="header">
-                            <h:outputText value="${r"#{"}bundle.List${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
+                            <h:outputText value="${r"#{"}${bundle}.List${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
                         </f:facet>
     <#if entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}">
                             <f:convertDateTime pattern="${entityDescriptor.dateTimeFormat}" />
                         </h:outputText>
     <#elseif entityDescriptor.returnType?contains("boolean")>
-                        <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}bundle.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}bundle.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> disabled="true"/>
+                        <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}${bundle}.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> disabled="true"/>
     <#elseif entityDescriptor.relationshipOne>
             <#if relationLabelName?? && relationLabelName != "">
                         <h:outputText value="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"/>
@@ -146,16 +147,16 @@
 </#list>
                     <f:facet name="footer">
 <#if doCreate>
-                        <p:commandButton id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}bundle.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="${entityName}CreateDialog.show()"/>
+                        <p:commandButton id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="${entityName}CreateDialog.show()"/>
 </#if>
 <#if doRead>
-                        <p:commandButton id="${readButton}"   icon="ui-icon-search" value="${r"#{"}bundle.View${r"}"}" update=":${entityName}ViewForm" oncomplete="${entityName}ViewDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${readButton}"   icon="ui-icon-search" value="${r"#{"}${bundle}.View${r"}"}" update=":${entityName}ViewForm" oncomplete="${entityName}ViewDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
 <#if doUpdate>
-                        <p:commandButton id="${updateButton}"   icon="ui-icon-pencil" value="${r"#{"}bundle.Edit${r"}"}" update=":${entityName}EditForm" oncomplete="${entityName}EditDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${updateButton}"   icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" update=":${entityName}EditForm" oncomplete="${entityName}EditDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
 <#if doDelete>
-                        <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}bundle.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
                     </f:facet>
 

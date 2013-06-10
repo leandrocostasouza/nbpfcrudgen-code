@@ -6,6 +6,7 @@
   is performed using FreeMaker (http://freemarker.org/) - see its documentation
   for full syntax. Variables available for templating are:
 
+    bundle - name of the bundle variable set in faces-config.xml (type: String)
     entityName - name of entity being modified (type: String)
     managedBean - name of managed choosen in UI (type: String)
     managedBeanProperty - name of managed bean property choosen in UI (type: String)
@@ -42,7 +43,7 @@
       template="/template.xhtml">
 
         <ui:define name="title">
-            <h:outputText value="${r"#{"}bundle.${entityName}Title${r"}"}"/>
+            <h:outputText value="${r"#{"}${bundle}.${entityName}Title${r"}"}"/>
         </ui:define>
 
         <ui:define name="body">

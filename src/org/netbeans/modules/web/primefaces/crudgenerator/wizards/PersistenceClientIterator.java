@@ -478,6 +478,11 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
         List<TemplateData> bundleData = new ArrayList<TemplateData>();
 
+        //2013-06-10 Kay Wrobel: Create a bundle variable name
+        //This will be passed on to template engine!
+        String bundleVar = bundleName.replaceFirst("/", "");
+        bundleVar = (bundleVar.substring(0, 1).toLowerCase() + bundleVar.substring(1));
+
         for (int i = 0; i < controllerFileObjects.length; i++) {
             String entityClass = entities.get(i);
             String simpleClassName = JpaControllerUtil.simpleClassName(entityClass);
@@ -546,6 +551,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("cdiEnabled", isCdiEnabled(project));
             params.put("growlMessages", growlMessages);
             params.put("growlLife", growlLife);
+            params.put("bundle", bundleVar); // NOI18N
 
             if (doCreate) {
                 expandSingleJSFTemplate("create.ftl", entityClass, jsfFolder, webRoot, "Create", params, progressContributor, progressPanel, progressIndex++);
@@ -574,6 +580,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("doFilter", doFilter);
             params.put("growlMessages", growlMessages);
             params.put("growlLife", growlLife);
+            params.put("bundle", bundleVar); // NOI18N
             expandSingleJSFTemplate("list.ftl", entityClass, jsfFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
             expandSingleJSFTemplate("index.ftl", entityClass, jsfFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
 
@@ -603,6 +610,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
         params.put("appIndex", PRIMEFACES_APPINDEX_PAGE.replace(".xhtml", ""));
         params.put("servletMapping", servletMapping);
+        params.put("bundle", bundleVar); // NOI18N
         if (jsfFolder.length() > 0) {
             if (jsfFolder.startsWith("/")) {
                 params.put("jsfFolder", jsfFolder);
@@ -620,6 +628,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         // Add PrimeFaces Application Home Page to be overwritten as index.xhtml
         template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_APPINDEX_TEMPLATE);
         target = webRoot.getFileObject(WELCOME_JSF_FL_PAGE);
+        params.put("bundle", bundleVar); // NOI18N
         if (target == null) {
             target = FileUtil.createData(webRoot, WELCOME_JSF_FL_PAGE);
         }
@@ -631,6 +640,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         params.put("appMenu", PRIMEFACES_APPMENU_PAGE);
         params.put("styleFile", PRIMEFACES_CRUD_STYLESHEET);
         params.put("scriptFile", PRIMEFACES_CRUD_SCRIPT);
+        params.put("bundle", bundleVar); // NOI18N
         if (target == null) {
             target = FileUtil.createData(webRoot, PRIMEFACES_TEMPLATE_PAGE);
         }
@@ -649,7 +659,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         }
         JSFConfigModel model = ConfigurationUtils.getConfigModel(fo, true);
         ResourceBundle rb = model.getFactory().createResourceBundle();
-        rb.setVar("bundle");
+        //rb.setVar("bundle");
+        rb.setVar(bundleVar);
         rb.setBaseName(bundleName);
         ResourceBundle existing = findBundle(model, rb);
         model.startTransaction();
