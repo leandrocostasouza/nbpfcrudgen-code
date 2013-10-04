@@ -18,7 +18,8 @@ import java.util.List;
  */
 public final class Version implements Comparable<Version> {
 
-    private static final String ACCEPTED_VERSION_PATTERN = "[0-9]+(\\.[0-9]+)*";
+    // private static final String ACCEPTED_VERSION_PATTERN = "[0-9]+(\\.[0-9]+)*";
+    private static final String ACCEPTED_VERSION_PATTERN = "[0-9]+(\\.[0-9]+)*(\\.[\\w]+)*";
     private static final String DEFAULT_DELIMITER = ".";
     private String version;
     private String delimiter;

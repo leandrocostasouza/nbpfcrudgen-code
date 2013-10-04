@@ -44,6 +44,8 @@ import javax.inject.Named;
 import javax.inject.Inject;
 <#if myFacesCodiVersion??>
 import org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessScoped;
+<#elseif (jsfVersion.compareTo("2.2") >= 0)>
+import javax.faces.view.ViewScoped;
 <#else>
 import javax.enterprise.context.SessionScoped;
 </#if>
@@ -59,6 +61,8 @@ import javax.faces.bean.ViewScoped;
 @Named(value="${managedBeanName}")
 <#if myFacesCodiVersion??>
 @ViewAccessScoped
+<#elseif (jsfVersion.compareTo("2.2") >= 0)>
+@ViewScoped
 <#else>
 @SessionScoped
 </#if>

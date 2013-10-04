@@ -12,6 +12,6 @@
     text-align: center;
     text-transform: uppercase;
 }
-.ui-datatable-footer .ui-button{
-    float: left;
- }
+.ui-datatable .ui-datatable-footer .footer-section {
+    text-align: left;
+}

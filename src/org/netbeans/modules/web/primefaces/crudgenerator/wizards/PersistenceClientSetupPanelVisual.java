@@ -69,8 +69,10 @@ import org.netbeans.modules.j2ee.core.api.support.SourceGroups;
 import org.netbeans.modules.j2ee.core.api.support.java.JavaIdentifiers;
 import org.netbeans.modules.j2ee.persistence.wizard.Util;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.SourceGroupUISupport;
+import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.api.webmodule.WebProjectConstants;
 import org.netbeans.modules.web.jsf.JSFConfigUtilities;
+import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
 import org.netbeans.modules.web.jsf.dialogs.BrowseFolders;
 import org.netbeans.modules.web.jsf.palette.items.CancellableDialog;
 import org.netbeans.modules.web.jsf.palette.items.ManagedBeanCustomizer.OpenTemplateAction;
@@ -107,6 +109,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private JTextComponent jpaPackageComboBoxEditor, jsfPackageComboBoxEditor, converterPackageComboBoxEditor;
     private ChangeSupport changeSupport = new ChangeSupport(this);
     private boolean cancelled = false;
+    private WebModule wm;
 
     /**
      * Creates new form CrudSetupPanel
@@ -171,6 +174,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         filterFunctionCheckBox = new javax.swing.JCheckBox();
         growlCheckBox = new javax.swing.JCheckBox();
         growlLifeSpinner = new javax.swing.JSpinner();
+        jLabel1 = new javax.swing.JLabel();
+        jsfVersionLabel = new javax.swing.JLabel();
 
         jTextField2.setText("jTextField2");
 
@@ -297,6 +302,10 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         growlLifeSpinner.setValue(3000);
 
+        jLabel1.setText("JSF:");
+
+        jsfVersionLabel.setText("jLabel5");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -348,7 +357,11 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(codiVersionForLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(codiVersionLabel))
+                                .addComponent(codiVersionLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jsfVersionLabel))
                             .addComponent(overrideExistingCheckBox)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(createFunctionCheckBox)
@@ -433,12 +446,14 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                     .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(overrideExistingCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(primeFacesVersionForLabel)
                     .addComponent(primeFacesVersionLabel)
                     .addComponent(codiVersionForLabel)
-                    .addComponent(codiVersionLabel))
+                    .addComponent(codiVersionLabel)
+                    .addComponent(jLabel1)
+                    .addComponent(jsfVersionLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(customizeTemplatesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -532,6 +547,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JCheckBox filterFunctionCheckBox;
     private javax.swing.JCheckBox growlCheckBox;
     private javax.swing.JSpinner growlLifeSpinner;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -542,6 +558,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JTextField jsfFolder;
     private javax.swing.JComboBox jsfPackageComboBox;
     private javax.swing.JLabel jsfPackageLabel;
+    private javax.swing.JLabel jsfVersionLabel;
     private javax.swing.JLabel localizationBundleLabel;
     private javax.swing.JTextField localizationBundleTextField;
     private javax.swing.JComboBox locationComboBox;
@@ -614,6 +631,10 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         Version codiVersion = LibraryUtil.getVersion(cl, "MyFaces Extensions-CDI Core-API");
         String codiVersionString = codiVersion != null ? codiVersion.toString() : "";
         wizard.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersionString);
+        
+        Version jsfVersion = new Version(JSFVersion.get(wm,true).getShortName().replace("JSF ", ""));
+        String jsfVersionString = jsfVersion != null ? jsfVersion.toString() : "";
+        wizard.putProperty(WizardProperties.JSF_VERSION, jsfVersionString);
 
         if (pfVersion == null) {
             wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ERR_PrimeFaces_NotFound"));
@@ -708,6 +729,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         jsfFolder.setText((String) settings.getProperty(WizardProperties.JSF_FOLDER));
 
         project = Templates.getProject(settings);
+        //2013-10-04 Kay Wrobel: Also retrieve the web module
+        wm = WebModule.getWebModule(project.getProjectDirectory());
 
         projectTextField.setText(ProjectUtils.getInformation(project).getDisplayName());
 
@@ -729,8 +752,11 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         String primeFacesVersion = (String) settings.getProperty(WizardProperties.PRIMEFACES_VERSION);
         String codiVersion = (String) settings.getProperty(WizardProperties.MYFACES_CODI_VERSION);
+        String jsfVersion = (String) settings.getProperty(WizardProperties.JSF_VERSION);
+        
         primeFacesVersionLabel.setText(primeFacesVersion);
         codiVersionLabel.setText(codiVersion);
+        jsfVersionLabel.setText(jsfVersion);
 
     }
 
@@ -760,6 +786,9 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         settings.putProperty(WizardProperties.FILTER_FUNCTION, Boolean.valueOf(filterFunctionCheckBox.isSelected()));
         settings.putProperty(WizardProperties.GROWL_MESSAGES, Boolean.valueOf(growlCheckBox.isSelected()));
         settings.putProperty(WizardProperties.GROWL_LIFE, growlLifeSpinner.getValue());
+        //2013-10-04 Kay Wrobel
+        settings.putProperty(WizardProperties.JSF_VERSION, jsfVersionLabel.getText());
+
     }
 
     private void updateSourceGroupPackages() {

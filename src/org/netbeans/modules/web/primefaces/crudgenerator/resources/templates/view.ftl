@@ -57,6 +57,9 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
     <#list entityDescriptors as entityDescriptor>
+     <#-- Skip this field if we are dealing with many:many and this entity is not the owner -->
+     <#if !(entityDescriptor.relationshipMany && 
+           !entityDescriptor.relationshipOwner)> 
 
         <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
             <#if entityDescriptor.getRelationsLabelName(searchLabels)??>
@@ -100,6 +103,7 @@
         <#else>
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
         </#if>
+     </#if>
     </#list>
                     </p:panelGrid>
                     <p:commandButton value="${r"#{"}${bundle}.Close${r"}"}" onclick="${entityName}ViewDialog.hide()"/>

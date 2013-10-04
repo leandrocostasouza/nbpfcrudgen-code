@@ -146,6 +146,7 @@
   </#if>
 </#list>
                     <f:facet name="footer">
+                      <div class="footer-section">
 <#if doCreate>
                         <p:commandButton id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="${entityName}CreateDialog.show()"/>
 </#if>
@@ -158,6 +159,7 @@
 <#if doDelete>
                         <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
+                      </div>
                     </f:facet>
 
                 </p:dataTable>

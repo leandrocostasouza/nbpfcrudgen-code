@@ -83,6 +83,10 @@
                               <Component id="codiVersionForLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="codiVersionLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jsfVersionLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="overrideExistingCheckBox" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
@@ -194,6 +198,8 @@
                   <Component id="primeFacesVersionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="codiVersionForLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="codiVersionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jsfVersionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="customizeTemplatesLabel" min="-2" max="-2" attributes="0"/>
@@ -561,6 +567,16 @@
         <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="3000" type="code"/>
         </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="JSF:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jsfVersionLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabel5"/>
       </Properties>
     </Component>
   </SubComponents>

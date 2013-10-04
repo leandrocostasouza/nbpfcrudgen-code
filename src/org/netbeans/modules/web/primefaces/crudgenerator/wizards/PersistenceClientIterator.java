@@ -196,6 +196,9 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         Boolean growlMessagesBoolean = (Boolean) wizard.getProperty(WizardProperties.GROWL_MESSAGES);
         final boolean growlMessages = growlMessagesBoolean == null ? true : growlMessagesBoolean.booleanValue();
         final int growlLife = ((Integer) wizard.getProperty(WizardProperties.GROWL_LIFE)).intValue();
+        //2013-10-04 Kay Wrobel
+        final String jsfVersionString = (String) wizard.getProperty(WizardProperties.JSF_VERSION);
+        final Version jsfVersion = jsfVersionString.isEmpty() ? null : new Version(jsfVersionString);
 
         // add framework to project first:
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
@@ -263,7 +266,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife);
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife);
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }
@@ -392,6 +395,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             String defaultDataTableRowsPerPageTemplate,
             Version primeFacesVersion,
             Version myFacesCodiVersion,
+            Version jsfVersion,
             String searchLabelArtifacts,
             boolean doCreate,
             boolean doRead,
@@ -529,6 +533,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             if (myFacesCodiVersion != null) {
                 params.put("myFacesCodiVersion", myFacesCodiVersion); //NOI18N
             }
+            params.put("jsfVersion", jsfVersion); //NOI18N
             FromEntityBase.createParamsForConverterTemplate(params, controllerTargetFolder, entityClass, embeddedPkSupport);
 
             //Generate abstract controller on first loop
@@ -547,6 +552,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("converterClassName", converterClassName);
             params.put("servletMapping", servletMapping);
             params.put("primeFacesVersion", primeFacesVersion); //NOI18N
+            params.put("jsfVersion", jsfVersion); //NOI18N
             params.put("searchLabels", searchLabelArtifacts); //Default property artifacts to look for
             params.put("cdiEnabled", isCdiEnabled(project));
             params.put("growlMessages", growlMessages);
@@ -570,6 +576,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("defaultDataTableRowsPerPageTemplate", defaultDataTableRowsPerPageTemplate);
             params.put("servletMapping", servletMapping);
             params.put("primeFacesVersion", primeFacesVersion); //NOI18N
+            params.put("jsfVersion", jsfVersion); //NOI18N
             params.put("searchLabels", searchLabelArtifacts); //Default property artifacts to look for
             params.put("cdiEnabled", isCdiEnabled(project));
             params.put("doCreate", doCreate);
@@ -595,6 +602,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         params.put("entities", bundleData);
         params.put("comment", Boolean.FALSE);
         params.put("primeFacesVersion", primeFacesVersion); //NOI18N
+        params.put("jsfVersion", jsfVersion); //NOI18N
         params.put("growlMessages", growlMessages);
         params.put("growlLife", growlLife);
         String bundleFileName = getBundleFileName(bundleName);
@@ -871,7 +879,11 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
 
-        if (wm.getJ2eeProfile().equals(Profile.JAVA_EE_6_WEB) || wm.getJ2eeProfile().equals(Profile.JAVA_EE_6_FULL) || JSFUtils.isJSF20Plus(wm,true)) {    //NOI18N
+        if (wm.getJ2eeProfile().equals(Profile.JAVA_EE_6_WEB) || 
+            wm.getJ2eeProfile().equals(Profile.JAVA_EE_6_FULL) || 
+            wm.getJ2eeProfile().equals(Profile.JAVA_EE_7_WEB) || 
+            wm.getJ2eeProfile().equals(Profile.JAVA_EE_7_FULL) || 
+            JSFUtils.isJSF20Plus(wm,true)) {    //NOI18N
             wizard.putProperty(JSF2_GENERATOR_PROPERTY, "true");
             helpCtx = new HelpCtx("persistence_entity_selection_javaee6");  //NOI18N
         } else {
