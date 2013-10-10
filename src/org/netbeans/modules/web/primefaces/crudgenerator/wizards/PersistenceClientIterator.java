@@ -486,6 +486,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         //This will be passed on to template engine!
         String bundleVar = bundleName.replaceFirst("/", "");
         bundleVar = (bundleVar.substring(0, 1).toLowerCase() + bundleVar.substring(1));
+        
+        boolean isCDI = isCdiEnabled(project);
 
         for (int i = 0; i < controllerFileObjects.length; i++) {
             String entityClass = entities.get(i);

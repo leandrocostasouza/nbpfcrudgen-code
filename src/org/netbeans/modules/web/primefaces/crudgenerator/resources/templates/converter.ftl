@@ -34,18 +34,28 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 <#if ejbClassName??>
 <#if cdiEnabled?? && cdiEnabled == true>
+<#if (jsfVersion.compareTo("2.2") < 0)>
 import javax.inject.Named;
+</#if>
 import javax.inject.Inject;
 <#else>
+<#if (jsfVersion.compareTo("2.2") < 0)>
 import javax.ejb.EJB;
+</#if>
 import javax.faces.bean.ManagedBean;
 </#if>
 </#if>
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+<#if (jsfVersion.compareTo("2.2") >= 0)>
+import javax.faces.convert.FacesConverter;
+</#if>
 
-<#if cdiEnabled?? && cdiEnabled == true>
+
+<#if (jsfVersion.compareTo("2.2") >= 0)>
+@FacesConverter(value = "${converterClassName?uncap_first}")
+<#elseif cdiEnabled?? && cdiEnabled == true>
 @Named
 <#else>
 @ManagedBean
