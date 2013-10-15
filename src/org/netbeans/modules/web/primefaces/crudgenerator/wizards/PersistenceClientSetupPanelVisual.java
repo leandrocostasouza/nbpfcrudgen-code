@@ -124,6 +124,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         converterPackageComboBoxEditor = (JTextComponent) converterPackageComboBox.getEditor().getEditorComponent();
         converterPackageComboBoxEditor.getDocument().addDocumentListener(this);
         jsfFolder.getDocument().addDocumentListener(this);
+        genericIncludeFolder.getDocument().addDocumentListener(this);
+        entityIncludeFolder.getDocument().addDocumentListener(this);
         localizationBundleTextField.getDocument().addDocumentListener(this);
     }
 
@@ -176,6 +178,12 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         growlLifeSpinner = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
         jsfVersionLabel = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        genericIncludeFolder = new javax.swing.JTextField();
+        browseGIFolderButton = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        entityIncludeFolder = new javax.swing.JTextField();
+        browseEIFolderButton = new javax.swing.JButton();
 
         jTextField2.setText("jTextField2");
 
@@ -306,6 +314,26 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         jsfVersionLabel.setText("jLabel5");
 
+        jLabel5.setLabelFor(genericIncludeFolder);
+        jLabel5.setText("Generic Include Folder:");
+
+        browseGIFolderButton.setText(bundle.getString("LBL_Browse")); // NOI18N
+        browseGIFolderButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseGIFolderButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setLabelFor(entityIncludeFolder);
+        jLabel7.setText("Entity Include Folder:");
+
+        browseEIFolderButton.setText(bundle.getString("LBL_Browse")); // NOI18N
+        browseEIFolderButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseEIFolderButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -316,70 +344,78 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                         .addComponent(searchLabelsLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(searchLabelsTextBox))
+                    .addComponent(customizeTemplatesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel6)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(projectLabel)
-                            .addComponent(locationLabel)
-                            .addComponent(jpaPackageLabel)
-                            .addComponent(jsfPackageLabel)
-                            .addComponent(jLabel2)
-                            .addComponent(localizationBundleLabel)
-                            .addComponent(converterPackageLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(defaultRowsPerPageTemplateLabel)
+                            .addComponent(defaultRowsLabel))
+                        .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(converterPackageComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(projectTextField)
-                            .addComponent(locationComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jpaPackageComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jsfPackageComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jsfFolder)
-                            .addComponent(localizationBundleTextField))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(browseFolderButton))
+                            .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(defaultRowsPerPageTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(primeFacesVersionForLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(primeFacesVersionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(codiVersionForLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(codiVersionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jsfVersionLabel))
+                    .addComponent(overrideExistingCheckBox)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(createFunctionCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(updateFunctionCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteFunctionCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(readFunctionCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(sortFunctionCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(filterFunctionCheckBox))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(growlCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(projectLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(locationLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jpaPackageLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jsfPackageLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(converterPackageLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(localizationBundleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(customizeTemplatesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel6)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(defaultRowsPerPageTemplateLabel)
-                                    .addComponent(defaultRowsLabel))
-                                .addGap(27, 27, 27)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(defaultRowsPerPageTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(primeFacesVersionForLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(primeFacesVersionLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(codiVersionForLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(codiVersionLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jsfVersionLabel))
-                            .addComponent(overrideExistingCheckBox)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(createFunctionCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(updateFunctionCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(deleteFunctionCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(readFunctionCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sortFunctionCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(filterFunctionCheckBox))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(growlCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(entityIncludeFolder)
+                            .addComponent(genericIncludeFolder, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(localizationBundleTextField)
+                            .addComponent(jsfFolder, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 86, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(projectTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(locationComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jpaPackageComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 227, Short.MAX_VALUE)
+                                    .addComponent(jsfPackageComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(converterPackageComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(browseFolderButton)
+                                .addComponent(browseGIFolderButton))
+                            .addComponent(browseEIFolderButton, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -409,11 +445,20 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(browseFolderButton)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(jsfFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jsfFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseFolderButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(genericIncludeFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseGIFolderButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(browseEIFolderButton)
+                    .addComponent(entityIncludeFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(localizationBundleLabel)
@@ -446,7 +491,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                     .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(overrideExistingCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(primeFacesVersionForLabel)
                     .addComponent(primeFacesVersionLabel)
@@ -531,8 +576,31 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private void growlCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_growlCheckBoxActionPerformed
         this.growlLifeSpinner.setEnabled(this.growlCheckBox.isSelected());
     }//GEN-LAST:event_growlCheckBoxActionPerformed
+
+    private void browseGIFolderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseGIFolderButtonActionPerformed
+        Sources s = (Sources) ProjectUtils.getSources(Templates.getProject(wizard));
+        org.netbeans.api.project.SourceGroup[] groups = s.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
+        org.openide.filesystems.FileObject fo = BrowseFolders.showDialog(groups);
+        if (fo != null) {
+            String res = "/" + JSFConfigUtilities.getResourcePath(groups, fo, '/', true);
+            genericIncludeFolder.setText(res);
+        }
+    }//GEN-LAST:event_browseGIFolderButtonActionPerformed
+
+    private void browseEIFolderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseEIFolderButtonActionPerformed
+        Sources s = (Sources) ProjectUtils.getSources(Templates.getProject(wizard));
+        org.netbeans.api.project.SourceGroup[] groups = s.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
+        org.openide.filesystems.FileObject fo = BrowseFolders.showDialog(groups);
+        if (fo != null) {
+            String res = "/" + JSFConfigUtilities.getResourcePath(groups, fo, '/', true);
+            entityIncludeFolder.setText(res);
+        }
+    }//GEN-LAST:event_browseEIFolderButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton browseEIFolderButton;
     private javax.swing.JButton browseFolderButton;
+    private javax.swing.JButton browseGIFolderButton;
     private javax.swing.JLabel codiVersionForLabel;
     private javax.swing.JLabel codiVersionLabel;
     private javax.swing.JComboBox converterPackageComboBox;
@@ -544,14 +612,18 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JLabel defaultRowsPerPageTemplateLabel;
     private javax.swing.JTextField defaultRowsTextField;
     private javax.swing.JCheckBox deleteFunctionCheckBox;
+    private javax.swing.JTextField entityIncludeFolder;
     private javax.swing.JCheckBox filterFunctionCheckBox;
+    private javax.swing.JTextField genericIncludeFolder;
     private javax.swing.JCheckBox growlCheckBox;
     private javax.swing.JSpinner growlLifeSpinner;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JComboBox jpaPackageComboBox;
     private javax.swing.JLabel jpaPackageLabel;
@@ -664,6 +736,22 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
             return false;
         }
 
+        String genericIncludeFolderText = genericIncludeFolder.getText();
+        try {
+            String canonPath = new File(pagesRootFolderAsFile, genericIncludeFolderText).getCanonicalPath();
+        } catch (IOException ioe) {
+            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ERR_JsfTargetChooser_InvalidGenericIncludeFolder"));
+            return false;
+        }
+
+        String entityIncludeFolderText = entityIncludeFolder.getText();
+        try {
+            String canonPath = new File(pagesRootFolderAsFile, entityIncludeFolderText).getCanonicalPath();
+        } catch (IOException ioe) {
+            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ERR_JsfTargetChooser_InvalidEntityIncludeFolder"));
+            return false;
+        }
+
         String[] packageNames = {getJpaPackage(), getJsfPackage(), getConverterPackage()};
         for (int i = 0; i < packageNames.length; i++) {
             if (packageNames[i].trim().equals("")) { // NOI18N
@@ -684,7 +772,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         if (overrideExistingCheckBox.isVisible()) {
             boolean conflict = PersistenceClientIterator.doesSomeFileExistAlready(
                     getLocationValue().getRootFolder(), pagesRootFolder, getJpaPackage(),
-                    getJsfPackage(), getConverterPackage(), jsfFolder.getText(), (List<String>) wizard.getProperty(WizardProperties.ENTITY_CLASS),
+                    getJsfPackage(), getConverterPackage(), jsfFolder.getText(), genericIncludeFolder.getText(), entityIncludeFolder.getText(), (List<String>) wizard.getProperty(WizardProperties.ENTITY_CLASS),
                     localizationBundleTextField.getText());
             if (conflict) {
                 if (overrideExistingCheckBox.isSelected()) {
@@ -727,6 +815,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
     void read(WizardDescriptor settings) {
         jsfFolder.setText((String) settings.getProperty(WizardProperties.JSF_FOLDER));
+        genericIncludeFolder.setText((String) settings.getProperty(WizardProperties.JSF_GI_FOLDER));
+        entityIncludeFolder.setText((String) settings.getProperty(WizardProperties.JSF_EI_FOLDER));
 
         project = Templates.getProject(settings);
         //2013-10-04 Kay Wrobel: Also retrieve the web module
@@ -762,6 +852,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
     void store(WizardDescriptor settings) {
         settings.putProperty(WizardProperties.JSF_FOLDER, jsfFolder.getText());
+        settings.putProperty(WizardProperties.JSF_GI_FOLDER, genericIncludeFolder.getText());
+        settings.putProperty(WizardProperties.JSF_EI_FOLDER, entityIncludeFolder.getText());
         String jpaPkg = getJpaPackage();
         String jsfPkg = getJsfPackage();
         String cnvPkg = getConverterPackage();

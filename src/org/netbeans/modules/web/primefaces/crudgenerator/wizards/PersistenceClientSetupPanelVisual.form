@@ -35,80 +35,90 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="searchLabelsTextBox" max="32767" attributes="0"/>
                   </Group>
+                  <Component id="customizeTemplatesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="defaultRowsPerPageTemplateLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="defaultRowsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="defaultRowsTextField" min="-2" max="-2" attributes="0"/>
+                          <Component id="defaultRowsPerPageTemplate" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="primeFacesVersionForLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="primeFacesVersionLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="codiVersionForLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="codiVersionLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jsfVersionLabel" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="overrideExistingCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="createFunctionCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="updateFunctionCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="deleteFunctionCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="readFunctionCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="sortFunctionCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="filterFunctionCheckBox" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="growlCheckBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="growlLifeSpinner" min="-2" pref="90" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="jLabel7" max="32767" attributes="0"/>
                           <Component id="projectLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="locationLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="locationLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jpaPackageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jsfPackageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="localizationBundleLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="converterPackageLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="converterPackageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="localizationBundleLabel" alignment="1" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="converterPackageComboBox" max="32767" attributes="0"/>
-                          <Component id="projectTextField" alignment="0" max="32767" attributes="1"/>
-                          <Component id="locationComboBox" alignment="0" max="32767" attributes="1"/>
-                          <Component id="jpaPackageComboBox" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jsfPackageComboBox" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jsfFolder" alignment="0" max="32767" attributes="1"/>
+                          <Component id="entityIncludeFolder" max="32767" attributes="0"/>
+                          <Component id="genericIncludeFolder" alignment="1" max="32767" attributes="0"/>
                           <Component id="localizationBundleTextField" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jsfFolder" alignment="1" max="32767" attributes="1"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="0" pref="86" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="projectTextField" alignment="1" max="32767" attributes="1"/>
+                                  <Component id="locationComboBox" max="32767" attributes="1"/>
+                                  <Component id="jpaPackageComboBox" alignment="1" pref="227" max="32767" attributes="0"/>
+                                  <Component id="jsfPackageComboBox" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="converterPackageComboBox" alignment="1" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="browseFolderButton" min="-2" max="-2" attributes="1"/>
-                  </Group>
-                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="customizeTemplatesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="defaultRowsPerPageTemplateLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="defaultRowsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="defaultRowsTextField" min="-2" max="-2" attributes="0"/>
-                                  <Component id="defaultRowsPerPageTemplate" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                          <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                              <Component id="browseFolderButton" min="-2" max="-2" attributes="1"/>
+                              <Component id="browseGIFolderButton" min="-2" max="-2" attributes="1"/>
                           </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="primeFacesVersionForLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="primeFacesVersionLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="codiVersionForLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="codiVersionLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jsfVersionLabel" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="overrideExistingCheckBox" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Component id="createFunctionCheckBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="updateFunctionCheckBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="deleteFunctionCheckBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="readFunctionCheckBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="sortFunctionCheckBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="filterFunctionCheckBox" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="growlCheckBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="growlLifeSpinner" min="-2" pref="90" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="browseEIFolderButton" alignment="1" min="-2" max="-2" attributes="1"/>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -147,12 +157,22 @@
               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="browseFolderButton" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                      <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jsfFolder" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jsfFolder" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="browseFolderButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="genericIncludeFolder" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="browseGIFolderButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="browseEIFolderButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="entityIncludeFolder" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -192,7 +212,7 @@
               </Group>
               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
               <Component id="overrideExistingCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="55" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="primeFacesVersionForLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="primeFacesVersionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -578,6 +598,46 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="jLabel5"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel5">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="genericIncludeFolder"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Generic Include Folder:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="genericIncludeFolder">
+    </Component>
+    <Component class="javax.swing.JButton" name="browseGIFolderButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle.properties" key="LBL_Browse" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="browseGIFolderButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel7">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="entityIncludeFolder"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Entity Include Folder:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="entityIncludeFolder">
+    </Component>
+    <Component class="javax.swing.JButton" name="browseEIFolderButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle.properties" key="LBL_Browse" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="browseEIFolderButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

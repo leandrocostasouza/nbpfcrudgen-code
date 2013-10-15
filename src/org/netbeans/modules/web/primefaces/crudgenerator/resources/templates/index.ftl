@@ -40,7 +40,7 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      template="/template.xhtml">
+      template="${templatePage}">
 
         <ui:define name="title">
             <h:outputText value="${r"#{"}${bundle}.${entityName}Title${r"}"}"/>
@@ -48,15 +48,15 @@
 
         <ui:define name="body">
 
-            <ui:include src="List.xhtml"/>
+            <ui:include src="${entityIncludeFolder}/${entityName?uncap_first}/List.xhtml"/>
 <#if doRead>
-            <ui:include src="View.xhtml"/>
+            <ui:include src="${entityIncludeFolder}/${entityName?uncap_first}/View.xhtml"/>
 </#if>
 <#if doUpdate>
-            <ui:include src="Edit.xhtml"/>
+            <ui:include src="${entityIncludeFolder}/${entityName?uncap_first}/Edit.xhtml"/>
 </#if>
 <#if doCreate>
-            <ui:include src="Create.xhtml"/>
+            <ui:include src="${entityIncludeFolder}/${entityName?uncap_first}/Create.xhtml"/>
 </#if>
 
         </ui:define>

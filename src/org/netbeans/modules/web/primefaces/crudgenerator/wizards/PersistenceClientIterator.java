@@ -164,6 +164,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     public Set instantiate(TemplateWizard wizard) throws IOException {
         final List<String> entities = (List<String>) wizard.getProperty(WizardProperties.ENTITY_CLASS);
         final String jsfFolder = (String) wizard.getProperty(WizardProperties.JSF_FOLDER);
+        final String jsfGenericIncludeFolder = (String) wizard.getProperty(WizardProperties.JSF_GI_FOLDER);
+        final String jsfEntityIncludeFolder = (String) wizard.getProperty(WizardProperties.JSF_EI_FOLDER);
         final Project project = Templates.getProject(wizard);
         final FileObject javaPackageRoot = (FileObject) wizard.getProperty(WizardProperties.JAVA_PACKAGE_ROOT_FILE_OBJECT);
         final String jpaControllerPkg = (String) wizard.getProperty(WizardProperties.JPA_CLASSES_PACKAGE);
@@ -266,7 +268,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife);
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife);
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }
@@ -323,7 +325,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     }
 
     public static boolean doesSomeFileExistAlready(FileObject javaPackageRoot, FileObject webRoot,
-            String jpaControllerPkg, String jsfControllerPkg, String jsfConverterPkg, String jsfFolder, List<String> entities,
+            String jpaControllerPkg, String jsfControllerPkg, String jsfConverterPkg, String jsfFolder, String jsfGenericIncludeFolder, String jsfEntityIncludeFolder, List<String> entities,
             String bundleName) {
         for (String entity : entities) {
             String simpleControllerName = getFacadeFileName(entity);
@@ -353,10 +355,19 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             }
             String fileName = getJsfFileName(entity, jsfFolder, "");
             // For regular JSF
+            if (webRoot.getFileObject(fileName + "index.xhtml") != null) {
+                return true;
+            }
+            fileName = getJsfFileName(entity, jsfEntityIncludeFolder, "");
+            // For Generic Include JSFs
+            if (webRoot.getFileObject(fileName + "appmenu.xhtml") != null
+                    || webRoot.getFileObject(fileName + "template.xhtml") != null) {
+                return true;
+            }
+            // For Entity Include JSFs
             if (webRoot.getFileObject(fileName + "View.xhtml") != null
                     || webRoot.getFileObject(fileName + "Edit.xhtml") != null
                     || webRoot.getFileObject(fileName + "List.xhtml") != null
-                    || webRoot.getFileObject(fileName + "index.xhtml") != null
                     || webRoot.getFileObject(fileName + "Create.xhtml") != null) {
                 return true;
             }
@@ -383,6 +394,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             List<String> entities,
             Project project,
             String jsfFolder,
+            String jsfGenericIncludeFolder,
+            String jsfEntityIncludeFolder,
             FileObject jpaControllerPackageFileObject,
             JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport,
             boolean genSessionBean,
@@ -407,6 +420,13 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             int growlLife) throws IOException {
         String progressMsg;
 
+        if (jsfGenericIncludeFolder.length() == 0) {
+            jsfGenericIncludeFolder = "/";
+        }
+        if (jsfEntityIncludeFolder.length() == 0) {
+            jsfEntityIncludeFolder = "/";
+        }
+        
         //copy util classes
         FileObject utilFolder = controllerTargetFolder.getFileObject(UTIL_FOLDER_NAME);
         if (utilFolder == null) {
@@ -489,6 +509,13 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         
         boolean isCDI = isCdiEnabled(project);
 
+        // 2013-10-15 Kay Wrobel: Fix ending slash in path information
+        if (jsfGenericIncludeFolder.length() > 0) {
+            if (!jsfGenericIncludeFolder.endsWith("/")) {
+                jsfGenericIncludeFolder = jsfGenericIncludeFolder + "/";
+            }
+        }
+
         for (int i = 0; i < controllerFileObjects.length; i++) {
             String entityClass = entities.get(i);
             String simpleClassName = JpaControllerUtil.simpleClassName(entityClass);
@@ -562,13 +589,13 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("bundle", bundleVar); // NOI18N
 
             if (doCreate) {
-                expandSingleJSFTemplate("create.ftl", entityClass, jsfFolder, webRoot, "Create", params, progressContributor, progressPanel, progressIndex++);
+                expandSingleJSFTemplate("create.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "Create", params, progressContributor, progressPanel, progressIndex++);
             }
             if (doUpdate) {
-                expandSingleJSFTemplate("edit.ftl", entityClass, jsfFolder, webRoot, "Edit", params, progressContributor, progressPanel, progressIndex++);
+                expandSingleJSFTemplate("edit.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "Edit", params, progressContributor, progressPanel, progressIndex++);
             }
             if (doRead) {
-                expandSingleJSFTemplate("view.ftl", entityClass, jsfFolder, webRoot, "View", params, progressContributor, progressPanel, progressIndex++);
+                expandSingleJSFTemplate("view.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "View", params, progressContributor, progressPanel, progressIndex++);
             }
 
             params = FromEntityBase.createFieldParameters(webRoot, entityClass, managedBean, managedBean + ".items", true, true, null);
@@ -590,7 +617,9 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("growlMessages", growlMessages);
             params.put("growlLife", growlLife);
             params.put("bundle", bundleVar); // NOI18N
-            expandSingleJSFTemplate("list.ftl", entityClass, jsfFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
+            expandSingleJSFTemplate("list.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
+            params.put("entityIncludeFolder", jsfEntityIncludeFolder); // NOI18N
+            params.put("templatePage", jsfGenericIncludeFolder +  PRIMEFACES_TEMPLATE_PAGE);
             expandSingleJSFTemplate("index.ftl", entityClass, jsfFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
 
         }
@@ -615,8 +644,16 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         JSFPaletteUtilities.expandJSFTemplate(template, params, target);
 
         // Add PrimeFaces Application Menu to be included in main template
+        // 2013-10-15 Kay Wrobel: Fix beginning slash in path information
+        String jsfGenericIncludeFolder2 = jsfGenericIncludeFolder;
+        if (jsfGenericIncludeFolder2.length() > 0) {
+            if (jsfGenericIncludeFolder2.startsWith("/")) {
+                jsfGenericIncludeFolder2 = jsfGenericIncludeFolder2.replaceFirst("/", "");
+            }
+        }
+
         template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_APPMENU_TEMPLATE);
-        target = webRoot.getFileObject(PRIMEFACES_APPMENU_PAGE);
+        target = webRoot.getFileObject(jsfGenericIncludeFolder2 + PRIMEFACES_APPMENU_PAGE);
 
         params.put("appIndex", PRIMEFACES_APPINDEX_PAGE.replace(".xhtml", ""));
         params.put("servletMapping", servletMapping);
@@ -631,7 +668,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("jsfFolder", "");
         }
         if (target == null) {
-            target = FileUtil.createData(webRoot, PRIMEFACES_APPMENU_PAGE);
+            target = FileUtil.createData(webRoot, jsfGenericIncludeFolder2 + PRIMEFACES_APPMENU_PAGE);
         }
         JSFPaletteUtilities.expandJSFTemplate(template, params, target);
 
@@ -639,6 +676,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_APPINDEX_TEMPLATE);
         target = webRoot.getFileObject(WELCOME_JSF_FL_PAGE);
         params.put("bundle", bundleVar); // NOI18N
+        params.put("templatePage", jsfGenericIncludeFolder +  PRIMEFACES_TEMPLATE_PAGE);
         if (target == null) {
             target = FileUtil.createData(webRoot, WELCOME_JSF_FL_PAGE);
         }
@@ -646,13 +684,13 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
         // Add PrimeFaces Application Template Page to be overwritten
         template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_TEMPLATE_TEMPLATE);
-        target = webRoot.getFileObject(PRIMEFACES_TEMPLATE_PAGE);
-        params.put("appMenu", PRIMEFACES_APPMENU_PAGE);
+        target = webRoot.getFileObject(jsfGenericIncludeFolder + PRIMEFACES_TEMPLATE_PAGE);
+        params.put("appMenu", jsfGenericIncludeFolder +  PRIMEFACES_APPMENU_PAGE);
         params.put("styleFile", PRIMEFACES_CRUD_STYLESHEET);
         params.put("scriptFile", PRIMEFACES_CRUD_SCRIPT);
         params.put("bundle", bundleVar); // NOI18N
         if (target == null) {
-            target = FileUtil.createData(webRoot, PRIMEFACES_TEMPLATE_PAGE);
+            target = FileUtil.createData(webRoot,jsfGenericIncludeFolder +  PRIMEFACES_TEMPLATE_PAGE);
         }
         JSFPaletteUtilities.expandJSFTemplate(template, params, target);
 

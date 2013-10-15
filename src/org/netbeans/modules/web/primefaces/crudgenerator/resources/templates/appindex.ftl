@@ -6,7 +6,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 
-    <ui:composition template="/template.xhtml">
+    <ui:composition template="${templatePage}">
         <ui:define name="title">
             <h:outputText value="${r"#{"}${bundle}.AppName${r"}"}"></h:outputText>
         </ui:define>

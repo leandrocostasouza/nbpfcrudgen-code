@@ -55,6 +55,8 @@ public class WizardProperties {
     public static final String SCOPE = "Scope"; // NOI18N
     public static final String ENTITY_CLASS = "EntityClass"; //NOI18N
     public static final String JSF_FOLDER = "JSFFolder"; //NOI18N
+    public static final String JSF_GI_FOLDER = "JSFGIFolder"; //NOI18N
+    public static final String JSF_EI_FOLDER = "JSFEIFolder"; //NOI18N
     public static final String JSF_CLASSES_PACKAGE = "JsfClassesPackage"; //NOI18N
     public static final String JSF_CONVERTER_PACKAGE = "JsfConverterPackage"; //NOI18N
     //2013-10-04 Kay Wrobel

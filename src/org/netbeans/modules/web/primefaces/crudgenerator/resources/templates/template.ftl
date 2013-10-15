@@ -40,7 +40,7 @@
         <p:layout fullPage="true">
             <p:layoutUnit position="north" size="100" header="${r"#{"}${bundle}.AppName${r"}"}">
                 <!-- Menu here. Also a layout and a way to log a user out -->
-                <ui:include src="${r"/"}${appMenu}"/>
+                <ui:include src="${appMenu}"/>
             </p:layoutUnit>
             
             <p:layoutUnit position="west" size="50"/>
