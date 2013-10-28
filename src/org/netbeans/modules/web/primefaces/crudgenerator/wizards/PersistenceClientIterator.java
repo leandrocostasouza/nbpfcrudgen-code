@@ -506,8 +506,6 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         //This will be passed on to template engine!
         String bundleVar = bundleName.replaceFirst("/", "");
         bundleVar = (bundleVar.substring(0, 1).toLowerCase() + bundleVar.substring(1));
-        
-        boolean isCDI = isCdiEnabled(project);
 
         // 2013-10-15 Kay Wrobel: Fix ending slash in path information
         if (jsfGenericIncludeFolder.length() > 0) {
@@ -618,7 +616,11 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("growlLife", growlLife);
             params.put("bundle", bundleVar); // NOI18N
             expandSingleJSFTemplate("list.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
-            params.put("entityIncludeFolder", jsfEntityIncludeFolder); // NOI18N
+            if (jsfEntityIncludeFolder != "/") {
+                params.put("entityIncludeFolder", jsfEntityIncludeFolder); // NOI18N
+            } else {
+                params.put("entityIncludeFolder", ""); // NOI18N
+            }
             params.put("templatePage", jsfGenericIncludeFolder +  PRIMEFACES_TEMPLATE_PAGE);
             expandSingleJSFTemplate("index.ftl", entityClass, jsfFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
 
@@ -744,7 +746,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         return !(packageName + "." + simpleName).equals(fqn); //NOI18N
     }
 
-    private static boolean isCdiEnabled(Project project) {
+    protected static boolean isCdiEnabled(Project project) {
         CdiUtil cdiUtil = project.getLookup().lookup(CdiUtil.class);
         return (cdiUtil == null) ? false : cdiUtil.isCdiEnabled();
     }

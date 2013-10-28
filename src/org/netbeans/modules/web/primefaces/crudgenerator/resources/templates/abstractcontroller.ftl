@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.event.ActionEvent;
+<#if cdiEnabled?? && cdiEnabled == true>
+import javax.inject.Inject;
+</#if>
 
 import java.util.ResourceBundle;
 import javax.ejb.EJBException;
@@ -44,6 +47,9 @@ import javax.ejb.EJBException;
  */
 public abstract class ${abstractControllerClassName}<T> {
 
+<#if cdiEnabled?? && cdiEnabled == true>
+    @Inject
+</#if>
     private ${ejbFacadeClassName}<T> ejbFacade;
     private Class<T> itemClass;
     private T selected;
@@ -62,6 +68,10 @@ public abstract class ${abstractControllerClassName}<T> {
         this.itemClass = itemClass;
     }
 
+<#if !cdiEnabled?? || cdiEnabled == false>
+
+    public abstract void init();
+
     protected AbstractFacade<T> getFacade() {
         return ejbFacade;
     }
@@ -70,6 +80,7 @@ public abstract class ${abstractControllerClassName}<T> {
         this.ejbFacade = ejbFacade;
     }
 
+</#if>
     public T getSelected() {
         return selected;
     }

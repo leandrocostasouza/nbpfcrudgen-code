@@ -67,7 +67,7 @@
 
 </#if>
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
+                    <p:panelGrid columns="2">
     <#list entityDescriptors as entityDescriptor>
      <#-- Skip this field if it is an identity field that has an auto-generated value       -->
      <#-- Skip this field if we are dealing with many:many and this entity is not the owner -->
