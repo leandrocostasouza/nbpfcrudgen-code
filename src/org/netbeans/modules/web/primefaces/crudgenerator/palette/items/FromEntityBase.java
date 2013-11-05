@@ -51,6 +51,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -62,6 +64,7 @@ import javax.lang.model.util.Types;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.modules.j2ee.persistence.editor.completion.AnnotationUtils;
 import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil;
 import org.netbeans.modules.web.jsf.palette.items.JsfLibrariesSupport;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
@@ -421,6 +424,7 @@ public abstract class FromEntityBase {
     public final static class FieldDesc {
 
         private ExecutableElement method;
+        private Element fieldElement;
         private String methodName;
         private String propertyName;
         private String label;
@@ -457,6 +461,11 @@ public abstract class FromEntityBase {
             this.methodName = method.getSimpleName().toString();
             this.label = this.methodName.substring(3);
             this.propertyName = JpaControllerUtil.getPropNameFromMethod(getMethodName());
+            this.fieldElement = this.isFieldAccess() ? JpaControllerUtil.guessField(method) : method;
+            if (this.fieldElement == null) {
+                this.fieldElement = method;
+            }
+
         }
 
         public boolean isPrimaryKey() {
@@ -474,9 +483,28 @@ public abstract class FromEntityBase {
         public void setEmbeddedKey() {
             this.embeddedKey = true;
         }
-        
+
         public String getMethodName() {
             return methodName;
+        }
+
+        public Integer getMaxSize() {
+            if (fieldElement != null) {
+                AnnotationMirror sizeAnnotation = JpaControllerUtil.findAnnotation(fieldElement, "javax.validation.constraints.Size");
+                if (sizeAnnotation != null) {
+                    String stringMemberValue = JpaControllerUtil.findAnnotationValueAsString(sizeAnnotation, "max");
+                    if (stringMemberValue != null) {
+                        int parseInt;
+                        try {
+                            parseInt = Integer.parseInt(stringMemberValue);
+                            return Integer.valueOf(parseInt);
+                        } catch (NumberFormatException ex) {
+                            return null;
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
         public String getPropertyName() {
@@ -684,7 +712,7 @@ public abstract class FromEntityBase {
         public boolean isPrimaryKey() {
             return fd.isPrimaryKey();
         }
-        
+
         public boolean isRelationshipOne() {
             return fd.getRelationship() == JpaControllerUtil.REL_TO_ONE;
         }
@@ -720,9 +748,13 @@ public abstract class FromEntityBase {
         public String getRelationsLabelName(String labelArtifacts) {
             return fd.getRelationsLabelName(labelArtifacts);
         }
-        
+
         public boolean isEmbeddedKey() {
             return fd.embeddedKey;
+        }
+
+        public Integer getMaxSize() {
+            return fd.getMaxSize();
         }
 
         @Override

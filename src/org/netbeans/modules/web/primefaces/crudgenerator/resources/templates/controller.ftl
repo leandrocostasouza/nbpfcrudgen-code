@@ -33,15 +33,15 @@ package ${controllerPackageName};
 <#if importEntityFullClassName?? && importEntityFullClassName == true>
 import ${entityFullClassName};
 </#if>
-<#if !cdiEnabled?? || cdiEnabled == false>
 <#if importEjbFullClassName?? && importEjbFullClassName == true>
 import ${ejbFullClassName};
 </#if>
-</#if>
 import java.io.Serializable;
+import javax.annotation.PostConstruct;
 <#if managedBeanName??>
 <#if cdiEnabled?? && cdiEnabled == true>
 import javax.inject.Named;
+import javax.inject.Inject;
 <#if myFacesCodiVersion??>
 import org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessScoped;
 <#elseif (jsfVersion.compareTo("2.2") >= 0)>
@@ -50,7 +50,6 @@ import javax.faces.view.ViewScoped;
 import javax.enterprise.context.SessionScoped;
 </#if>
 <#else>
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -74,19 +73,20 @@ import javax.faces.bean.ViewScoped;
 </#if>
 public class ${controllerClassName} extends ${abstractControllerClassName}<${entityClassName}> implements Serializable {
 
-<#if !cdiEnabled?? || cdiEnabled == false>
+<#if cdiEnabled?? && cdiEnabled == true>
+    @Inject
+<#else>
     @EJB
-    private ${ejbClassName} ejbFacade;
-
-    @PostConstruct
-    @Override
-    public void init() {
-        super.setFacade(ejbFacade);
-    }
 </#if>
+    private ${ejbClassName} ejbFacade;
 
     public ${controllerClassName}() {
         super(${entityClassName}.class);
+    }
+
+    @PostConstruct
+    public void init() {
+        super.setFacade(ejbFacade);
     }
 
 <#if embeddedIdFields??>
