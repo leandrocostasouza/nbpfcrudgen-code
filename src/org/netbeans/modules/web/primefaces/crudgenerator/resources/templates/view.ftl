@@ -35,6 +35,7 @@
                    Use in conjunction with getRelationsLabelName.
     growlMessages - Indicates whether to utilize Growl widget or traditional messages (type: Boolean)
     growlLife - Default display life time in ms for Growl widget (type: Integer)
+    tooltipMessages - Indicates whether messages are presented as tooltips (entity pages only) (type: Boolean)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
@@ -50,7 +51,7 @@
 
     <ui:composition>
 
-        <p:dialog id="${entityName}ViewDlg" widgetVar="${entityName}ViewDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}${bundle}.View${entityName}Title${r"}"}">
+        <p:dialog id="${entityName}ViewDlg" widgetVar="${entityName}ViewDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}${bundle}.View${entityName}Title${r"}"}"<#if (primeFacesVersion.compareTo("3.5") >= 0)> closeOnEscape="true"</#if>>
 
             <h:form id="${entityName}ViewForm">
 

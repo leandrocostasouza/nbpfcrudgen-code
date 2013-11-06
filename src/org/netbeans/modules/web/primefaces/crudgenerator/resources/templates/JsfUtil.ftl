@@ -16,9 +16,11 @@
 
 package ${packageName};
 
+import java.util.Iterator;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.component.UISelectItem;
 import javax.faces.context.FacesContext;
 
@@ -78,6 +80,34 @@ public class JsfUtil {
             }
         }
         return false;
+    }
+
+    public static String getComponentMessages(UIComponent component, String defaultMessage) {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        if (component instanceof UIInput) {
+            UIInput inputComponent = (UIInput) component;
+            if (inputComponent.isValid()) {
+                return defaultMessage;
+            } else {
+                Iterator<FacesMessage> iter = fc.getMessages(inputComponent.getClientId());
+                if (iter.hasNext()) {
+                    return iter.next().getDetail();
+                }
+            }
+        }
+        return "";
+    }
+
+    public static String getComponentMessages(String clientComponent, String defaultMessage) {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        UIComponent component = UIComponent.getCurrentComponent(fc).findComponent(clientComponent);
+        return getComponentMessages(component, defaultMessage);
+    }
+
+    public static String getComponentMessages(String clientComponent) {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        UIComponent component = UIComponent.getCurrentComponent(fc).findComponent(clientComponent);
+        return getComponentMessages(component, "");
     }
 
 }

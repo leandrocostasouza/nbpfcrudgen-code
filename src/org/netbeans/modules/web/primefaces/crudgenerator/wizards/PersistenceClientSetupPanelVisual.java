@@ -187,6 +187,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         browseEIFolderButton = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         cdiLabel = new javax.swing.JLabel();
+        tooltipMessagesCheckBox = new javax.swing.JCheckBox();
 
         setName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_JSFPagesAndClasses")); // NOI18N
 
@@ -334,6 +335,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         cdiLabel.setText("jLabel9");
 
+        tooltipMessagesCheckBox.setText("Tooltip Messages");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -404,7 +407,9 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(growlCheckBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tooltipMessagesCheckBox))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(primeFacesVersionForLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -494,7 +499,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(growlCheckBox)
-                    .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tooltipMessagesCheckBox))
                 .addGap(18, 18, 18)
                 .addComponent(overrideExistingCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -647,6 +653,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JLabel searchLabelsLabel;
     private javax.swing.JTextField searchLabelsTextBox;
     private javax.swing.JCheckBox sortFunctionCheckBox;
+    private javax.swing.JCheckBox tooltipMessagesCheckBox;
     private javax.swing.JCheckBox updateFunctionCheckBox;
     // End of variables declaration//GEN-END:variables
 
@@ -884,6 +891,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         settings.putProperty(WizardProperties.GROWL_LIFE, growlLifeSpinner.getValue());
         //2013-10-04 Kay Wrobel
         settings.putProperty(WizardProperties.JSF_VERSION, jsfVersionLabel.getText());
+        settings.putProperty(WizardProperties.TOOLTIP_MESSAGES, Boolean.valueOf(tooltipMessagesCheckBox.isSelected()));
 
     }
 

@@ -36,6 +36,7 @@
                    Use in conjunction with getRelationsLabelName.
     growlMessages - Indicates whether to utilize Growl widget or traditional messages (type: Boolean)
     growlLife - Default display life time in ms for Growl widget (type: Integer)
+    tooltipMessages - Indicates whether messages are presented as tooltips (entity pages only) (type: Boolean)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
@@ -56,13 +57,13 @@
 
     <ui:composition>
 
-        <p:dialog id="${entityName}CreateDlg" widgetVar="${entityName}CreateDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}${bundle}.Create${entityName}Title${r"}"}">
+        <p:dialog id="${entityName}CreateDlg" widgetVar="${entityName}CreateDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}${bundle}.Create${entityName}Title${r"}"}"<#if (primeFacesVersion.compareTo("3.5") >= 0)> closeOnEscape="true"</#if>>
 
             <h:form id="${entityName}CreateForm">
 
 <#if !growlMessages>
                 <h:panelGroup id="messagePanel">
-                    <p:messages id="messages"/>
+                    <p:messages id="messages"<#if tooltipMessages> globalOnly="true"</#if>/>
                 </h:panelGroup>
 
 </#if>
@@ -86,6 +87,9 @@
                         <p:outputLabel value="${r"#{"}${bundle}.Create${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
         <#else>
                         <h:outputLabel value="${r"#{"}${bundle}.Create${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
+        </#if>
+        <#if tooltipMessages>
+                      <h:panelGroup>
         </#if>
         <#if entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
                         <p:calendar id="${entityDescriptor.id?replace(".","_")}" pattern="${entityDescriptor.dateTimeFormat}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}${bundle}.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> showOn="button"/>
@@ -124,6 +128,10 @@
           </#if>
         <#else>
                         <p:inputText id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.Create${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"<#if entityDescriptor.required> required="true" requiredMessage="${r"#{"}${bundle}.Create${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if><#if entityDescriptor.maxSize??> size="${entityDescriptor.maxSize}" maxlength="${entityDescriptor.maxSize}"</#if>/>
+        </#if>
+        <#if tooltipMessages>
+                        <p:tooltip for="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${managedBean}.getComponentMessages('${entityDescriptor.id?replace(".","_")}', ${bundle}.Create${entityName}HelpText_${entityDescriptor.id?replace(".","_")})${r"}"}"/>
+                      </h:panelGroup>
         </#if>
      </#if>
     </#list>

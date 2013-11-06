@@ -201,6 +201,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         //2013-10-04 Kay Wrobel
         final String jsfVersionString = (String) wizard.getProperty(WizardProperties.JSF_VERSION);
         final Version jsfVersion = jsfVersionString.isEmpty() ? null : new Version(jsfVersionString);
+        Boolean tooltipMessagesBoolean = (Boolean) wizard.getProperty(WizardProperties.TOOLTIP_MESSAGES);
+        final boolean tooltipMessages = tooltipMessagesBoolean == null ? false : tooltipMessagesBoolean.booleanValue();
 
         // add framework to project first:
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
@@ -268,7 +270,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife);
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages);
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }
@@ -417,7 +419,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             boolean doSort,
             boolean doFilter,
             boolean growlMessages,
-            int growlLife) throws IOException {
+            int growlLife,
+            boolean tooltipMessages) throws IOException {
         String progressMsg;
 
         if (jsfGenericIncludeFolder.length() == 0) {
@@ -584,6 +587,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("cdiEnabled", isCdiEnabled(project));
             params.put("growlMessages", growlMessages);
             params.put("growlLife", growlLife);
+            params.put("tooltipMessages", tooltipMessages);
             params.put("bundle", bundleVar); // NOI18N
 
             if (doCreate) {
@@ -614,6 +618,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("doFilter", doFilter);
             params.put("growlMessages", growlMessages);
             params.put("growlLife", growlLife);
+            params.put("tooltipMessages", tooltipMessages);
             params.put("bundle", bundleVar); // NOI18N
             expandSingleJSFTemplate("list.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
             if (jsfEntityIncludeFolder != "/") {
@@ -638,6 +643,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         params.put("jsfVersion", jsfVersion); //NOI18N
         params.put("growlMessages", growlMessages);
         params.put("growlLife", growlLife);
+        params.put("tooltipMessages", tooltipMessages);
         String bundleFileName = getBundleFileName(bundleName);
         FileObject target = resourcePackageRoot.getFileObject(bundleFileName);
         if (target == null) {

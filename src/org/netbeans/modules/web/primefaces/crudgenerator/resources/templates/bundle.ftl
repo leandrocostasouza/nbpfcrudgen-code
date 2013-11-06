@@ -56,6 +56,7 @@ Create${entity.entityClassName}IndexLink=Index
 Create${entity.entityClassName}Label_${entityDescriptor.id?replace(".","_")}=${entityDescriptor.label}:
 <#if entityDescriptor.required>Create${entity.entityClassName}RequiredMessage_${entityDescriptor.id?replace(".","_")}=The ${entityDescriptor.label} field is required.
 </#if>Create${entity.entityClassName}Title_${entityDescriptor.id?replace(".","_")}=${entityDescriptor.label}
+Create${entity.entityClassName}HelpText_${entityDescriptor.id?replace(".","_")}=Please provide information for ${entityDescriptor.label}
     </#list>
 Edit${entity.entityClassName}Title=Edit ${entity.entityClassName}
 Edit${entity.entityClassName}SaveLink=Save
@@ -66,6 +67,7 @@ Edit${entity.entityClassName}IndexLink=Index
 Edit${entity.entityClassName}Label_${entityDescriptor.id?replace(".","_")}=${entityDescriptor.label}:
 <#if entityDescriptor.required>Edit${entity.entityClassName}RequiredMessage_${entityDescriptor.id?replace(".","_")}=The ${entityDescriptor.label} field is required.
 </#if>Edit${entity.entityClassName}Title_${entityDescriptor.id?replace(".","_")}=${entityDescriptor.label}
+Edit${entity.entityClassName}HelpText_${entityDescriptor.id?replace(".","_")}=Please provide information for ${entityDescriptor.label}
     </#list>
 View${entity.entityClassName}Title=View ${entity.entityClassName}
 View${entity.entityClassName}DestroyLink=Destroy

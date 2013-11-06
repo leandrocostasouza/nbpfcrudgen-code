@@ -12,6 +12,7 @@
     servletMapping - Prefix mapping of the JSF servlet inside web.xml (type: String)
     growlMessages - Indicates whether to utilize Growl widget or traditional messages (type: Boolean)
     growlLife - Default display life time in ms for Growl widget (type: Integer)
+    tooltipMessages - Indicates whether messages are presented as tooltips (entity pages only) (type: Boolean)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
@@ -34,7 +35,7 @@
     <h:body>
 
 <#if growlMessages>
-        <p:growl id="growl" <#if (growlLife > 0)>life="${growlLife}"</#if>/>
+        <p:growl id="growl"<#if (growlLife > 0)> life="${growlLife}"</#if><#if tooltipMessages> globalOnly="true"</#if>/>
 
 </#if>
         <p:layout fullPage="true">

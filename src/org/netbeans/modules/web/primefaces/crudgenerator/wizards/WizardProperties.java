@@ -83,4 +83,5 @@ public class WizardProperties {
     public static final String FILTER_FUNCTION = "FilterFunction"; //NOI18N
     public static final String GROWL_MESSAGES = "GrowlMessages"; //NOI18N
     public static final String GROWL_LIFE = "GrowlLife"; //NOI18N
+    public static final String TOOLTIP_MESSAGES = "TooltipMessages"; //NOI18N
 }

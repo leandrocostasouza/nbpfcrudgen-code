@@ -36,6 +36,7 @@ import javax.faces.event.ActionEvent;
 
 import java.util.ResourceBundle;
 import javax.ejb.EJBException;
+import javax.faces.component.UIComponent;
 
 /**
  * Represents an abstract shell of to be used as JSF Controller to be used in
@@ -171,6 +172,14 @@ public abstract class ${abstractControllerClassName}<T> {
 
     public boolean isValidationFailed() {
         return JsfUtil.isValidationFailed();
+    }
+
+    public String getComponentMessages(String clientComponent, String defaultMessage) {
+        return JsfUtil.getComponentMessages(clientComponent, defaultMessage);
+    }
+    
+    public String getComponentMessages(UIComponent component, String defaultMessage) {
+        return JsfUtil.getComponentMessages(component, defaultMessage);
     }
 
 }
