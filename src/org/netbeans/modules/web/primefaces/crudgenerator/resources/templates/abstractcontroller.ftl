@@ -177,9 +177,5 @@ public abstract class ${abstractControllerClassName}<T> {
     public String getComponentMessages(String clientComponent, String defaultMessage) {
         return JsfUtil.getComponentMessages(clientComponent, defaultMessage);
     }
-    
-    public String getComponentMessages(UIComponent component, String defaultMessage) {
-        return JsfUtil.getComponentMessages(component, defaultMessage);
-    }
 
 }

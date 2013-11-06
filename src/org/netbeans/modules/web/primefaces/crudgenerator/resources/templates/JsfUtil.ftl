@@ -82,8 +82,9 @@ public class JsfUtil {
         return false;
     }
 
-    public static String getComponentMessages(UIComponent component, String defaultMessage) {
+    public static String getComponentMessages(String clientComponent, String defaultMessage) {
         FacesContext fc = FacesContext.getCurrentInstance();
+        UIComponent component = UIComponent.getCurrentComponent(fc).findComponent(clientComponent);
         if (component instanceof UIInput) {
             UIInput inputComponent = (UIInput) component;
             if (inputComponent.isValid()) {
@@ -96,18 +97,6 @@ public class JsfUtil {
             }
         }
         return "";
-    }
-
-    public static String getComponentMessages(String clientComponent, String defaultMessage) {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        UIComponent component = UIComponent.getCurrentComponent(fc).findComponent(clientComponent);
-        return getComponentMessages(component, defaultMessage);
-    }
-
-    public static String getComponentMessages(String clientComponent) {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        UIComponent component = UIComponent.getCurrentComponent(fc).findComponent(clientComponent);
-        return getComponentMessages(component, "");
     }
 
 }
