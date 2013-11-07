@@ -52,7 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -64,10 +63,11 @@ import javax.lang.model.util.Types;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
-import org.netbeans.modules.j2ee.persistence.editor.completion.AnnotationUtils;
 import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil;
 import org.netbeans.modules.web.jsf.palette.items.JsfLibrariesSupport;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
+import org.netbeans.modules.web.primefaces.crudgenerator.util.CustomJpaControllerUtil;
+import org.netbeans.modules.web.primefaces.crudgenerator.util.StringHelper;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
@@ -122,7 +122,7 @@ public abstract class FromEntityBase {
         List<FieldDesc> fields = new ArrayList<FieldDesc>();
         String idFieldName = "";
         if (bean != null) {
-            ExecutableElement[] methods = JpaControllerUtil.getEntityMethods(bean);
+            ExecutableElement[] methods = CustomJpaControllerUtil.getEntityMethodsBySuperClass(bean);
             JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport = null;
             for (ExecutableElement method : methods) {
                 // filter out @Transient methods
@@ -459,8 +459,8 @@ public abstract class FromEntityBase {
             this.method = method;
             this.bean = bean;
             this.methodName = method.getSimpleName().toString();
-            this.label = this.methodName.substring(3);
-            this.propertyName = JpaControllerUtil.getPropNameFromMethod(getMethodName());
+            this.propertyName = CustomJpaControllerUtil.getPropNameFromMethod(getMethodName());
+            this.label = StringHelper.firstUpper(this.propertyName);
             this.fieldElement = this.isFieldAccess() ? JpaControllerUtil.guessField(method) : method;
             if (this.fieldElement == null) {
                 this.fieldElement = method;
@@ -531,7 +531,9 @@ public abstract class FromEntityBase {
         }
 
         public boolean isValid() {
-            return getMethodName().startsWith("get"); // NOI18N
+            // 2013-11-07 Kay Wrobel: Also take into account methods that start
+            // with "is" for boolean getters.
+            return (getMethodName().startsWith("get") || getMethodName().startsWith("is")); // NOI18N
         }
 
         public int getRelationship() {
