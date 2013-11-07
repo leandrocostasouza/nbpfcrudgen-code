@@ -17,8 +17,7 @@ public class StringHelper {
     }
 
     public static String firstUpper(String string) {
-        boolean makeFirstUpper = string.length() < 2 || (!Character.isLowerCase(string.charAt(1)));
-        return makeFirstUpper ? string.substring(0, 1).toUpperCase() + string.substring(1) : string;
+        return string.length() > 1 ? string.substring(0, 1).toUpperCase() + string.substring(1) : string.toUpperCase();
     }
 
     public static String removeBeanMethodPrefix(String methodName) {
