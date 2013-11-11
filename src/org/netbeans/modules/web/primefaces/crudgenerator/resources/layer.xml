@@ -94,6 +94,10 @@ made subject to such option by the copyright holder.
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
                     <attr name="template" boolvalue="true"/>
                 </file>
+                <file name="editonefield.ftl" url="templates/editonefield.ftl">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                    <attr name="template" boolvalue="true"/>
+                </file>
                 <file name="index.ftl" url="templates/index.ftl">
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
                     <attr name="template" boolvalue="true"/>
@@ -107,6 +111,10 @@ made subject to such option by the copyright holder.
                     <attr name="template" boolvalue="true"/>
                 </file>
                 <file name="view.ftl" url="templates/view.ftl">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                    <attr name="template" boolvalue="true"/>
+                </file>
+                <file name="viewonefield.ftl" url="templates/viewonefield.ftl">
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
                     <attr name="template" boolvalue="true"/>
                 </file>

@@ -65,4 +65,25 @@ public class CustomJpaControllerUtil extends JpaControllerUtil {
         return StringHelper.firstLower(name);
     }
 
+    public static boolean isReadOnly(TypeElement entityTypeElement, ExecutableElement getterMethod) throws NotGetterMethodException {
+
+        // Determine the setter name to search for
+        String setterMethod = getterMethod.getSimpleName().toString();
+        if (setterMethod.startsWith("get")) {
+            setterMethod = setterMethod.replaceFirst("get", "set");
+        } else if (setterMethod.startsWith("is")) {
+            setterMethod = setterMethod.replaceFirst("is", "set");
+        } else throw new NotGetterMethodException();
+        
+        // Try to find a matching setter method for given getter method
+        ExecutableElement[] methods = getEntityMethodsBySuperClass(entityTypeElement);
+        for (ExecutableElement method : methods) {
+            if (method.getSimpleName().toString().equals(setterMethod)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
 }

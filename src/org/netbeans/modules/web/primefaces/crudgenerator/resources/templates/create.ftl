@@ -17,8 +17,10 @@
         name - field property name (type: String)
         dateTimeFormat - date/time/datetime formatting (type: String)
         blob - does field represents a large block of text? (type: boolean)
+        maxSize - returns the size of a field if annotated with @Size (type: Integer)
         generatedValue = does field have an auto-generated value? (type: boolean)
         primaryKey - is field a primary key field? (type: boolean)
+        readOnly - is the field a read-only field? (type: boolean)
         relationshipOne - does field represent one to one or many to one relationship (type: boolean)
         relationshipMany - does field represent one to many relationship (type: boolean)
         relationshipOwner - does the field represent the owning side of a many:many relationship? (type: boolean)
@@ -30,6 +32,7 @@
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
         valuesConverter - if item is of type 1:many or many:many relationship then use this
             for the converter binding of <h:selectOneMenu> or <h:selectManyMenu>
+        versionField - is the field a Version field (type: boolean)
     primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
     servletMapping - Prefix mapping of the JSF servlet inside web.xml (type: String)
     searchLabels - Comma-seperated list of field name artifacts to search for labels (type: String)
@@ -57,7 +60,7 @@
 
     <ui:composition>
 
-        <p:dialog id="${entityName}CreateDlg" widgetVar="${entityName}CreateDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}${bundle}.Create${entityName}Title${r"}"}"<#if (primeFacesVersion.compareTo("3.5") >= 0)> closeOnEscape="true"</#if>>
+        <p:dialog id="${entityName}CreateDlg" widgetVar="${entityName}CreateDialog" modal="true" resizable="false" <#if (primeFacesVersion.compareTo("4.0") >= 0)>appendTo="@(body)"<#else>appendToBody="true"</#if> header="${r"#{"}${bundle}.Create${entityName}Title${r"}"}"<#if (primeFacesVersion.compareTo("3.5") >= 0)> closeOnEscape="true"</#if>>
 
             <h:form id="${entityName}CreateForm">
 
@@ -73,8 +76,10 @@
      <#-- Skip this field if it is an identity field that has an auto-generated value       -->
      <#-- Skip this field if we are dealing with many:many and this entity is not the owner -->
      <#if !entityDescriptor.generatedValue &&
-         !(entityDescriptor.relationshipMany && 
-          !entityDescriptor.relationshipOwner)> 
+          !entityDescriptor.versionField &&
+          !entityDescriptor.readOnly &&
+          !(entityDescriptor.relationshipMany && 
+           !entityDescriptor.relationshipOwner)> 
 
         <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
             <#if entityDescriptor.getRelationsLabelName(searchLabels)??>

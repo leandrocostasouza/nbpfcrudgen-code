@@ -93,7 +93,9 @@ import org.openide.util.NbBundle;
  */
 public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implements DocumentListener, CancellableDialog {
 
+    public static final String PRIMEFACES_TEMPLATE_PATH = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/"; // NOI18N
     public static final String PRIMEFACES_VIEW_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/view.ftl"; // NOI18N
+    public static final String PRIMEFACES_VIEWONEFIELD_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/viewonefield.ftl"; // NOI18N
     public static final String PRIMEFACES_LIST_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/list.ftl"; // NOI18N
     public static final String PRIMEFACES_CREATE_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/create.ftl"; // NOI18N
     public static final String PRIMEFACES_EDIT_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/edit.ftl"; // NOI18N

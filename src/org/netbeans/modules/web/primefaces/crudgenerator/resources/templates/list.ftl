@@ -17,7 +17,9 @@
         name - field property name (type: String)
         dateTimeFormat - date/time/datetime formatting (type: String)
         blob - does field represents a large block of text? (type: boolean)
+        maxSize - returns the size of a field if annotated with @Size (type: Integer)
         primaryKey - is field a primary key field? (type: boolean)
+        readOnly - is the field a read-only field? (type: boolean)
         relationshipOne - does field represent one to one or many to one relationship (type: boolean)
         relationshipMany - does field represent one to many relationship (type: boolean)
         relationshipOwner - does the field represent the owning side of a many:many relationship? (type: boolean)
@@ -29,6 +31,7 @@
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
         valuesConverter - if item is of type 1:many or many:many relationship then use this
             for the converter binding of <h:selectOneMenu> or <h:selectManyMenu>
+        versionField - is the field a Version field (type: boolean)
     defaultDataTableRows - will be used for DataTable Paging
     defaultDataTableRowsPerPageTemplate - will be used for DataTable Paging
     primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
@@ -100,7 +103,7 @@
 
 <#list entityDescriptors as entityDescriptor>
   <#-- Skip this field if we are dealing with many:many -->
-  <#if !entityDescriptor.relationshipMany>
+  <#if !entityDescriptor.relationshipMany && !entityDescriptor.versionField>
     <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
         <#if entityDescriptor.getRelationsLabelName(searchLabels)??>
           <#assign relationLabelName = entityDescriptor.getRelationsLabelName(searchLabels)>

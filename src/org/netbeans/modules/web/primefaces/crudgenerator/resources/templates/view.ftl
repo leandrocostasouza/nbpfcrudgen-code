@@ -17,7 +17,9 @@
         name - field property name (type: String)
         dateTimeFormat - date/time/datetime formatting (type: String)
         blob - does field represents a large block of text? (type: boolean)
+        maxSize - returns the size of a field if annotated with @Size (type: Integer)
         primaryKey - is field a primary key field? (type: boolean)
+        readOnly - is the field a read-only field? (type: boolean)
         relationshipOne - does field represent one to one or many to one relationship (type: boolean)
         relationshipMany - does field represent one to many relationship (type: boolean)
         relationshipOwner - does the field represent the owning side of a many:many relationship? (type: boolean)
@@ -29,6 +31,7 @@
             getter to populate <h:selectOneMenu> or <h:selectManyMenu>
         valuesConverter - if item is of type 1:many or many:many relationship then use this
             for the converter binding of <h:selectOneMenu> or <h:selectManyMenu>
+        versionField - is the field a Version field (type: boolean)
     primeFacesVersion - Version of the PrimeFaces library in use (type: Version)
     servletMapping - Prefix mapping of the JSF servlet inside web.xml (type: String)
     searchLabels - Comma-seperated list of field name artifacts to search for labels (type: String)
@@ -51,7 +54,7 @@
 
     <ui:composition>
 
-        <p:dialog id="${entityName}ViewDlg" widgetVar="${entityName}ViewDialog" modal="true" resizable="false" appendToBody="true" header="${r"#{"}${bundle}.View${entityName}Title${r"}"}"<#if (primeFacesVersion.compareTo("3.5") >= 0)> closeOnEscape="true"</#if>>
+        <p:dialog id="${entityName}ViewDlg" widgetVar="${entityName}ViewDialog" modal="true" resizable="false"  <#if (primeFacesVersion.compareTo("4.0") >= 0)>appendTo="@(body)"<#else>appendToBody="true"</#if> header="${r"#{"}${bundle}.View${entityName}Title${r"}"}"<#if (primeFacesVersion.compareTo("3.5") >= 0)> closeOnEscape="true"</#if>>
 
             <h:form id="${entityName}ViewForm">
 
@@ -59,7 +62,8 @@
                     <p:panelGrid columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
     <#list entityDescriptors as entityDescriptor>
      <#-- Skip this field if we are dealing with many:many and this entity is not the owner -->
-     <#if !(entityDescriptor.relationshipMany && 
+     <#if !entityDescriptor.versionField &&
+          !(entityDescriptor.relationshipMany && 
            !entityDescriptor.relationshipOwner)> 
 
         <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
@@ -69,41 +73,7 @@
               <#assign relationLabelName = "">
             </#if>
         </#if>
-                        <h:outputText value="${r"#{"}${bundle}.View${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
-        <#if entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
-                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}">
-                            <f:convertDateTime pattern="${entityDescriptor.dateTimeFormat}" />
-                        </h:outputText>
-        <#elseif entityDescriptor.returnType?contains("boolean") || entityDescriptor.returnType?contains("Boolean")>
-                        <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}${bundle}.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> disabled="true"/>
-        <#elseif entityDescriptor.relationshipOne>
-            <#if relationLabelName?? && relationLabelName != "">
-                        <h:outputText value="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"/>
-            <#else>
-                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}">
-<#if (jsfVersion.compareTo("2.2") < 0) && cdiEnabled?? && cdiEnabled == true>
-                            <f:converter binding="${r"#{"}${entityDescriptor.valuesConverter}${r"}"}"/>
-<#else>
-                            <f:converter converterId="${entityDescriptor.valuesConverter}"/>
-</#if>
-                        </h:outputText>
-            </#if>
-        <#elseif entityDescriptor.relationshipMany>
-          <#if entityDescriptor.relationshipOwner>
-                        <h:selectManyMenu<#if (jsfVersion.compareTo("2.2") >= 0)> converter="${entityDescriptor.valuesConverter}"</#if>>
-                            <f:selectItems value="${r"#{"}${entityDescriptor.name}${r"}"}"
-                                           var="${entityDescriptor.id?replace(".","_")}Item"
-                                           itemValue="${r"#{"}${entityDescriptor.id?replace(".","_")}Item${r"}"}"
-            <#if relationLabelName != "">
-                                           itemLabel="${r"#{"}${entityDescriptor.id?replace(".","_")}Item.${relationLabelName}${r".toString()}"}"
-            </#if>
-                            />
-                            <#if (jsfVersion.compareTo("2.2") < 0)><f:converter binding="${r"#{"}${entityDescriptor.valuesConverter}${r"}"}"/></#if>
-                        </h:selectManyMenu>
-          </#if>
-        <#else>
-                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
-        </#if>
+        <#include "${viewOneFieldTemplate}">
      </#if>
     </#list>
                     </p:panelGrid>

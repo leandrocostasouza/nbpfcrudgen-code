@@ -67,6 +67,7 @@ import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerU
 import org.netbeans.modules.web.jsf.palette.items.JsfLibrariesSupport;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
 import org.netbeans.modules.web.primefaces.crudgenerator.util.CustomJpaControllerUtil;
+import org.netbeans.modules.web.primefaces.crudgenerator.util.NotGetterMethodException;
 import org.netbeans.modules.web.primefaces.crudgenerator.util.StringHelper;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -438,6 +439,8 @@ public abstract class FromEntityBase {
         private boolean primaryKey;
         private boolean generatedValue;
         private boolean embeddedKey;
+        private boolean readOnly;
+        private boolean versionField;
 
         public boolean isGeneratedValue() {
             return generatedValue;
@@ -530,10 +533,27 @@ public abstract class FromEntityBase {
             return fieldAccess.booleanValue();
         }
 
+        public boolean isReadOnly() {
+            try {
+                readOnly = CustomJpaControllerUtil.isReadOnly(bean, method);
+            } catch (NotGetterMethodException ex) {
+                readOnly = false;
+            }
+            return readOnly;
+        }
+
         public boolean isValid() {
             // 2013-11-07 Kay Wrobel: Also take into account methods that start
             // with "is" for boolean getters.
             return (getMethodName().startsWith("get") || getMethodName().startsWith("is")); // NOI18N
+        }
+
+        public boolean isVersionField() {
+            versionField = false;
+            if (fieldElement != null) {
+                versionField = JpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.Version");
+            }
+            return versionField;
         }
 
         public int getRelationship() {
@@ -757,6 +777,14 @@ public abstract class FromEntityBase {
 
         public Integer getMaxSize() {
             return fd.getMaxSize();
+        }
+
+        public boolean isReadOnly() {
+            return fd.isReadOnly();
+        }
+
+        public boolean isVersionField() {
+            return fd.isVersionField();
         }
 
         @Override
