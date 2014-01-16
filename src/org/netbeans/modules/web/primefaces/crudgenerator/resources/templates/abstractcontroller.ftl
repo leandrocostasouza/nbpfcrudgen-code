@@ -39,7 +39,8 @@ import javax.inject.Inject;
 
 import java.util.ResourceBundle;
 import javax.ejb.EJBException;
-import javax.faces.component.UIComponent;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 /**
  * Represents an abstract shell of to be used as JSF Controller to be used in
@@ -146,12 +147,19 @@ public abstract class ${abstractControllerClassName}<T> {
                 String msg = "";
                 Throwable cause = JsfUtil.getRootCause(ex.getCause());
                 if (cause != null) {
-                    msg = cause.getLocalizedMessage();
-                }
-                if (msg.length() > 0) {
-                    JsfUtil.addErrorMessage(msg);
-                } else {
-                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("${bundle}").getString("PersistenceErrorOccured"));
+                    if (cause instanceof ConstraintViolationException) {
+                        ConstraintViolationException excp = (ConstraintViolationException) cause;
+                        for (ConstraintViolation s : excp.getConstraintViolations()) {
+                            JsfUtil.addErrorMessage(s.getMessage());
+                        }
+                    } else {
+                        msg = cause.getLocalizedMessage();
+                        if (msg.length() > 0) {
+                            JsfUtil.addErrorMessage(msg);
+                        } else {
+                            JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+                        }
+                    }
                 }
             } catch (Exception ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);

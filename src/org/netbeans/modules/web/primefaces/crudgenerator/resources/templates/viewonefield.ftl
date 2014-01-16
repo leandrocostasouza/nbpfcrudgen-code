@@ -1,6 +1,6 @@
-                        <h:outputText value="${r"#{"}${bundle}.View${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
+                        <h:outputText value="${r"#{"}${bundle}.${crud}${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
         <#if entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
-                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}">
+                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.${crud}${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}">
                             <f:convertDateTime pattern="${entityDescriptor.dateTimeFormat}" />
                         </h:outputText>
         <#elseif entityDescriptor.returnType?contains("boolean") || entityDescriptor.returnType?contains("Boolean")>
@@ -31,5 +31,5 @@
                         </h:selectManyMenu>
           </#if>
         <#else>
-                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.View${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
+                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.${crud}${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
         </#if>

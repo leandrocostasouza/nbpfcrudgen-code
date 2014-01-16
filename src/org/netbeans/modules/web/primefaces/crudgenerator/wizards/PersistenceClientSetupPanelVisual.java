@@ -103,6 +103,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     public static final String PRIMEFACES_CONTROLLER_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/controller.ftl"; // NOI18N
     public static final String PRIMEFACES_CONVERTER_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/converter.ftl"; // NOI18N
     public static final String PRIMEFACES_ABSTRACTCONTROLLER_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/abstractcontroller.ftl"; // NOI18N
+    public static final String PRIMEFACES_CONFIRMATION_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/confirmation.ftl"; // NOI18N
     public static final String PRIMEFACES_TEMPLATE_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/template.ftl"; // NOI18N
     public static final String PRIMEFACES_APPMENU_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/appmenu.ftl"; // NOI18N
     public static final String PRIMEFACES_APPINDEX_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/appindex.ftl"; // NOI18N
@@ -190,6 +191,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         jLabel8 = new javax.swing.JLabel();
         cdiLabel = new javax.swing.JLabel();
         tooltipMessagesCheckBox = new javax.swing.JCheckBox();
+        confirmDialogsCheckBox = new javax.swing.JCheckBox();
 
         setName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_JSFPagesAndClasses")); // NOI18N
 
@@ -339,6 +341,9 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         tooltipMessagesCheckBox.setText("Tooltip Messages");
 
+        confirmDialogsCheckBox.setSelected(true);
+        confirmDialogsCheckBox.setText("Confirm Dialogs");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -411,7 +416,9 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tooltipMessagesCheckBox))
+                                .addComponent(tooltipMessagesCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(confirmDialogsCheckBox))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(primeFacesVersionForLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -502,7 +509,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(growlCheckBox)
                     .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tooltipMessagesCheckBox))
+                    .addComponent(tooltipMessagesCheckBox)
+                    .addComponent(confirmDialogsCheckBox))
                 .addGap(18, 18, 18)
                 .addComponent(overrideExistingCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -613,6 +621,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JLabel cdiLabel;
     private javax.swing.JLabel codiVersionForLabel;
     private javax.swing.JLabel codiVersionLabel;
+    private javax.swing.JCheckBox confirmDialogsCheckBox;
     private javax.swing.JComboBox converterPackageComboBox;
     private javax.swing.JLabel converterPackageLabel;
     private javax.swing.JCheckBox createFunctionCheckBox;
@@ -860,7 +869,10 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         codiVersionLabel.setText(codiVersion);
         jsfVersionLabel.setText(jsfVersion);
         cdiLabel.setText((new Boolean(PersistenceClientIterator.isCdiEnabled(project))).toString());
-
+        if (primeFacesVersion.compareTo("4.0") < 0) {
+            this.confirmDialogsCheckBox.setSelected(false);
+            this.confirmDialogsCheckBox.setVisible(false);
+        }
     }
 
     void store(WizardDescriptor settings) {
@@ -894,6 +906,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         //2013-10-04 Kay Wrobel
         settings.putProperty(WizardProperties.JSF_VERSION, jsfVersionLabel.getText());
         settings.putProperty(WizardProperties.TOOLTIP_MESSAGES, Boolean.valueOf(tooltipMessagesCheckBox.isSelected()));
+        settings.putProperty(WizardProperties.CONFIRMATION_DIALOGS, Boolean.valueOf(confirmDialogsCheckBox.isSelected()));
 
     }
 

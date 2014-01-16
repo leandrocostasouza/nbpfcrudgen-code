@@ -160,7 +160,13 @@
                         <p:commandButton id="${updateButton}"   icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" update=":${entityName}EditForm" oncomplete="${entityName}EditDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
 <#if doDelete>
+    <#if (primeFacesVersion.compareTo("4.0") >= 0 && doConfirmationDialogs) >
+                        <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}">
+                            <p:confirm header="${r"#{"}${bundle}.ConfirmationHeader${r"}"}" message="${r"#{"}${bundle}.ConfirmDeleteMessage${r"}"}" icon="ui-icon-alert"/>
+                        </p:commandButton>
+    <#else>
                         <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+    </#if>
 </#if>
                       </div>
                     </f:facet>
@@ -168,7 +174,9 @@
                 </p:dataTable>
 
             </p:panel>
-
+<#if (primeFacesVersion.compareTo("4.0") >= 0 && doConfirmationDialogs) >
+            <ui:include src="${confirmDialogPage}"/>
+</#if>
         </h:form>
 
 </ui:composition>

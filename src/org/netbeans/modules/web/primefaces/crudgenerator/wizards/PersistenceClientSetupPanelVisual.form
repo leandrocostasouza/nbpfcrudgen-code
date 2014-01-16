@@ -128,6 +128,8 @@
                                       <Component id="growlLifeSpinner" min="-2" pref="90" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="tooltipMessagesCheckBox" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="confirmDialogsCheckBox" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="primeFacesVersionForLabel" min="-2" max="-2" attributes="0"/>
@@ -239,6 +241,7 @@
                           <Component id="growlCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="growlLifeSpinner" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                           <Component id="tooltipMessagesCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="confirmDialogsCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                       <Component id="overrideExistingCheckBox" min="-2" max="-2" attributes="0"/>
@@ -673,6 +676,12 @@
             <Component class="javax.swing.JCheckBox" name="tooltipMessagesCheckBox">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Tooltip Messages"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="confirmDialogsCheckBox">
+              <Properties>
+                <Property name="selected" type="boolean" value="true"/>
+                <Property name="text" type="java.lang.String" value="Confirm Dialogs"/>
               </Properties>
             </Component>
           </SubComponents>

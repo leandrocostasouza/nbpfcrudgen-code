@@ -37,11 +37,17 @@ Edit=Edit
 Close=Close
 Save=Save
 View=View
+Yes=Yes
+No=No
 Maintenance=Maintenance
 Home=Home
 Welcome=Welcome
 WelcomeMessage=Welcome to your PrimeFaces Application. Please explore by making a selection from the menu.
 SelectOneMessage=Select One...
+ConfirmationHeader=Confirmation
+ConfirmDeleteMessage=Are you sure you want to proceed?
+ConfirmEditMessage=Do you want to apply the changes?
+ConfirmCreateMessage=Ready to create?
 
 <#list entities as entity>
 ${entity.entityClassName}Title=${entity.entityClassName} Maintenance

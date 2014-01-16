@@ -160,6 +160,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     public static final String JSF2_GENERATOR_PROPERTY = "jsf2Generator"; // "true" if set otherwise undefined
     private static final String CSS_FOLDER = "resources/css/";  //NOI18N
     private static final String SCRIPT_FOLDER = "resources/scripts/";  //NOI18N
+    private static final String PRIMEFACES_CONFIRMATION_PAGE = "confirmation.xhtml"; //NOI18N
     private transient WebModuleExtender wme;
     private transient ExtenderController ec;
 
@@ -206,6 +207,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final Version jsfVersion = jsfVersionString.isEmpty() ? null : new Version(jsfVersionString);
         Boolean tooltipMessagesBoolean = (Boolean) wizard.getProperty(WizardProperties.TOOLTIP_MESSAGES);
         final boolean tooltipMessages = tooltipMessagesBoolean == null ? false : tooltipMessagesBoolean.booleanValue();
+        Boolean confirmationDialogsBoolean = (Boolean) wizard.getProperty(WizardProperties.CONFIRMATION_DIALOGS);
+        final boolean confirmationDialogs = confirmationDialogsBoolean == null ? false : confirmationDialogsBoolean.booleanValue();
 
         // add framework to project first:
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
@@ -273,7 +276,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages);
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages, confirmationDialogs);
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }
@@ -422,7 +425,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             boolean doFilter,
             boolean growlMessages,
             int growlLife,
-            boolean tooltipMessages) throws IOException {
+            boolean tooltipMessages,
+            boolean confirmationDialogs) throws IOException {
         String progressMsg;
 
         if (jsfGenericIncludeFolder.length() == 0) {
@@ -521,7 +525,6 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
         // 2013-11-11 Kay Wrobel: Write the template content to a physical file
         // in the user's working directory so that FreeMarker can find it for <#include>
-        
         // ViewOneField
         FileObject viewOneFieldTemplate = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_TEMPLATE_PATH + "viewonefield.ftl");
         String tmpViewOneFieldTemplateFileName = System.getProperty("user.dir") + System.getProperty("file.separator") + viewOneFieldTemplate.getNameExt();
@@ -624,6 +627,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("bundle", bundleVar); // NOI18N
             params.put("editOneFieldTemplate", editOneFieldTemplate.getNameExt());
             params.put("viewOneFieldTemplate", viewOneFieldTemplate.getNameExt());
+            params.put("doConfirmationDialogs", confirmationDialogs);
 
             if (doCreate) {
                 expandSingleJSFTemplate("create.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "Create", params, progressContributor, progressPanel, progressIndex++);
@@ -655,6 +659,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("growlLife", growlLife);
             params.put("tooltipMessages", tooltipMessages);
             params.put("bundle", bundleVar); // NOI18N
+            params.put("doConfirmationDialogs", confirmationDialogs);
+            params.put("confirmDialogPage", jsfGenericIncludeFolder + PRIMEFACES_CONFIRMATION_PAGE);
             expandSingleJSFTemplate("list.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
             if (jsfEntityIncludeFolder != "/") {
                 params.put("entityIncludeFolder", jsfEntityIncludeFolder); // NOI18N
@@ -736,6 +742,19 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             target = FileUtil.createData(webRoot, jsfGenericIncludeFolder + PRIMEFACES_TEMPLATE_PAGE);
         }
         JSFPaletteUtilities.expandJSFTemplate(template, params, target);
+
+        // Add PrimeFaces Confirmation Dialog Page Include File
+        // We only support PF 4.0+ due to its new "global" mode, whic
+        // is utilized in all CRUD pages via the <p:confirm> tag on buttons
+        if (primeFacesVersion.compareTo("4.0") >= 0 && confirmationDialogs) {
+            template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_CONFIRMATION_TEMPLATE);
+            target = webRoot.getFileObject(jsfGenericIncludeFolder + PRIMEFACES_CONFIRMATION_PAGE);
+            params.put("bundle", bundleVar); // NOI18N
+            if (target == null) {
+                target = FileUtil.createData(webRoot, jsfGenericIncludeFolder + PRIMEFACES_CONFIRMATION_PAGE);
+            }
+            JSFPaletteUtilities.expandJSFTemplate(template, params, target);
+        }
 
         FileObject[] configFiles = ConfigurationUtils.getFacesConfigFiles(wm);
         FileObject fo;

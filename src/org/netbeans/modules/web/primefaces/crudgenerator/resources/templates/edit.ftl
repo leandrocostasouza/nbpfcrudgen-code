@@ -39,11 +39,14 @@
     growlMessages - Indicates whether to utilize Growl widget or traditional messages (type: Boolean)
     growlLife - Default display life time in ms for Growl widget (type: Integer)
     tooltipMessages - Indicates whether messages are presented as tooltips (entity pages only) (type: Boolean)
+    textThreshold - the maximum length of a text field before switching to a text area (type: Integer)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
 
 </#if>
+<#assign crud = "Edit">
+<#assign textThreshold = 255>
 <#if growlMessages>
   <#assign messageUpdate = ":growl">
 <#else>
@@ -92,7 +95,13 @@
      </#if>
     </#list>
                     </p:panelGrid>
+    <#if (primeFacesVersion.compareTo("4.0") >= 0 && doConfirmationDialogs) >
+                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListForm:datalist,${messageUpdate}" oncomplete="handleSubmit(xhr,status,args,${entityName}EditDialog);">
+                        <p:confirm header="${r"#{"}${bundle}.ConfirmationHeader${r"}"}" message="${r"#{"}${bundle}.ConfirmEditMessage${r"}"}" icon="ui-icon-alert"/>
+                    </p:commandButton>
+    <#else>
                     <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListForm:datalist,${messageUpdate}" oncomplete="handleSubmit(xhr,status,args,${entityName}EditDialog);"/>
+    </#if>
                     <p:commandButton value="${r"#{"}${bundle}.Cancel${r"}"}" onclick="${entityName}EditDialog.hide()"/>
                 </h:panelGroup>
 
