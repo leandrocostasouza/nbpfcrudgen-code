@@ -63,16 +63,20 @@ import javax.lang.model.util.Types;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
+import static org.netbeans.modules.j2ee.core.api.support.java.JavaIdentifiers.getPackageName;
 import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil;
 import org.netbeans.modules.web.jsf.palette.items.JsfLibrariesSupport;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
 import org.netbeans.modules.web.primefaces.crudgenerator.util.CustomJpaControllerUtil;
 import org.netbeans.modules.web.primefaces.crudgenerator.util.NotGetterMethodException;
 import org.netbeans.modules.web.primefaces.crudgenerator.util.StringHelper;
+import static org.netbeans.modules.web.primefaces.crudgenerator.util.StringHelper.*;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 public abstract class FromEntityBase {
+
+    private static final String RELATION_LABEL_ANNOTATION = "RelationLabel";
 
     private static final String ITEM_VAR = "item";
     private boolean readOnly = false;
@@ -659,21 +663,46 @@ public abstract class FromEntityBase {
             if (getRelationship() == JpaControllerUtil.REL_NONE) {
                 return "";
             }
+            /* 2014-01-20 Kay Wrobel: Locate custom RelationLabel annotation class */
+
             String name = getRelationQualifiedClassName(controller, method, isFieldAccess());
             if (name != null) {
                 TypeElement relationEntity = controller.getElements().getTypeElement(name);
+                String entityPackage = getPackageName(relationEntity.getQualifiedName().toString());
                 ExecutableElement[] relationMethods = JpaControllerUtil.getEntityMethods(relationEntity);
                 String idField = "";
                 for (ExecutableElement relationMethod : relationMethods) {
-                    FieldDesc relfd = new FieldDesc(controller, relationMethod, relationEntity);
-                    boolean isPrimaryKey = EntityClass.isId(relationMethod, relfd.isFieldAccess());
-                    String relPropertyName = relfd.getPropertyName();
-                    if (isPrimaryKey) {
-                        idField = relPropertyName;
-                    }
-                    for (String searchLabel : searchLabels.split(",")) {
-                        if (relPropertyName.contains(searchLabel)) {
+                    if (isGetterMethod(relationMethod.getSimpleName().toString())) {
+                        FieldDesc relfd = new FieldDesc(controller, relationMethod, relationEntity);
+                        /* 2014-01-20 Kay Wrobel: We want to check whether
+                         * an entity is annotated with a custom @RelationLabel. This should
+                         * be a user-created annotation-type to be placed inside the entity's
+                         * package. This is currently the ONLY way to ensure a perfect hit
+                         * for a relationships "Label". Unfortunately, the developer must
+                         * annotate each entity by hand.
+                         */
+                        boolean isRelationLabel = false;
+                        Element relationFieldElement = isFieldAccess() ? JpaControllerUtil.guessField(relationMethod) : relationMethod;
+                        if (relationFieldElement == null) {
+                            relationFieldElement = relationMethod;
+                        }
+                        try {
+                            isRelationLabel = JpaControllerUtil.isAnnotatedWith(relationFieldElement, entityPackage + "." + RELATION_LABEL_ANNOTATION);
+                        } catch (Exception ex) {
+                            // Do nothing
+                        }
+                        boolean isPrimaryKey = EntityClass.isId(relationMethod, relfd.isFieldAccess());
+                        String relPropertyName = relfd.getPropertyName();
+                        if (isRelationLabel) {
                             return relPropertyName;
+                        }
+                        if (isPrimaryKey) {
+                            idField = relPropertyName;
+                        }
+                        for (String searchLabel : searchLabels.split(",")) {
+                            if (relPropertyName.toLowerCase().contains(searchLabel.toLowerCase())) {
+                                return relPropertyName;
+                            }
                         }
                     }
                 }

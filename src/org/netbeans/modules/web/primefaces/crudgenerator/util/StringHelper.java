@@ -32,5 +32,9 @@ public class StringHelper {
         }
         return methodName;
     }
+    
+    public static boolean isGetterMethod(String methodName) {
+        return methodName.startsWith("get") || methodName.startsWith("is");
+    }
 
 }
