@@ -19,8 +19,9 @@ import java.util.List;
 public final class Version implements Comparable<Version> {
 
     // private static final String ACCEPTED_VERSION_PATTERN = "[0-9]+(\\.[0-9]+)*";
-    private static final String ACCEPTED_VERSION_PATTERN = "[0-9]+(\\.[0-9]+)*(\\.[\\w]+)*";
+    private static final String ACCEPTED_VERSION_PATTERN = "[0-9]+(\\.[0-9]+)*([\\.\\-][\\w]+)*";
     private static final String DEFAULT_DELIMITER = ".";
+    private static final String ARTIFACT_DELIMITER = "-";
     private String version;
     private String delimiter;
     private List<Integer> versionArtifacts;
@@ -37,6 +38,9 @@ public final class Version implements Comparable<Version> {
     private void setVersionArtifacts() {
         versionArtifacts = new ArrayList<Integer>();
         for (String artifact : this.version.split(this.delimiter)) {
+            if (artifact.contains(ARTIFACT_DELIMITER)) {
+                artifact = artifact.substring(0, artifact.indexOf(ARTIFACT_DELIMITER));
+            }
             try {
                 int parseInt = Integer.parseInt(artifact);
                 versionArtifacts.add(parseInt);

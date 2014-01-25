@@ -603,8 +603,8 @@ public abstract class FromEntityBase {
                     "]"; // NOI18N
         }
 
-        private String getRelationClassName(CompilationController controller, ExecutableElement executableElement, boolean isFieldAccess) {
-            TypeMirror passedReturnType = executableElement.getReturnType();
+        public String getRelationClassName() {
+            TypeMirror passedReturnType = method.getReturnType();
             if (TypeKind.DECLARED != passedReturnType.getKind() || !(passedReturnType instanceof DeclaredType)) {
                 return null;
             }
@@ -617,8 +617,8 @@ public abstract class FromEntityBase {
             return passedReturnTypeStrippedElement.getSimpleName().toString();
         }
 
-        private String getRelationQualifiedClassName(CompilationController controller, ExecutableElement executableElement, boolean isFieldAccess) {
-            TypeMirror passedReturnType = executableElement.getReturnType();
+        public String getRelationQualifiedClassName() {
+            TypeMirror passedReturnType = method.getReturnType();
             if (TypeKind.DECLARED != passedReturnType.getKind() || !(passedReturnType instanceof DeclaredType)) {
                 return null;
             }
@@ -630,12 +630,12 @@ public abstract class FromEntityBase {
             TypeElement passedReturnTypeStrippedElement = (TypeElement) types.asElement(passedReturnTypeStripped);
             return passedReturnTypeStrippedElement.getQualifiedName().toString();
         }
-
+        
         public String getValuesListGetter() {
             if (getRelationship() == JpaControllerUtil.REL_NONE) {
                 return null;
             }
-            String name = getRelationClassName(controller, method, isFieldAccess());
+            String name = getRelationClassName();
             if (name == null) {
                 valuesListGetter = "";
             } else {
@@ -649,7 +649,7 @@ public abstract class FromEntityBase {
             if (getRelationship() == JpaControllerUtil.REL_NONE) {
                 return null;
             }
-            String name = getRelationClassName(controller, method, isFieldAccess());
+            String name = getRelationClassName();
             if (name == null) {
                 valuesListGetter = "";
             } else {
@@ -665,7 +665,7 @@ public abstract class FromEntityBase {
             }
             /* 2014-01-20 Kay Wrobel: Locate custom RelationLabel annotation class */
 
-            String name = getRelationQualifiedClassName(controller, method, isFieldAccess());
+            String name = getRelationQualifiedClassName();
             if (name != null) {
                 TypeElement relationEntity = controller.getElements().getTypeElement(name);
                 String entityPackage = getPackageName(relationEntity.getQualifiedName().toString());
@@ -794,6 +794,14 @@ public abstract class FromEntityBase {
 
         public boolean isRelationshipOwner() {
             return fd.isRelationshipOwner();
+        }
+
+        public String getRelationClassName() {
+            return fd.getRelationClassName();
+        }
+
+        public String getRelationQualifiedClassName() {
+            return fd.getRelationQualifiedClassName();
         }
 
         public String getRelationsLabelName(String labelArtifacts) {

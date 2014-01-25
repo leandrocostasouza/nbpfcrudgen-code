@@ -209,6 +209,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final boolean tooltipMessages = tooltipMessagesBoolean == null ? false : tooltipMessagesBoolean.booleanValue();
         Boolean confirmationDialogsBoolean = (Boolean) wizard.getProperty(WizardProperties.CONFIRMATION_DIALOGS);
         final boolean confirmationDialogs = confirmationDialogsBoolean == null ? false : confirmationDialogsBoolean.booleanValue();
+        Boolean relationshipNavigationBoolean = (Boolean) wizard.getProperty(WizardProperties.RELATIONSHIP_NAVIGATION);
+        final boolean relationshipNavigation = relationshipNavigationBoolean == null ? false : relationshipNavigationBoolean.booleanValue();
 
         // add framework to project first:
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
@@ -276,7 +278,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages, confirmationDialogs);
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages, confirmationDialogs, relationshipNavigation);
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }
@@ -426,7 +428,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             boolean growlMessages,
             int growlLife,
             boolean tooltipMessages,
-            boolean confirmationDialogs) throws IOException {
+            boolean confirmationDialogs,
+            boolean relationshipNavigation) throws IOException {
         String progressMsg;
 
         if (jsfGenericIncludeFolder.length() == 0) {
@@ -571,6 +574,18 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             String controllerClassName = controllerFileObjects[i].getName();
             String converterClassName = converterFileObjects[i].getName();
             String managedBean = controllerClassName.substring(0, 1).toLowerCase() + controllerClassName.substring(1);
+            //Find out if entity has relationships
+            Map<String, Object> relationshipParams = FromEntityBase.createFieldParameters(webRoot, entityClass, managedBean, managedBean + ".selected", false, true, null);
+            boolean hasRelationships = false; // SingleRelationships = either OneToMany or ManyToOne. We are skipping ManyToMany for now
+            List<FromEntityBase.TemplateData> relationshipEntityDescriptors = new ArrayList<FromEntityBase.TemplateData>();
+            for (FromEntityBase.TemplateData relationshipEntityDescriptor : (List<FromEntityBase.TemplateData>) relationshipParams.get("entityDescriptors")) {
+                if (relationshipEntityDescriptor.isRelationshipOne() || relationshipEntityDescriptor.isRelationshipMany()) {
+                    hasRelationships = true;
+                    relationshipEntityDescriptors.add(relationshipEntityDescriptor);
+                }
+            }
+            relationshipParams = null; // Destroy
+
             params.put("managedBeanName", managedBean);
             params.put("cdiEnabled", isCdiEnabled(project));
             params.put("controllerPackageName", controllerPkg);
@@ -600,6 +615,18 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                 params.put("myFacesCodiVersion", myFacesCodiVersion); //NOI18N
             }
             params.put("jsfVersion", jsfVersion); //NOI18N
+            params.put("doRelationshipNavigation", relationshipNavigation);
+            params.put("hasRelationships", hasRelationships);
+            params.put("relationshipEntityDescriptors", relationshipEntityDescriptors);
+            if (jsfFolder.length() > 0) {
+                if (jsfFolder.startsWith("/")) {
+                    params.put("jsfFolder", jsfFolder);
+                } else {
+                    params.put("jsfFolder", "/" + jsfFolder);
+                }
+            } else {
+                params.put("jsfFolder", "");
+            }
             FromEntityBase.createParamsForConverterTemplate(params, controllerTargetFolder, entityClass, embeddedPkSupport);
 
             //Generate abstract controller on first loop
@@ -628,6 +655,9 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("editOneFieldTemplate", editOneFieldTemplate.getNameExt());
             params.put("viewOneFieldTemplate", viewOneFieldTemplate.getNameExt());
             params.put("doConfirmationDialogs", confirmationDialogs);
+            params.put("doRelationshipNavigation", relationshipNavigation);
+            params.put("hasRelationships", hasRelationships);
+            params.put("relationshipEntityDescriptors", relationshipEntityDescriptors);
 
             if (doCreate) {
                 expandSingleJSFTemplate("create.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "Create", params, progressContributor, progressPanel, progressIndex++);
@@ -661,6 +691,9 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("bundle", bundleVar); // NOI18N
             params.put("doConfirmationDialogs", confirmationDialogs);
             params.put("confirmDialogPage", jsfGenericIncludeFolder + PRIMEFACES_CONFIRMATION_PAGE);
+            params.put("doRelationshipNavigation", relationshipNavigation);
+            params.put("hasRelationships", hasRelationships);
+            params.put("relationshipEntityDescriptors", relationshipEntityDescriptors);
             expandSingleJSFTemplate("list.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
             if (jsfEntityIncludeFolder != "/") {
                 params.put("entityIncludeFolder", jsfEntityIncludeFolder); // NOI18N

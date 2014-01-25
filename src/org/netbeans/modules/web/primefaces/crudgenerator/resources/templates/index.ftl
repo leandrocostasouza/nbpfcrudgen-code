@@ -58,6 +58,13 @@
 <#if doCreate>
             <ui:include src="${entityIncludeFolder}/${entityName?uncap_first}/Create.xhtml"/>
 </#if>
+<#if doRelationshipNavigation == true && hasRelationships && doRead>
+<#list relationshipEntityDescriptors as relationshipEntityDescriptor>
+<#if relationshipEntityDescriptor.relationshipOne>
+            <ui:include src="${entityIncludeFolder}/${relationshipEntityDescriptor.relationClassName?uncap_first}/View.xhtml"/>
+</#if>
+</#list>
+</#if>
 
         </ui:define>
 

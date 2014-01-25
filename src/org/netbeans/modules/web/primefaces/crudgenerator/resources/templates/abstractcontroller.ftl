@@ -29,7 +29,7 @@ package ${controllerPackageName};
 
 import ${ejbFacadeFullClassName};
 import ${controllerPackageName}.util.JsfUtil;
-import java.util.List;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.event.ActionEvent;
@@ -55,7 +55,7 @@ public abstract class ${abstractControllerClassName}<T> {
     private ${ejbFacadeClassName}<T> ejbFacade;
     private Class<T> itemClass;
     private T selected;
-    private List<T> items;
+    private Collection<T> items;
 
     private enum PersistAction {
         CREATE,
@@ -83,10 +83,18 @@ public abstract class ${abstractControllerClassName}<T> {
     }
 
 </#if>
+    /**
+     * Retrieve the currently selected item
+     * @return
+     */
     public T getSelected() {
         return selected;
     }
 
+    /**
+     * Pass in the currently selected item
+     * @param selected
+     */
     public void setSelected(T selected) {
         this.selected = selected;
     }
@@ -100,22 +108,38 @@ public abstract class ${abstractControllerClassName}<T> {
     }
 
     /**
-     * Returns all items in a List object
+     * Returns all items as a Collection object
      *
      * @return
      */
-    public List<T> getItems() {
+    public Collection<T> getItems() {
         if (items == null) {
             items = this.ejbFacade.findAll();
         }
         return items;
     }
 
+    /**
+     * Pass in collection of items
+     * @param items
+     */
+    public void setItems(Collection<T> items) {
+        this.items = items;
+    }
+
+    /**
+     * Apply changes to an existing item to the data layer.
+     * @param event
+     */
     public void save(ActionEvent event) {
         String msg = ResourceBundle.getBundle("${bundle}").getString(itemClass.getSimpleName() + "Updated");
         persist(PersistAction.UPDATE, msg);
     }
 
+    /**
+     * Store a new item in the data layer.
+     * @param event
+     */
     public void saveNew(ActionEvent event) {
         String msg = ResourceBundle.getBundle("${bundle}").getString(itemClass.getSimpleName() + "Created");
         persist(PersistAction.CREATE, msg);
@@ -124,6 +148,10 @@ public abstract class ${abstractControllerClassName}<T> {
         }
     }
 
+    /**
+     * Remove an existing item from the data layer.
+     * @param event
+     */
     public void delete(ActionEvent event) {
         String msg = ResourceBundle.getBundle("${bundle}").getString(itemClass.getSimpleName() + "Deleted");
         persist(PersistAction.DELETE, msg);
@@ -189,10 +217,20 @@ public abstract class ${abstractControllerClassName}<T> {
         return null;
     }
 
+    /**
+     * Inform the user interface whether any validation error exist on a page.
+     * @return
+     */
     public boolean isValidationFailed() {
         return JsfUtil.isValidationFailed();
     }
 
+    /**
+     * Retrieve all messages as a String to be displayed on the page.
+     * @param clientComponent
+     * @param defaultMessage
+     * @return
+     */
     public String getComponentMessages(String clientComponent, String defaultMessage) {
         return JsfUtil.getComponentMessages(clientComponent, defaultMessage);
     }

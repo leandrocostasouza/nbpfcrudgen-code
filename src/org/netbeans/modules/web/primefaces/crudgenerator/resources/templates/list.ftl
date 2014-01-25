@@ -77,7 +77,18 @@
         <h:form id="${entityName}ListForm">
 
             <p:panel header="${r"#{"}${bundle}.List${entityName}Title${r"}"}">
-
+<#if doRelationshipNavigation == true && hasRelationships && doRead>
+                <p:contextMenu for="datalist">  
+<#list relationshipEntityDescriptors as relationshipEntityDescriptor>
+<#if relationshipEntityDescriptor.relationshipOne>
+                    <p:menuitem value="${r"#{"}${bundle}.View${relationshipEntityDescriptor.relationClassName}Heading${r"}"}" icon="ui-icon-search"  actionListener="${r"#{"}${managedBean}.prepare${relationshipEntityDescriptor.relationClassName}${r"}"}" update=":${relationshipEntityDescriptor.relationClassName}ViewForm" oncomplete="${relationshipEntityDescriptor.relationClassName}ViewDialog.show()"/>  
+</#if>
+<#if relationshipEntityDescriptor.relationshipMany>
+                    <p:menuitem value="${r"#{"}${bundle}.View${relationshipEntityDescriptor.relationClassName}Heading${r"}"}..." icon="ui-icon-search"  action="${r"#{"}${managedBean}.navigate${relationshipEntityDescriptor.relationClassName}${r"}"}"/>  
+</#if>
+</#list>
+                </p:contextMenu>  
+</#if>
 <#if !growlMessages>
                 <h:panelGroup id="messagePanel">
                     <p:messages id="listMessages" rendered="${r"#{"}!${managedBean}.validationFailed${r"}"}"/>

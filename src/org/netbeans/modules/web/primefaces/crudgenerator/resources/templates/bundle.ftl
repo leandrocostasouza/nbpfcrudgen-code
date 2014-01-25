@@ -50,6 +50,7 @@ ConfirmEditMessage=Do you want to apply the changes?
 ConfirmCreateMessage=Ready to create?
 
 <#list entities as entity>
+${entity.entityClassName}Heading=${entity.entityClassName}
 ${entity.entityClassName}Title=${entity.entityClassName} Maintenance
 ${entity.entityClassName}Created=${entity.entityClassName} was successfully created.
 ${entity.entityClassName}Updated=${entity.entityClassName} was successfully updated.
