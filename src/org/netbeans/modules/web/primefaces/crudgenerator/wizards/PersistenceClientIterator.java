@@ -543,80 +543,15 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             tmpRoot = webRoot;
         }
 
-        // 2013-11-11 Kay Wrobel: Write the template content to a physical file
-        // in the user's working directory so that FreeMarker can find it for <#include>
-        // ViewOneField
-        FileObject viewOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_VIEWONE);
-        String viewOneFieldFileName = "";
-        if (viewOneFieldTemplate == null) {
-            String content = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + TEMPLATE_VIEWONE), "UTF-8"); //NOI18N
-            viewOneFieldTemplate = FileUtil.createData(tmpRoot, TEMPLATE_VIEWONE);
-            JSFFrameworkProvider.createFile(viewOneFieldTemplate, content, encoding.name());
-            progressMsg = NbBundle.getMessage(PersistenceClientIterator.class, "MSG_Progress_Jsf_Now_Generating", viewOneFieldTemplate.getNameExt()); //NOI18N
-            progressContributor.progress(progressMsg, progressIndex++);
-            progressPanel.setText(progressMsg);
-        }
-        if (tmpRoot == webRoot) {
-            String viewOneFieldURL = viewOneFieldTemplate.toURL().toString();
-            viewOneFieldFileName = viewOneFieldURL.replace(userHomeURL, "");
-        } else {
-            viewOneFieldFileName = viewOneFieldTemplate.getNameExt();
-        }
+        // 2013-11-11 Kay Wrobel: 
+        // To fix ticket #16, we have to avoid using <#include> directive inside
+        // the templates because the template root is not universally know
+        // when using NetBeans. For that reason, we will pull in the actual code
+        // into a String variable and use the <@variable?interpret/> directive.
+        // for dynamic code interpretation.
+        String viewOneFieldTemplate = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + TEMPLATE_VIEWONE), "UTF-8"); //NOI18N        FileObject viewOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_VIEWONE);
+        String editOneFieldTemplate = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + TEMPLATE_EDITONE), "UTF-8"); //NOI18N        FileObject editOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_EDITONE);
 
-        NotifyDescriptor nd = new NotifyDescriptor.Message("ViewOne File Name: " + viewOneFieldFileName);
-        DialogDisplayer.getDefault().notify(nd);
-//        FileObject viewOneFieldTemplate = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_TEMPLATE_PATH + "viewonefield.ftl");
-//        String tmpViewOneFieldTemplateFileName = System.getProperty("user.dir") + System.getProperty("file.separator") + viewOneFieldTemplate.getNameExt();
-//        File tmpViewOneFieldTemplateFile = new File(tmpViewOneFieldTemplateFileName);
-//        if (tmpViewOneFieldTemplateFile.createNewFile()) {
-//            PrintWriter out = new PrintWriter(tmpViewOneFieldTemplateFile);
-//            try {
-//                out.print(viewOneFieldTemplate.asText());
-//                out.close();
-//            } catch (IOException ex) {
-//                Logger.getLogger(PersistenceClientIterator.class.getName()).log(Level.SEVERE, null, ex);
-//                return;
-//            }
-//        }
-//        NotifyDescriptor nd = new NotifyDescriptor.Message("ViewOne File Name: " + tmpViewOneFieldTemplateFileName);
-//        DialogDisplayer.getDefault().notify(nd);
-        // EditOneField
-        FileObject editOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_EDITONE);
-        String editOneFieldFileName = "";
-        if (editOneFieldTemplate == null) {
-            String content = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + TEMPLATE_EDITONE), "UTF-8"); //NOI18N
-            editOneFieldTemplate = FileUtil.createData(tmpRoot, TEMPLATE_EDITONE);
-            JSFFrameworkProvider.createFile(editOneFieldTemplate, content, encoding.name());
-            progressMsg = NbBundle.getMessage(PersistenceClientIterator.class, "MSG_Progress_Jsf_Now_Generating", editOneFieldTemplate.getNameExt()); //NOI18N
-            progressContributor.progress(progressMsg, progressIndex++);
-            progressPanel.setText(progressMsg);
-        }
-        if (tmpRoot == webRoot) {
-            String editOneFieldURL = editOneFieldTemplate.toURL().toString();
-            viewOneFieldFileName = editOneFieldURL.replace(userHomeURL, "");
-            nd = new NotifyDescriptor.Message("HomeURL: " + userHomeURL + "\r\nEditOneURL: " + editOneFieldURL);
-            DialogDisplayer.getDefault().notify(nd);
-
-        } else {
-            editOneFieldFileName = editOneFieldTemplate.getNameExt();
-        }
-
-        nd = new NotifyDescriptor.Message("EditOne File Name: " + editOneFieldFileName);
-        DialogDisplayer.getDefault().notify(nd);
-
-//        FileObject editOneFieldTemplate = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_TEMPLATE_PATH + "editonefield.ftl");
-//        String tmpEditOneFieldTemplateFileName = System.getProperty("user.dir") + System.getProperty("file.separator") + editOneFieldTemplate.getNameExt();
-//        File tmpEditOneFieldTemplateFile = new File(tmpEditOneFieldTemplateFileName);
-//        if (tmpEditOneFieldTemplateFile.createNewFile()) {
-//            PrintWriter out = new PrintWriter(tmpEditOneFieldTemplateFile);
-//            try {
-//                out.print(editOneFieldTemplate.asText());
-//                out.close();
-//            } catch (IOException ex) {
-//                Logger.getLogger(PersistenceClientIterator.class.getName()).log(Level.SEVERE, null, ex);
-//                return;
-//            }
-//        }
         for (int i = 0; i < controllerFileObjects.length; i++) {
             String entityClass = entities.get(i);
             String simpleClassName = JpaControllerUtil.simpleClassName(entityClass);
@@ -712,8 +647,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("growlLife", growlLife);
             params.put("tooltipMessages", tooltipMessages);
             params.put("bundle", bundleVar); // NOI18N
-            params.put("editOneFieldTemplate", editOneFieldFileName);
-            params.put("viewOneFieldTemplate", viewOneFieldFileName);
+            params.put("editOneFieldTemplate", editOneFieldTemplate);
+            params.put("viewOneFieldTemplate", viewOneFieldTemplate);
             params.put("doConfirmationDialogs", confirmationDialogs);
             params.put("doRelationshipNavigation", relationshipNavigation);
             params.put("hasRelationships", hasRelationships);
@@ -892,9 +827,6 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             saveFacesConfig(fo);
         }
 
-        // 2013-11-11 Kay Wrobel: Remove temporary template files
-//        tmpEditOneFieldTemplateFile.delete();
-//        tmpViewOneFieldTemplateFile.delete();
     }
 
     private static boolean showImportStatement(String packageName, String fqn) {

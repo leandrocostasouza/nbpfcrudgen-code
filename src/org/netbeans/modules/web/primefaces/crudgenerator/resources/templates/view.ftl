@@ -76,7 +76,7 @@
               <#assign relationLabelName = "">
             </#if>
         </#if>
-        <#include "${viewOneFieldTemplate}">
+        <@viewOneFieldTemplate?interpret/>
      </#if>
     </#list>
                     </p:panelGrid>

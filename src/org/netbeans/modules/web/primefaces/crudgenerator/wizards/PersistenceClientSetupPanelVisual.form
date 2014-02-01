@@ -21,10 +21,10 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="541" max="32767" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -32,7 +32,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="648" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -81,11 +81,11 @@
                                   <Component id="localizationBundleTextField" alignment="0" max="32767" attributes="0"/>
                                   <Component id="jsfFolder" alignment="1" max="32767" attributes="1"/>
                                   <Group type="102" alignment="1" attributes="0">
-                                      <EmptySpace min="0" pref="70" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                           <Component id="projectTextField" alignment="1" max="32767" attributes="1"/>
                                           <Component id="locationComboBox" max="32767" attributes="1"/>
-                                          <Component id="jpaPackageComboBox" alignment="1" pref="227" max="32767" attributes="0"/>
+                                          <Component id="jpaPackageComboBox" alignment="1" max="32767" attributes="0"/>
                                           <Component id="jsfPackageComboBox" alignment="1" max="32767" attributes="0"/>
                                           <Component id="converterPackageComboBox" alignment="1" max="32767" attributes="0"/>
                                       </Group>
@@ -134,7 +134,7 @@
                                       <Component id="growlCheckBox" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="growlLifeSpinner" min="-2" pref="90" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="111" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
                                       <Component id="tooltipMessagesCheckBox" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="confirmDialogsCheckBox" min="-2" max="-2" attributes="0"/>
@@ -267,7 +267,7 @@
                           <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cdiLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="118" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -692,7 +692,7 @@
             <Component class="javax.swing.JCheckBox" name="confirmDialogsCheckBox">
               <Properties>
                 <Property name="selected" type="boolean" value="true"/>
-                <Property name="text" type="java.lang.String" value="Confirm Dialogs"/>
+                <Property name="text" type="java.lang.String" value="Confirmation Dialogs"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="relationshipNavigationCheckBox">

@@ -61,7 +61,6 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
-
         <p:dialog id="${entityName}EditDlg" widgetVar="${entityName}EditDialog" modal="true" resizable="false"  <#if (primeFacesVersion.compareTo("4.0") >= 0)>appendTo="@(body)"<#else>appendToBody="true"</#if> header="${r"#{"}${bundle}.Edit${entityName}Title${r"}"}"<#if (primeFacesVersion.compareTo("3.5") >= 0)> closeOnEscape="true"</#if>>
 
             <h:form id="${entityName}EditForm">
@@ -88,9 +87,9 @@
             </#if>
         </#if>
         <#if entityDescriptor.readOnly>
-          <#include "${viewOneFieldTemplate}">
+          <@viewOneFieldTemplate?interpret/>
         <#else>
-          <#include "${editOneFieldTemplate}">
+          <@editOneFieldTemplate?interpret/>
         </#if>
      </#if>
     </#list>

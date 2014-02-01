@@ -91,7 +91,7 @@
               <#assign relationLabelName = "">
             </#if>
         </#if>
-        <#include "${editOneFieldTemplate}">
+        <@editOneFieldTemplate?interpret/>
      </#if>
     </#list>
                     </p:panelGrid>
