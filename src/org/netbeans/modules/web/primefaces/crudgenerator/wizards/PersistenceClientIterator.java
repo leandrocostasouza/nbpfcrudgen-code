@@ -48,10 +48,7 @@
 package org.netbeans.modules.web.primefaces.crudgenerator.wizards;
 
 import java.awt.Image;
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,7 +73,6 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.queries.FileEncodingQuery;
-import org.openide.filesystems.FileUtil;
 import org.netbeans.modules.j2ee.common.J2eeProjectCapabilities;
 import org.netbeans.modules.j2ee.core.api.support.wizard.Wizards;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
@@ -118,7 +114,6 @@ import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
@@ -529,18 +524,6 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             if (!jsfGenericIncludeFolder.endsWith("/")) {
                 jsfGenericIncludeFolder = jsfGenericIncludeFolder + "/";
             }
-        }
-
-        // 2014-01-31 Kay Wrobel: User "user.dir" if we're debugging (I put my project source in nbpfcrudgen
-        // Otherwise, put the include template files inside the project root temporarily.
-        // This fixes ticket #16.
-        FileObject userHome = URLMapper.findFileObject(new File(System.getProperty("user.dir")).toURI().toURL());
-        String userHomeURL = userHome.toURL().toString();
-        FileObject tmpRoot;
-        if (System.getProperty("user.dir").contains("nbpfcrudgen")) {
-            tmpRoot = userHome;
-        } else {
-            tmpRoot = webRoot;
         }
 
         // 2013-11-11 Kay Wrobel: 
