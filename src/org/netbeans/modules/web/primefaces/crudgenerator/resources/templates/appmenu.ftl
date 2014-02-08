@@ -51,9 +51,9 @@
                 <p:submenu label="${r"#{"}${bundle}.Maintenance${r"}"}">
 <#list entities as entity>
     <#if (primeFacesVersion.compareTo("3.4") >= 0)>
-                    <p:menuitem value="${entity.entityClassName}" outcome="${jsfFolder}${r"/"}${entity.entityClassName?uncap_first}${r"/index"}" />
+                    <p:menuitem value="${r"#{"}${bundle}.${entity.entityClassName}Heading${r"}"}..." outcome="${jsfFolder}${r"/"}${entity.entityClassName?uncap_first}${r"/index"}" />
     <#else>
-                    <p:menuitem value="${entity.entityClassName}" url="${servletMapping}${jsfFolder}${r"/"}${entity.entityClassName?uncap_first}${r"/index.xhtml"}" />
+                    <p:menuitem value="${r"#{"}${bundle}.${entity.entityClassName}Heading${r"}"}..." url="${servletMapping}${jsfFolder}${r"/"}${entity.entityClassName?uncap_first}${r"/index.xhtml"}" />
     </#if>
 </#list>
                 </p:submenu>
