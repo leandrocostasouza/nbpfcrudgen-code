@@ -523,7 +523,7 @@ public abstract class FromEntityBase {
         }
 
         public String getLabel() {
-            return label;
+            return StringHelper.toNatural(label);
         }
 
         public void setLabel(String label) {

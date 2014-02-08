@@ -50,8 +50,6 @@ package org.netbeans.modules.web.primefaces.crudgenerator.wizards;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,7 +74,6 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.queries.FileEncodingQuery;
-import org.openide.filesystems.FileUtil;
 import org.netbeans.modules.j2ee.common.J2eeProjectCapabilities;
 import org.netbeans.modules.j2ee.core.api.support.wizard.Wizards;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
@@ -108,6 +105,7 @@ import org.netbeans.modules.web.jsf.api.facesmodel.ResourceBundle;
 import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
 import org.netbeans.modules.web.jsf.wizards.FacesConfigIterator;
 import org.netbeans.modules.web.primefaces.crudgenerator.palette.items.FromEntityBase;
+import org.netbeans.modules.web.primefaces.crudgenerator.util.StringHelper;
 import org.netbeans.modules.web.primefaces.crudgenerator.util.Version;
 import org.netbeans.modules.web.spi.webmodule.WebModuleExtender;
 import org.netbeans.spi.project.ui.templates.support.Templates;
@@ -551,7 +549,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         // for dynamic code interpretation.
         String viewOneFieldTemplate = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + TEMPLATE_VIEWONE), "UTF-8"); //NOI18N        FileObject viewOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_VIEWONE);
         String editOneFieldTemplate = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + TEMPLATE_EDITONE), "UTF-8"); //NOI18N        FileObject editOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_EDITONE);
-
+        
         for (int i = 0; i < controllerFileObjects.length; i++) {
             String entityClass = entities.get(i);
             String simpleClassName = JpaControllerUtil.simpleClassName(entityClass);
@@ -889,6 +887,10 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
         public String getEntityClassName() {
             return entityClassName;
+        }
+        
+        public String getEntityNaturalName() {
+            return StringHelper.toNatural(entityClassName);
         }
 
         public List<FromEntityBase.TemplateData> getEntityDescriptors() {

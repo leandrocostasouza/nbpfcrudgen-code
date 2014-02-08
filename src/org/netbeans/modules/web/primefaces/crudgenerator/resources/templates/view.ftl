@@ -62,7 +62,7 @@
             <h:form id="${entityName}ViewForm">
 
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
+                    <p:panelGrid columns="2" columnClasses="column" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
     <#list entityDescriptors as entityDescriptor>
      <#-- Skip this field if we are dealing with many:many and this entity is not the owner -->
      <#if !entityDescriptor.versionField &&

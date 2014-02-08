@@ -15,3 +15,7 @@
 .ui-datatable .ui-datatable-footer .footer-section {
     text-align: left;
 }
+
+.column {
+    font-weight: bold;
+}
