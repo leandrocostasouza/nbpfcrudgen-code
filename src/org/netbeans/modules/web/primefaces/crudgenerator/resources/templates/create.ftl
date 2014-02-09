@@ -74,7 +74,7 @@
 
 </#if>
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2">
+                    <p:panelGrid columns="2" columnClasses="column">
     <#list entityDescriptors as entityDescriptor>
      <#-- Skip this field if it is an identity field that has an auto-generated value       -->
      <#-- Skip this field if we are dealing with many:many and this entity is not the owner -->

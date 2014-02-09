@@ -50,14 +50,14 @@ ConfirmEditMessage=Do you want to apply the changes?
 ConfirmCreateMessage=Ready to create?
 
 <#list entities as entity>
-${entity.entityClassName}Heading=${entity.entityClassName}
-${entity.entityClassName}Title=${entity.entityClassName} Maintenance
-${entity.entityClassName}Created=${entity.entityClassName} was successfully created.
-${entity.entityClassName}Updated=${entity.entityClassName} was successfully updated.
-${entity.entityClassName}Deleted=${entity.entityClassName} was successfully deleted.
-Create${entity.entityClassName}Title=Create New ${entity.entityClassName}
+${entity.entityClassName}Heading=${entity.entityNaturalName}
+${entity.entityClassName}Title=${entity.entityNaturalName} Maintenance
+${entity.entityClassName}Created=${entity.entityNaturalName} was successfully created.
+${entity.entityClassName}Updated=${entity.entityNaturalName} was successfully updated.
+${entity.entityClassName}Deleted=${entity.entityNaturalName} was successfully deleted.
+Create${entity.entityClassName}Title=Create New ${entity.entityNaturalName}
 Create${entity.entityClassName}SaveLink=Save
-Create${entity.entityClassName}ShowAllLink=Show All ${entity.entityClassName} Items
+Create${entity.entityClassName}ShowAllLink=Show All ${entity.entityNaturalName} Items
 Create${entity.entityClassName}IndexLink=Index
     <#list entity.entityDescriptors as entityDescriptor>
 Create${entity.entityClassName}Label_${entityDescriptor.id?replace(".","_")}=${entityDescriptor.label}:
@@ -65,10 +65,10 @@ Create${entity.entityClassName}Label_${entityDescriptor.id?replace(".","_")}=${e
 </#if>Create${entity.entityClassName}Title_${entityDescriptor.id?replace(".","_")}=${entityDescriptor.label}
 Create${entity.entityClassName}HelpText_${entityDescriptor.id?replace(".","_")}=Please provide information for ${entityDescriptor.label}
     </#list>
-Edit${entity.entityClassName}Title=Edit ${entity.entityClassName}
+Edit${entity.entityClassName}Title=Edit ${entity.entityNaturalName}
 Edit${entity.entityClassName}SaveLink=Save
 Edit${entity.entityClassName}ViewLink=View
-Edit${entity.entityClassName}ShowAllLink=Show All ${entity.entityClassName} Items
+Edit${entity.entityClassName}ShowAllLink=Show All ${entity.entityNaturalName} Items
 Edit${entity.entityClassName}IndexLink=Index
     <#list entity.entityDescriptors as entityDescriptor>
 Edit${entity.entityClassName}Label_${entityDescriptor.id?replace(".","_")}=${entityDescriptor.label}:
@@ -76,22 +76,22 @@ Edit${entity.entityClassName}Label_${entityDescriptor.id?replace(".","_")}=${ent
 </#if>Edit${entity.entityClassName}Title_${entityDescriptor.id?replace(".","_")}=${entityDescriptor.label}
 Edit${entity.entityClassName}HelpText_${entityDescriptor.id?replace(".","_")}=Please provide information for ${entityDescriptor.label}
     </#list>
-View${entity.entityClassName}Title=View ${entity.entityClassName}
+View${entity.entityClassName}Title=View ${entity.entityNaturalName}
 View${entity.entityClassName}DestroyLink=Destroy
 View${entity.entityClassName}EditLink=Edit
-View${entity.entityClassName}CreateLink=Create New ${entity.entityClassName}
-View${entity.entityClassName}ShowAllLink=Show All ${entity.entityClassName} Items
+View${entity.entityClassName}CreateLink=Create New ${entity.entityNaturalName}
+View${entity.entityClassName}ShowAllLink=Show All ${entity.entityNaturalName} Items
 View${entity.entityClassName}IndexLink=Index
     <#list entity.entityDescriptors as entityDescriptor>
 View${entity.entityClassName}Label_${entityDescriptor.id?replace(".","_")}=${entityDescriptor.label}:
 View${entity.entityClassName}Title_${entityDescriptor.id?replace(".","_")}=${entityDescriptor.label}
     </#list>
-List${entity.entityClassName}Title=List ${entity.entityClassName}
-List${entity.entityClassName}Empty=(No ${entity.entityClassName} Items Found)
+List${entity.entityClassName}Title=List ${entity.entityNaturalName}
+List${entity.entityClassName}Empty=(No ${entity.entityNaturalName} Items Found)
 List${entity.entityClassName}DestroyLink=Destroy
 List${entity.entityClassName}EditLink=Edit
 List${entity.entityClassName}ViewLink=View
-List${entity.entityClassName}CreateLink=Create New ${entity.entityClassName}
+List${entity.entityClassName}CreateLink=Create New ${entity.entityNaturalName}
 List${entity.entityClassName}IndexLink=Index
     <#list entity.entityDescriptors as entityDescriptor>
 List${entity.entityClassName}Title_${entityDescriptor.id?replace(".","_")}=${entityDescriptor.label}

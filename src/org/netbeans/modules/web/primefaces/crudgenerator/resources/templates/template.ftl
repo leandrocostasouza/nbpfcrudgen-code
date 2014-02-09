@@ -44,9 +44,6 @@
                 <ui:include src="${appMenu}"/>
             </p:layoutUnit>
             
-            <p:layoutUnit position="west" size="50"/>
-            <p:layoutUnit position="east" size="50"/>
-            
             <p:layoutUnit position="south" size="60">
                 <ui:insert name="footer"/>
             </p:layoutUnit>
