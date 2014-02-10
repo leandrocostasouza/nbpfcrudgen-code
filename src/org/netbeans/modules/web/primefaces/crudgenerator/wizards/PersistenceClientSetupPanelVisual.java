@@ -113,6 +113,9 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private ChangeSupport changeSupport = new ChangeSupport(this);
     private boolean cancelled = false;
     private WebModule wm;
+    private Version pfVersion = null;
+    private Version codiVersion = null;
+    private Version jsfVersion = null;
 
     /**
      * Creates new form CrudSetupPanel
@@ -192,6 +195,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         tooltipMessagesCheckBox = new javax.swing.JCheckBox();
         confirmDialogsCheckBox = new javax.swing.JCheckBox();
         relationshipNavigationCheckBox = new javax.swing.JCheckBox();
+        contextMenusCheckBox = new javax.swing.JCheckBox();
 
         setName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_JSFPagesAndClasses")); // NOI18N
 
@@ -347,6 +351,14 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         relationshipNavigationCheckBox.setSelected(true);
         relationshipNavigationCheckBox.setText("Relationship Navigation");
 
+        contextMenusCheckBox.setSelected(true);
+        contextMenusCheckBox.setText("Context Menus");
+        contextMenusCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contextMenusCheckBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -415,14 +427,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(filterFunctionCheckBox))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(growlCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tooltipMessagesCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(confirmDialogsCheckBox))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(primeFacesVersionForLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(primeFacesVersionLabel)
@@ -438,7 +442,18 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cdiLabel))
-                            .addComponent(relationshipNavigationCheckBox))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(growlCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tooltipMessagesCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(confirmDialogsCheckBox))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(contextMenusCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(relationshipNavigationCheckBox)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -516,7 +531,9 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                     .addComponent(tooltipMessagesCheckBox)
                     .addComponent(confirmDialogsCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(relationshipNavigationCheckBox)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(relationshipNavigationCheckBox)
+                    .addComponent(contextMenusCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(overrideExistingCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -622,6 +639,12 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         }
     }//GEN-LAST:event_browseFolderButtonActionPerformed
 
+    private void contextMenusCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contextMenusCheckBoxActionPerformed
+        if (codiVersion != null) {
+            relationshipNavigationCheckBox.setSelected(contextMenusCheckBox.isSelected());
+        }
+    }//GEN-LAST:event_contextMenusCheckBoxActionPerformed
+
     private void supportPrimeFacesCheckboxActionPerformed(java.awt.event.ActionEvent evt) {
         changeSupport.fireChange();
     }
@@ -634,6 +657,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JLabel codiVersionForLabel;
     private javax.swing.JLabel codiVersionLabel;
     private javax.swing.JCheckBox confirmDialogsCheckBox;
+    private javax.swing.JCheckBox contextMenusCheckBox;
     private javax.swing.JComboBox converterPackageComboBox;
     private javax.swing.JLabel converterPackageLabel;
     private javax.swing.JCheckBox createFunctionCheckBox;
@@ -730,11 +754,11 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
             cl = cp.getClassLoader(true);
         }
 
-        Version pfVersion = LibraryUtil.getVersion(cl, "primefaces");
+        pfVersion = LibraryUtil.getVersion(cl, "primefaces");
         String pfVersionString = pfVersion != null ? pfVersion.toString() : "";
         wizard.putProperty(WizardProperties.PRIMEFACES_VERSION, pfVersionString);
 
-        Version codiVersion = LibraryUtil.getVersion(cl, "MyFaces Extensions-CDI Core-API");
+        codiVersion = LibraryUtil.getVersion(cl, "MyFaces Extensions-CDI Core-API");
         // Look for CODI Bundle version as well
         if (codiVersion == null) {
             codiVersion = LibraryUtil.getVersion(cl, "MyFaces Extensions-CDI Bundle for JSF 2.0");
@@ -742,7 +766,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         String codiVersionString = codiVersion != null ? codiVersion.toString() : "";
         wizard.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersionString);
 
-        Version jsfVersion = new Version(JSFVersion.get(wm, true).getShortName().replace("JSF ", ""));
+        jsfVersion = new Version(JSFVersion.get(wm, true).getShortName().replace("JSF ", ""));
         String jsfVersionString = jsfVersion != null ? jsfVersion.toString() : "";
         wizard.putProperty(WizardProperties.JSF_VERSION, jsfVersionString);
 
@@ -878,20 +902,20 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
             localizationBundleTextField.setText(NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.defaultBundleName")); // NOI18N
         }
 
-        String primeFacesVersion = (String) settings.getProperty(WizardProperties.PRIMEFACES_VERSION);
-        String codiVersion = (String) settings.getProperty(WizardProperties.MYFACES_CODI_VERSION);
-        String jsfVersion = (String) settings.getProperty(WizardProperties.JSF_VERSION);
+        String pfVersionString = (String) settings.getProperty(WizardProperties.PRIMEFACES_VERSION);
+        String codiVersionString = (String) settings.getProperty(WizardProperties.MYFACES_CODI_VERSION);
+        String jsfVersionString = (String) settings.getProperty(WizardProperties.JSF_VERSION);
 
-        primeFacesVersionLabel.setText(primeFacesVersion);
-        codiVersionLabel.setText(codiVersion);
-        jsfVersionLabel.setText(jsfVersion);
+        primeFacesVersionLabel.setText(pfVersionString);
+        codiVersionLabel.setText(codiVersionString);
+        jsfVersionLabel.setText(jsfVersionString);
         cdiLabel.setText((new Boolean(PersistenceClientIterator.isCdiEnabled(project))).toString());
-        if (primeFacesVersion.compareTo("4.0") < 0) {
+        if (pfVersion.compareTo("4.0") < 0) {
             this.confirmDialogsCheckBox.setSelected(false);
             this.confirmDialogsCheckBox.setEnabled(false); //2014-01-24 changed from visible to enabled to show users that it's there
         }
 
-        if (codiVersion.isEmpty()) {
+        if (codiVersion == null) {
             this.relationshipNavigationCheckBox.setSelected(false);
             this.relationshipNavigationCheckBox.setEnabled(false);
         }
@@ -931,7 +955,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         settings.putProperty(WizardProperties.CONFIRMATION_DIALOGS, Boolean.valueOf(confirmDialogsCheckBox.isSelected()));
         //2014-01-24 Kay Wrobel
         settings.putProperty(WizardProperties.RELATIONSHIP_NAVIGATION, Boolean.valueOf(relationshipNavigationCheckBox.isSelected()));
-
+        //2014-02-09 Kay Wrobel
+        settings.putProperty(WizardProperties.CONTEXT_MENUS, Boolean.valueOf(contextMenusCheckBox.isSelected()));
     }
 
     private void updateSourceGroupPackages() {

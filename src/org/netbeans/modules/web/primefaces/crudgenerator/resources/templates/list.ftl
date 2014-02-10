@@ -44,6 +44,10 @@
     doDelete - Provide DELETE functionality (type: boolean)
     doSort   - Provide SORT functionality   (type: boolean)
     doFilter - Provide FILTER functionality (type: boolean)
+    doContextMenus - Use context menus instead of regular buttons (type: boolean)
+    doRelationshipNavigation - Navigate to / display child/parent data (type: boolean)
+    hasRelationships - Entity has foreign relationships (type: boolean)
+    relationshipEntityDescriptors - List of child/parent entities (like entityDescriptors)
     growlMessages - Indicates whether to utilize Growl widget or traditional messages (type: Boolean)
     growlLife - Default display life time in ms for Growl widget (type: Integer)
 
@@ -77,8 +81,21 @@
         <h:form id="${entityName}ListForm">
 
             <p:panel header="${r"#{"}${bundle}.List${entityName}Title${r"}"}">
-<#if doRelationshipNavigation == true && hasRelationships && doRead>
+<#if doContextMenus>
                 <p:contextMenu for="datalist">  
+<#if doCreate>
+                        <p:menuitem id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="${entityName}CreateDialog.show()"/>
+</#if>
+<#if doRead>
+                        <p:menuitem id="${readButton}" icon="ui-icon-search" value="${r"#{"}${bundle}.View${r"}"}" update=":${entityName}ViewForm" oncomplete="${entityName}ViewDialog.show()"/>
+</#if>
+<#if doUpdate>
+                        <p:menuitem id="${updateButton}" icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" update=":${entityName}EditForm" oncomplete="${entityName}EditDialog.show()"/>
+</#if>
+<#if doDelete>
+                        <p:menuitem id="${deleteButton}" icon="ui-icon-trash" value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist"/>
+</#if>
+<#if doRelationshipNavigation == true && hasRelationships && doRead>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if relationshipEntityDescriptor.relationshipOne>
                     <p:menuitem value="${r"#{"}${bundle}.${relationshipEntityDescriptor.relationClassName}Heading${r"}"}" icon="ui-icon-search"  actionListener="${r"#{"}${managedBean}.prepare${relationshipEntityDescriptor.relationClassName}${r"}"}" update=":${relationshipEntityDescriptor.relationClassName}ViewForm" oncomplete="${relationshipEntityDescriptor.relationClassName}ViewDialog.show()"/>  
@@ -87,8 +104,9 @@
                     <p:menuitem value="${r"#{"}${bundle}.${relationshipEntityDescriptor.relationClassName}Heading${r"}"}..." icon="ui-icon-search"  action="${r"#{"}${managedBean}.navigate${relationshipEntityDescriptor.relationClassName}${r"}"}"/>  
 </#if>
 </#list>
-                </p:contextMenu>  
 </#if>
+                </p:contextMenu>
+</#if>  
 <#if !growlMessages>
                 <h:panelGroup id="messagePanel">
                     <p:messages id="listMessages" rendered="${r"#{"}!${managedBean}.validationFailed${r"}"}"/>
@@ -107,7 +125,7 @@
 </#if>
             >
 
-<#if ajaxUpdateIds?? && ajaxUpdateIds != "">
+<#if ajaxUpdateIds?? && ajaxUpdateIds != "" && !doContextMenus>
                     <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"/>
                     <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"/>
 </#if>
@@ -161,6 +179,7 @@
 </#list>
                     <f:facet name="footer">
                       <div class="footer-section">
+<#if !doContextMenus>
 <#if doCreate>
                         <p:commandButton id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="${entityName}CreateDialog.show()"/>
 </#if>
@@ -178,6 +197,7 @@
     <#else>
                         <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
     </#if>
+</#if>
 </#if>
                       </div>
                     </f:facet>
