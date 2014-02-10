@@ -153,7 +153,7 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
         if (this.getSelected() != null) {
             ${relationshipEntityDescriptor.relationClassName?uncap_first}Controller.setItems(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
         }
-        return "${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index"}";
+        return "${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index?faces-redirect=true"}";
     }
 </#if>
 </#list>

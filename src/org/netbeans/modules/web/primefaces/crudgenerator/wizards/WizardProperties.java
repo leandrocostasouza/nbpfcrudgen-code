@@ -87,4 +87,5 @@ public class WizardProperties {
     public static final String CONFIRMATION_DIALOGS = "ConfirmationDialogs"; //NOI18N
     public static final String RELATIONSHIP_NAVIGATION = "RelationshipNavigation"; //NOI18N
     public static final String CONTEXT_MENUS = "ContextMenus"; //NOI18N
+    public static final String MAX_DATATABLE_COLS = "MaxDataTableColumns"; //NOI18N
 }

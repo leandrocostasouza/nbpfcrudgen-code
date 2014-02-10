@@ -196,6 +196,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         confirmDialogsCheckBox = new javax.swing.JCheckBox();
         relationshipNavigationCheckBox = new javax.swing.JCheckBox();
         contextMenusCheckBox = new javax.swing.JCheckBox();
+        jLabel9 = new javax.swing.JLabel();
+        maxDataTableColumnsTextField = new javax.swing.JTextField();
 
         setName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_JSFPagesAndClasses")); // NOI18N
 
@@ -261,7 +263,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         defaultRowsPerPageTemplateLabel.setText("Default Page Selector:");
 
-        defaultRowsPerPageTemplate.setText("10,20,30");
+        defaultRowsPerPageTemplate.setText("10,20,30,40,50");
 
         defaultRowsTextField.setText("10");
 
@@ -359,6 +361,11 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
             }
         });
 
+        jLabel9.setText("Max. Table Columns:");
+
+        maxDataTableColumnsTextField.setText("6");
+        maxDataTableColumnsTextField.setToolTipText("Enter 0 for ALL columns");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -401,18 +408,10 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                                 .addComponent(browseGIFolderButton))
                             .addComponent(browseEIFolderButton, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
                             .addComponent(jLabel6)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(defaultRowsPerPageTemplateLabel)
-                                    .addComponent(defaultRowsLabel))
-                                .addGap(27, 27, 27)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(defaultRowsPerPageTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(overrideExistingCheckBox)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(createFunctionCheckBox)
@@ -453,8 +452,21 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(contextMenusCheckBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(relationshipNavigationCheckBox)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(relationshipNavigationCheckBox))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(defaultRowsPerPageTemplateLabel)
+                                    .addComponent(defaultRowsLabel)
+                                    .addComponent(jLabel9))
+                                .addGap(27, 27, 27)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(defaultRowsPerPageTemplate)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(maxDataTableColumnsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(0, 0, Short.MAX_VALUE)))))
+                        .addGap(0, 22, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -512,7 +524,11 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(defaultRowsPerPageTemplateLabel)
                     .addComponent(defaultRowsPerPageTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(maxDataTableColumnsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchLabelsLabel)
                     .addComponent(searchLabelsTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -679,6 +695,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox jpaPackageComboBox;
@@ -691,6 +708,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JTextField localizationBundleTextField;
     private javax.swing.JComboBox locationComboBox;
     private javax.swing.JLabel locationLabel;
+    private javax.swing.JTextField maxDataTableColumnsTextField;
     private javax.swing.JCheckBox overrideExistingCheckBox;
     private javax.swing.JLabel primeFacesVersionForLabel;
     private javax.swing.JLabel primeFacesVersionLabel;
@@ -936,6 +954,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         //2013-01-17 Kay Wrobel
         settings.putProperty(WizardProperties.DEFAULT_DATATABLE_ROWS, defaultRowsTextField.getText());
         settings.putProperty(WizardProperties.DEFAULT_DATATABLE_ROWSPERPAGETEMPLATE, defaultRowsPerPageTemplate.getText());
+        settings.putProperty(WizardProperties.MAX_DATATABLE_COLS, maxDataTableColumnsTextField.getText());
         settings.putProperty(WizardProperties.PRIMEFACES_VERSION, primeFacesVersionLabel.getText());
         settings.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersionLabel.getText());
         //2013-01-25 Kay Wrobel

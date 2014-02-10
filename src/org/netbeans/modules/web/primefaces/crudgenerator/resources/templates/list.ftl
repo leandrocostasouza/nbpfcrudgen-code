@@ -55,6 +55,7 @@
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
 
 </#if>
+<#assign columnCounter = 0/>
 <#assign createButton  = "createButton"/>
 <#assign readButton    = "viewButton"/>
 <#assign updateButton  = "editButton"/>
@@ -113,8 +114,9 @@
                 </h:panelGroup>
 
 </#if>
-                <p:dataTable id="datalist" value="${r"#{"}${managedBeanProperty}${r"}"}" var="${item}"
-                             selectionMode="single" selection="${r"#{"}${managedBean}${r".selected}"}"
+                <p:dataTable id="datalist"
+                             value="${r"#{"}${managedBeanProperty}${r"}"}"
+                             var="${item}"
 <#if entityIdField?? && entityIdField != "">
                              rowKey="${r"#{"}${item}.${entityIdField}${r"}"}"
 </#if>
@@ -123,13 +125,13 @@
                              rows="${defaultDataTableRows}"
                              rowsPerPageTemplate="${defaultDataTableRowsPerPageTemplate}"
 </#if>
-            >
-
+                             selectionMode="single"
+                             selection="${r"#{"}${managedBean}${r".selected}"}">
 <#if ajaxUpdateIds?? && ajaxUpdateIds != "" && !doContextMenus>
+
                     <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"/>
                     <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"/>
 </#if>
-
 <#list entityDescriptors as entityDescriptor>
   <#-- Skip this field if we are dealing with many:many -->
   <#if !entityDescriptor.relationshipMany && !entityDescriptor.versionField>
@@ -140,6 +142,8 @@
               <#assign relationLabelName = "">
         </#if>
     </#if>
+<#assign columnCounter = columnCounter + 1/>
+<#if (maxTableCols != 0 && columnCounter > maxTableCols)><!--</#if>
 <#if entityDescriptor.relationshipOne>
                 <#if relationLabelName?? && relationLabelName != "">
                     <p:column<#if doSort> sortBy="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"</#if><#if doFilter> filterBy="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"</#if>>
@@ -175,11 +179,12 @@
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}"/>
     </#if>
                     </p:column>
+<#if (maxTableCols != 0 && columnCounter > maxTableCols)>--></#if>
   </#if>
 </#list>
+<#if !doContextMenus>
                     <f:facet name="footer">
                       <div class="footer-section">
-<#if !doContextMenus>
 <#if doCreate>
                         <p:commandButton id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="${entityName}CreateDialog.show()"/>
 </#if>
@@ -198,9 +203,9 @@
                         <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
     </#if>
 </#if>
-</#if>
                       </div>
                     </f:facet>
+</#if>
 
                 </p:dataTable>
 

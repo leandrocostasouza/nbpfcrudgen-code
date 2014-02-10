@@ -214,6 +214,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final boolean relationshipNavigation = relationshipNavigationBoolean == null ? false : relationshipNavigationBoolean.booleanValue();
         Boolean contextMenusBoolean = (Boolean) wizard.getProperty(WizardProperties.CONTEXT_MENUS);
         final boolean contextMenus = contextMenusBoolean == null ? false : contextMenusBoolean.booleanValue();
+        String maxTableColsString = (String) wizard.getProperty(WizardProperties.MAX_DATATABLE_COLS);
+        final int maxTableCols = Integer.parseInt(maxTableColsString);
 
         // add framework to project first:
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
@@ -281,7 +283,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages, confirmationDialogs, relationshipNavigation,contextMenus);
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages, confirmationDialogs, relationshipNavigation,contextMenus,maxTableCols);
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }
@@ -433,7 +435,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             boolean tooltipMessages,
             boolean confirmationDialogs,
             boolean relationshipNavigation,
-            boolean contextMenus) throws IOException {
+            boolean contextMenus,
+            int maxTableCols) throws IOException {
         String progressMsg;
 
         if (jsfGenericIncludeFolder.length() == 0) {
@@ -678,6 +681,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("hasRelationships", hasRelationships);
             params.put("relationshipEntityDescriptors", relationshipEntityDescriptors);
             params.put("doContextMenus", contextMenus);
+            params.put("maxTableCols", maxTableCols);
             expandSingleJSFTemplate("list.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
             if (jsfEntityIncludeFolder != "/") {
                 params.put("entityIncludeFolder", jsfEntityIncludeFolder); // NOI18N

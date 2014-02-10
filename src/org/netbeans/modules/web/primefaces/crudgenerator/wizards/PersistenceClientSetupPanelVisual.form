@@ -101,21 +101,10 @@
                               </Group>
                           </Group>
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="defaultRowsPerPageTemplateLabel" min="-2" max="-2" attributes="0"/>
-                                          <Component id="defaultRowsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="defaultRowsTextField" min="-2" max="-2" attributes="0"/>
-                                          <Component id="defaultRowsPerPageTemplate" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
                                   <Component id="overrideExistingCheckBox" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <Component id="createFunctionCheckBox" min="-2" max="-2" attributes="0"/>
@@ -161,8 +150,26 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="relationshipNavigationCheckBox" min="-2" max="-2" attributes="0"/>
                                   </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="defaultRowsPerPageTemplateLabel" min="-2" max="-2" attributes="0"/>
+                                          <Component id="defaultRowsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="defaultRowsPerPageTemplate" max="32767" attributes="0"/>
+                                          <Group type="102" attributes="0">
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="defaultRowsTextField" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="maxDataTableColumnsTextField" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                  </Group>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="22" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -235,7 +242,12 @@
                           <Component id="defaultRowsPerPageTemplateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="defaultRowsPerPageTemplate" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxDataTableColumnsTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="searchLabelsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="searchLabelsTextBox" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -519,7 +531,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="defaultRowsPerPageTemplate">
               <Properties>
-                <Property name="text" type="java.lang.String" value="10,20,30"/>
+                <Property name="text" type="java.lang.String" value="10,20,30,40,50"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="defaultRowsTextField">
@@ -716,6 +728,17 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contextMenusCheckBoxActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel9">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Max. Table Columns:"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxDataTableColumnsTextField">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="6"/>
+                <Property name="toolTipText" type="java.lang.String" value="Enter 0 for ALL columns"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
