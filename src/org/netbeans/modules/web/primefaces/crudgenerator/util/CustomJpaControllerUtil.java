@@ -8,7 +8,6 @@ package org.netbeans.modules.web.primefaces.crudgenerator.util;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
@@ -65,7 +64,7 @@ public class CustomJpaControllerUtil extends JpaControllerUtil {
         return StringHelper.firstLower(name);
     }
 
-    public static boolean isReadOnly(TypeElement entityTypeElement, ExecutableElement getterMethod) throws NotGetterMethodException {
+    public static boolean isReadOnly(ExecutableElement getterMethod) throws NotGetterMethodException {
 
         // Determine the setter name to search for
         String setterMethod = getterMethod.getSimpleName().toString();
@@ -73,19 +72,22 @@ public class CustomJpaControllerUtil extends JpaControllerUtil {
             setterMethod = setterMethod.replaceFirst("get", "set");
         } else if (setterMethod.startsWith("is")) {
             setterMethod = setterMethod.replaceFirst("is", "set");
-        } else throw new NotGetterMethodException();
-        
-        // Try to find a matching setter method for given getter method
-        //TODO: Does not work on composite keys because getter method is not located
-        //in Entity class, but in Composite Key class (ending in PK). Try to find
-        //a better way. Investigate: method owner.
-        ExecutableElement[] methods = getEntityMethodsBySuperClass(entityTypeElement);
-        for (ExecutableElement method : methods) {
+        } else {
+            throw new NotGetterMethodException();
+        }
+
+        // Try to find a matching setter method from a list of methods in the
+        // enclosing type element
+        TypeElement enclosingElementType = (TypeElement) getterMethod.getEnclosingElement();
+        List<ExecutableElement> enclosedMethods = new LinkedList<ExecutableElement>();
+        enclosedMethods.addAll(ElementFilter.methodsIn(enclosingElementType.getEnclosedElements()));
+        for (ExecutableElement method : enclosedMethods) {
             if (method.getSimpleName().toString().equals(setterMethod)) {
                 return false;
             }
         }
         
+        // No setter found? Then it's a Read-Only property.
         return true;
     }
 

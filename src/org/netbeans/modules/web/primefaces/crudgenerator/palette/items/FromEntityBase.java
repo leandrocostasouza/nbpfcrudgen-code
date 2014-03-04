@@ -539,7 +539,7 @@ public abstract class FromEntityBase {
 
         public boolean isReadOnly() {
             try {
-                readOnly = CustomJpaControllerUtil.isReadOnly(bean, method);
+                readOnly = CustomJpaControllerUtil.isReadOnly(method);
             } catch (NotGetterMethodException ex) {
                 readOnly = false;
             }
