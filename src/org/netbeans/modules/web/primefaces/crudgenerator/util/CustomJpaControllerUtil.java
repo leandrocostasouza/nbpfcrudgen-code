@@ -76,6 +76,9 @@ public class CustomJpaControllerUtil extends JpaControllerUtil {
         } else throw new NotGetterMethodException();
         
         // Try to find a matching setter method for given getter method
+        //TODO: Does not work on composite keys because getter method is not located
+        //in Entity class, but in Composite Key class (ending in PK). Try to find
+        //a better way. Investigate: method owner.
         ExecutableElement[] methods = getEntityMethodsBySuperClass(entityTypeElement);
         for (ExecutableElement method : methods) {
             if (method.getSimpleName().toString().equals(setterMethod)) {

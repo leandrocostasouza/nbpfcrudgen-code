@@ -61,10 +61,17 @@
 <#assign updateButton  = "editButton"/>
 <#assign deleteButton  = "deleteButton"/>
 <#assign ajaxUpdateIds = "">
+<#if doContextMenus>
+<#if doCreate><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + createButton/></#if>
+<#if doRead><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + readButton/></#if>
+<#if doUpdate><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + updateButton/></#if>
+<#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + deleteButton/></#if>
+<#else>
 <#if doCreate><#assign ajaxUpdateIds = ajaxUpdateIds + " " + createButton/></#if>
 <#if doRead><#assign ajaxUpdateIds = ajaxUpdateIds + " " + readButton/></#if>
 <#if doUpdate><#assign ajaxUpdateIds = ajaxUpdateIds + " " + updateButton/></#if>
 <#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " " + deleteButton/></#if>
+</#if>
 <#assign ajaxUpdateIds = ajaxUpdateIds?trim>
 <#if growlMessages>
   <#assign messageUpdate = ":growl">
@@ -84,19 +91,17 @@
             <p:panel header="${r"#{"}${bundle}.List${entityName}Title${r"}"}">
 <#if doContextMenus>
                 <p:contextMenu for="datalist">  
-<#if doCreate>
-                        <p:menuitem id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="${entityName}CreateDialog.show()"/>
-</#if>
 <#if doRead>
-                        <p:menuitem id="${readButton}" icon="ui-icon-search" value="${r"#{"}${bundle}.View${r"}"}" update=":${entityName}ViewForm" oncomplete="${entityName}ViewDialog.show()"/>
+                        <p:menuitem id="readMenuItem" icon="ui-icon-search" value="${r"#{"}${bundle}.View${r"}"}" onclick="document.getElementById('${entityName}ListForm:${readButton}').click();"/>
 </#if>
 <#if doUpdate>
-                        <p:menuitem id="${updateButton}" icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" update=":${entityName}EditForm" oncomplete="${entityName}EditDialog.show()"/>
+                        <p:menuitem id="updateMenuItem" icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" onclick="document.getElementById('${entityName}ListForm:${updateButton}').click();"/>
 </#if>
 <#if doDelete>
-                        <p:menuitem id="${deleteButton}" icon="ui-icon-trash" value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist"/>
+                        <p:menuitem id="deleteMenuItem" icon="ui-icon-trash" value="${r"#{"}${bundle}.Delete${r"}"}" onclick="document.getElementById('${entityName}ListForm:${deleteButton}').click();"/>
 </#if>
 <#if doRelationshipNavigation == true && hasRelationships && doRead>
+<p:separator/>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if relationshipEntityDescriptor.relationshipOne>
                     <p:menuitem value="${r"#{"}${bundle}.${relationshipEntityDescriptor.relationClassName}Heading${r"}"}" icon="ui-icon-search"  actionListener="${r"#{"}${managedBean}.prepare${relationshipEntityDescriptor.relationClassName}${r"}"}" update=":${relationshipEntityDescriptor.relationClassName}ViewForm" oncomplete="${relationshipEntityDescriptor.relationClassName}ViewDialog.show()"/>  
@@ -127,10 +132,13 @@
 </#if>
                              selectionMode="single"
                              selection="${r"#{"}${managedBean}${r".selected}"}">
-<#if ajaxUpdateIds?? && ajaxUpdateIds != "" && !doContextMenus>
+<#if ajaxUpdateIds?? && ajaxUpdateIds != "">
 
                     <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"/>
                     <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"/>
+<#if doContextMenus && doRead>
+                    <p:ajax event="rowDblselect" onsuccess="document.getElementById('${entityName}ListForm:${readButton}').click();"/>
+</#if>
 </#if>
 <#list entityDescriptors as entityDescriptor>
   <#-- Skip this field if we are dealing with many:many -->
@@ -185,29 +193,35 @@
 <#if !doContextMenus>
                     <f:facet name="footer">
                       <div class="footer-section">
+<#else>
+
+                </p:dataTable>
+
+</#if>
 <#if doCreate>
-                        <p:commandButton id="${createButton}" icon="ui-icon-plus"   value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="${entityName}CreateDialog.show()"/>
+                        <p:commandButton id="${createButton}"<#if doContextMenus>                            </#if> icon="ui-icon-plus"   value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="${entityName}CreateDialog.show()"/>
 </#if>
 <#if doRead>
-                        <p:commandButton id="${readButton}"   icon="ui-icon-search" value="${r"#{"}${bundle}.View${r"}"}" update=":${entityName}ViewForm" oncomplete="${entityName}ViewDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${readButton}"  <#if doContextMenus> style="visibility: hidden;"</#if> icon="ui-icon-search" value="${r"#{"}${bundle}.View${r"}"}" update=":${entityName}ViewForm" oncomplete="${entityName}ViewDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
 <#if doUpdate>
-                        <p:commandButton id="${updateButton}"   icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" update=":${entityName}EditForm" oncomplete="${entityName}EditDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${updateButton}"  <#if doContextMenus> style="visibility: hidden;"</#if> icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" update=":${entityName}EditForm" oncomplete="${entityName}EditDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
 <#if doDelete>
     <#if (primeFacesVersion.compareTo("4.0") >= 0 && doConfirmationDialogs) >
-                        <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}">
+                        <p:commandButton id="${deleteButton}"<#if doContextMenus> style="visibility: hidden;"</#if> icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}">
                             <p:confirm header="${r"#{"}${bundle}.ConfirmationHeader${r"}"}" message="${r"#{"}${bundle}.ConfirmDeleteMessage${r"}"}" icon="ui-icon-alert"/>
                         </p:commandButton>
     <#else>
-                        <p:commandButton id="${deleteButton}" icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${deleteButton}"<#if doContextMenus> style="visibility: hidden;"</#if> icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
     </#if>
 </#if>
+<#if !doContextMenus>
                       </div>
                     </f:facet>
-</#if>
 
                 </p:dataTable>
+</#if>
 
             </p:panel>
 <#if (primeFacesVersion.compareTo("4.0") >= 0 && doConfirmationDialogs) >
