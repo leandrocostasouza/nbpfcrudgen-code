@@ -1,7 +1,7 @@
-        <#if (primeFacesVersion.compareTo("3.3") >= 0 && !entityDescriptor.primaryKey && !entityDescriptor.embeddedKey)>
-                        <p:outputLabel value="${r"#{"}${bundle}.${crud}${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
-        <#else>
+        <#if (primeFacesVersion.compareTo("3.3") < 0 || (crud != "Create" && (entityDescriptor.primaryKey || entityDescriptor.embeddedKey)))>
                         <h:outputLabel value="${r"#{"}${bundle}.${crud}${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
+        <#else>
+                        <p:outputLabel value="${r"#{"}${bundle}.${crud}${entityName}Label_${entityDescriptor.id?replace(".","_")}${r"}"}" for="${entityDescriptor.id?replace(".","_")}" />
         </#if>
         <#if tooltipMessages>
                       <h:panelGroup>
