@@ -91,6 +91,9 @@
             <p:panel header="${r"#{"}${bundle}.List${entityName}Title${r"}"}">
 <#if doContextMenus>
                 <p:contextMenu for="datalist">  
+<#if doCreate>
+                        <p:menuitem id="${createButton}" icon="ui-icon-plus" value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="${entityName}CreateDialog.show()"/>
+</#if>
 <#if doRead>
                         <p:menuitem id="readMenuItem" icon="ui-icon-search" value="${r"#{"}${bundle}.View${r"}"}" onclick="document.getElementById('${entityName}ListForm:${readButton}').click();"/>
 </#if>
