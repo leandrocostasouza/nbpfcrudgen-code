@@ -64,7 +64,6 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
 import static org.netbeans.modules.j2ee.core.api.support.java.JavaIdentifiers.getPackageName;
-import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil;
 import org.netbeans.modules.web.jsf.palette.items.JsfLibrariesSupport;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
 import org.netbeans.modules.web.primefaces.crudgenerator.util.CustomJpaControllerUtil;
@@ -128,10 +127,10 @@ public abstract class FromEntityBase {
         String idFieldName = "";
         if (bean != null) {
             ExecutableElement[] methods = CustomJpaControllerUtil.getEntityMethodsBySuperClass(bean);
-            JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport = null;
+            CustomJpaControllerUtil.CustomEmbeddedPkSupport embeddedPkSupport = null;
             for (ExecutableElement method : methods) {
                 // filter out @Transient methods
-                if (JpaControllerUtil.findAnnotation(method, "javax.persistence.Transient") != null) { //NOI18N
+                if (CustomJpaControllerUtil.findAnnotation(method, "javax.persistence.Transient") != null) { //NOI18N
                     continue;
                 }
 
@@ -149,9 +148,9 @@ public abstract class FromEntityBase {
                         if (TypeKind.DECLARED == rType.getKind()) {
                             DeclaredType rTypeDeclared = (DeclaredType) rType;
                             TypeElement rTypeElement = (TypeElement) rTypeDeclared.asElement();
-                            if (JpaControllerUtil.isEmbeddableClass(rTypeElement)) {
+                            if (CustomJpaControllerUtil.isEmbeddableClass(rTypeElement)) {
                                 if (embeddedPkSupport == null) {
-                                    embeddedPkSupport = new JpaControllerUtil.EmbeddedPkSupport();
+                                    embeddedPkSupport = new CustomJpaControllerUtil.CustomEmbeddedPkSupport();
                                 }
                                 String propName = fd.getPropertyName();
                                 for (ExecutableElement pkMethod : embeddedPkSupport.getPkAccessorMethods(bean)) {
@@ -159,7 +158,7 @@ public abstract class FromEntityBase {
                                         String pkMethodName = pkMethod.getSimpleName().toString();
                                         fd = new FieldDesc(controller, pkMethod, bean);
                                         fd.setLabel(pkMethodName.substring(3));
-                                        fd.setPropertyName(propName + "." + JpaControllerUtil.getPropNameFromMethod(pkMethodName));
+                                        fd.setPropertyName(propName + "." + CustomJpaControllerUtil.getPropNameFromMethod(pkMethodName));
                                         fd.setEmbeddedKey();
                                         fields.add(fd);
                                     }
@@ -174,16 +173,16 @@ public abstract class FromEntityBase {
                         }
                     } else if (fd.getDateTimeFormat().length() > 0) {
                         fields.add(fd);
-                    } else if (relationship == JpaControllerUtil.REL_TO_ONE
-                            || relationship == JpaControllerUtil.REL_TO_MANY) {
+                    } else if (relationship == CustomJpaControllerUtil.REL_TO_ONE
+                            || relationship == CustomJpaControllerUtil.REL_TO_MANY) {
                         if (embeddedPkSupport == null) {
-                            embeddedPkSupport = new JpaControllerUtil.EmbeddedPkSupport();
+                            embeddedPkSupport = new CustomJpaControllerUtil.CustomEmbeddedPkSupport();
                         }
                         if (embeddedPkSupport.isRedundantWithPkFields(bean, method)) {
                             fd.setEmbeddedKey();
                         }
                         fields.add(fd);
-                    } else if (relationship == JpaControllerUtil.REL_NONE) {
+                    } else if (relationship == CustomJpaControllerUtil.REL_NONE) {
                         fields.add(fd);
                     }
                 }
@@ -199,7 +198,7 @@ public abstract class FromEntityBase {
     }
 
     private static ExecutableElement findPrimaryKeyGetter(CompilationController controller, TypeElement bean) {
-        ExecutableElement[] methods = JpaControllerUtil.getEntityMethods(bean);
+        ExecutableElement[] methods = CustomJpaControllerUtil.getEntityMethods(bean);
         for (ExecutableElement method : methods) {
             FieldDesc fd = new FieldDesc(controller, method, bean, false);
             if (fd.isValid()) {
@@ -220,7 +219,7 @@ public abstract class FromEntityBase {
     }
 
     public static void createParamsForConverterTemplate(final Map<String, Object> params, final FileObject targetJspFO,
-            final String entityClass, final JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport) throws IOException {
+            final String entityClass, final CustomJpaControllerUtil.CustomEmbeddedPkSupport embeddedPkSupport) throws IOException {
         JavaSource javaSource = JavaSource.create(EntityClass.createClasspathInfo(targetJspFO));
         javaSource.runUserActionTask(new Task<CompilationController>() {
             @Override
@@ -234,7 +233,7 @@ public abstract class FromEntityBase {
     private static final String INDENT = "            "; // TODO: jsut reformat generated code
 
     private static void createParamsForConverterTemplate(Map<String, Object> params, CompilationController controller,
-            TypeElement bean, JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport) throws IOException {
+            TypeElement bean, CustomJpaControllerUtil.CustomEmbeddedPkSupport embeddedPkSupport) throws IOException {
         // primary key type:
         ExecutableElement primaryGetter = findPrimaryKeyGetter(controller, bean);
         StringBuffer key = new StringBuffer();
@@ -255,10 +254,10 @@ public abstract class FromEntityBase {
             if (TypeKind.DECLARED == idType.getKind()) {
                 DeclaredType declaredType = (DeclaredType) idType;
                 TypeElement idClass = (TypeElement) declaredType.asElement();
-                boolean embeddable = idClass != null && JpaControllerUtil.isEmbeddableClass(idClass);
+                boolean embeddable = idClass != null && CustomJpaControllerUtil.isEmbeddableClass(idClass);
                 boolean isDirevideId = false;
-                if (!embeddable && JpaControllerUtil.haveId(idClass)) {//NOI18N
-                    isDirevideId = JpaControllerUtil.isRelationship(primaryGetter, JpaControllerUtil.isFieldAccess(idClass)) != JpaControllerUtil.REL_NONE;
+                if (!embeddable && CustomJpaControllerUtil.haveId(idClass)) {//NOI18N
+                    isDirevideId = CustomJpaControllerUtil.isRelationship(primaryGetter, CustomJpaControllerUtil.isFieldAccess(idClass)) != CustomJpaControllerUtil.REL_NONE;
                 }
                 if (isDirevideId) {
                     //it may be direved id, find id field in parent entity
@@ -268,7 +267,7 @@ public abstract class FromEntityBase {
                         if (TypeKind.DECLARED == idType.getKind()) {
                             declaredType = (DeclaredType) idType;
                             idClass = (TypeElement) declaredType.asElement();
-                            embeddable = idClass != null && JpaControllerUtil.isEmbeddableClass(idClass);
+                            embeddable = idClass != null && CustomJpaControllerUtil.isEmbeddableClass(idClass);
                         }
                     } else {
                         idClass = null;//clean all, can't find getter in derived id
@@ -468,7 +467,7 @@ public abstract class FromEntityBase {
             this.methodName = method.getSimpleName().toString();
             this.propertyName = CustomJpaControllerUtil.getPropNameFromMethod(getMethodName());
             this.label = StringHelper.firstUpper(this.propertyName);
-            this.fieldElement = this.isFieldAccess() ? JpaControllerUtil.guessField(method) : method;
+            this.fieldElement = this.isFieldAccess() ? CustomJpaControllerUtil.guessField(method) : method;
             if (this.fieldElement == null) {
                 this.fieldElement = method;
             }
@@ -497,9 +496,9 @@ public abstract class FromEntityBase {
 
         public Integer getMaxSize() {
             if (fieldElement != null) {
-                AnnotationMirror sizeAnnotation = JpaControllerUtil.findAnnotation(fieldElement, "javax.validation.constraints.Size");
+                AnnotationMirror sizeAnnotation = CustomJpaControllerUtil.findAnnotation(fieldElement, "javax.validation.constraints.Size");
                 if (sizeAnnotation != null) {
-                    String stringMemberValue = JpaControllerUtil.findAnnotationValueAsString(sizeAnnotation, "max");
+                    String stringMemberValue = CustomJpaControllerUtil.findAnnotationValueAsString(sizeAnnotation, "max");
                     if (stringMemberValue != null) {
                         int parseInt;
                         try {
@@ -532,7 +531,7 @@ public abstract class FromEntityBase {
 
         private boolean isFieldAccess() {
             if (fieldAccess == null) {
-                fieldAccess = Boolean.valueOf(JpaControllerUtil.isFieldAccess(bean));
+                fieldAccess = Boolean.valueOf(CustomJpaControllerUtil.isFieldAccess(bean));
             }
             return fieldAccess.booleanValue();
         }
@@ -555,14 +554,14 @@ public abstract class FromEntityBase {
         public boolean isVersionField() {
             versionField = false;
             if (fieldElement != null) {
-                versionField = JpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.Version");
+                versionField = CustomJpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.Version");
             }
             return versionField;
         }
 
         public int getRelationship() {
             if (relationship == null) {
-                relationship = Integer.valueOf(JpaControllerUtil.isRelationship(method, isFieldAccess()));
+                relationship = Integer.valueOf(CustomJpaControllerUtil.isRelationship(method, isFieldAccess()));
             }
             return relationship.intValue();
         }
@@ -582,11 +581,11 @@ public abstract class FromEntityBase {
         }
 
         private boolean isBlob() {
-            Element fieldElement = isFieldAccess() ? JpaControllerUtil.guessField(method) : method;
+            Element fieldElement = isFieldAccess() ? CustomJpaControllerUtil.guessField(method) : method;
             if (fieldElement == null) {
                 fieldElement = method;
             }
-            return JpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.Lob"); // NOI18N
+            return CustomJpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.Lob"); // NOI18N
         }
 
         @Override
@@ -609,7 +608,7 @@ public abstract class FromEntityBase {
                 return null;
             }
             Types types = controller.getTypes();
-            TypeMirror passedReturnTypeStripped = JpaControllerUtil.stripCollection((DeclaredType) passedReturnType, types);
+            TypeMirror passedReturnTypeStripped = CustomJpaControllerUtil.stripCollection((DeclaredType) passedReturnType, types);
             if (passedReturnTypeStripped == null) {
                 return null;
             }
@@ -623,7 +622,7 @@ public abstract class FromEntityBase {
                 return null;
             }
             Types types = controller.getTypes();
-            TypeMirror passedReturnTypeStripped = JpaControllerUtil.stripCollection((DeclaredType) passedReturnType, types);
+            TypeMirror passedReturnTypeStripped = CustomJpaControllerUtil.stripCollection((DeclaredType) passedReturnType, types);
             if (passedReturnTypeStripped == null) {
                 return null;
             }
@@ -632,7 +631,7 @@ public abstract class FromEntityBase {
         }
         
         public String getValuesListGetter() {
-            if (getRelationship() == JpaControllerUtil.REL_NONE) {
+            if (getRelationship() == CustomJpaControllerUtil.REL_NONE) {
                 return null;
             }
             String name = getRelationClassName();
@@ -646,7 +645,7 @@ public abstract class FromEntityBase {
         }
 
         public String getValuesConverter() {
-            if (getRelationship() == JpaControllerUtil.REL_NONE) {
+            if (getRelationship() == CustomJpaControllerUtil.REL_NONE) {
                 return null;
             }
             String name = getRelationClassName();
@@ -660,7 +659,7 @@ public abstract class FromEntityBase {
         }
 
         public String getRelationsLabelName(String searchLabels) {
-            if (getRelationship() == JpaControllerUtil.REL_NONE) {
+            if (getRelationship() == CustomJpaControllerUtil.REL_NONE) {
                 return "";
             }
             /* 2014-01-20 Kay Wrobel: Locate custom RelationLabel annotation class */
@@ -669,7 +668,7 @@ public abstract class FromEntityBase {
             if (name != null) {
                 TypeElement relationEntity = controller.getElements().getTypeElement(name);
                 String entityPackage = getPackageName(relationEntity.getQualifiedName().toString());
-                ExecutableElement[] relationMethods = JpaControllerUtil.getEntityMethods(relationEntity);
+                ExecutableElement[] relationMethods = CustomJpaControllerUtil.getEntityMethods(relationEntity);
                 String idField = "";
                 for (ExecutableElement relationMethod : relationMethods) {
                     if (isGetterMethod(relationMethod.getSimpleName().toString())) {
@@ -682,12 +681,12 @@ public abstract class FromEntityBase {
                          * annotate each entity by hand.
                          */
                         boolean isRelationLabel = false;
-                        Element relationFieldElement = isFieldAccess() ? JpaControllerUtil.guessField(relationMethod) : relationMethod;
+                        Element relationFieldElement = isFieldAccess() ? CustomJpaControllerUtil.guessField(relationMethod) : relationMethod;
                         if (relationFieldElement == null) {
                             relationFieldElement = relationMethod;
                         }
                         try {
-                            isRelationLabel = JpaControllerUtil.isAnnotatedWith(relationFieldElement, entityPackage + "." + RELATION_LABEL_ANNOTATION);
+                            isRelationLabel = CustomJpaControllerUtil.isAnnotatedWith(relationFieldElement, entityPackage + "." + RELATION_LABEL_ANNOTATION);
                         } catch (Exception ex) {
                             // Do nothing
                         }
@@ -712,7 +711,7 @@ public abstract class FromEntityBase {
         }
 
         private boolean isRequired() {
-            return !JpaControllerUtil.isFieldOptionalAndNullable(method, isFieldAccess());
+            return !CustomJpaControllerUtil.isFieldOptionalAndNullable(method, isFieldAccess());
         }
 
         public String getReturnType() {
@@ -720,11 +719,11 @@ public abstract class FromEntityBase {
         }
 
         public boolean isRelationshipOwner() {
-            Element fieldElement = isFieldAccess() ? JpaControllerUtil.guessField(method) : method;
+            Element fieldElement = isFieldAccess() ? CustomJpaControllerUtil.guessField(method) : method;
             if (fieldElement == null) {
                 fieldElement = method;
             }
-            return JpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.JoinTable"); // NOI18N
+            return CustomJpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.JoinTable"); // NOI18N
         }
     }
 
@@ -765,11 +764,11 @@ public abstract class FromEntityBase {
         }
 
         public boolean isRelationshipOne() {
-            return fd.getRelationship() == JpaControllerUtil.REL_TO_ONE;
+            return fd.getRelationship() == CustomJpaControllerUtil.REL_TO_ONE;
         }
 
         public boolean isRelationshipMany() {
-            return fd.getRelationship() == JpaControllerUtil.REL_TO_MANY;
+            return fd.getRelationship() == CustomJpaControllerUtil.REL_TO_MANY;
         }
 
         public String getId() {

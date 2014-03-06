@@ -92,7 +92,7 @@
 <#if doContextMenus>
                 <p:contextMenu for="datalist">  
 <#if doCreate>
-                        <p:menuitem id="${createButton}" icon="ui-icon-plus" value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="${entityName}CreateDialog.show()"/>
+                        <p:menuitem id="createMenuItem" icon="ui-icon-plus" value="${r"#{"}${bundle}.Create${r"}"}" onclick="document.getElementById('${entityName}ListForm:${createButton}').click();"/>
 </#if>
 <#if doRead>
                         <p:menuitem id="readMenuItem" icon="ui-icon-search" value="${r"#{"}${bundle}.View${r"}"}" onclick="document.getElementById('${entityName}ListForm:${readButton}').click();"/>

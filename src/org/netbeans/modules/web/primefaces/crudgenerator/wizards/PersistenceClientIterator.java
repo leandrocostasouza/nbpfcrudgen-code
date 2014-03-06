@@ -86,7 +86,6 @@ import org.netbeans.modules.j2ee.persistence.wizard.PersistenceClientEntitySelec
 import org.netbeans.modules.j2ee.persistence.wizard.Util;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.ProgressPanel;
 import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerIterator;
-import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil;
 import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.ProgressReporter;
 import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.ProgressReporterDelegate;
 import org.netbeans.modules.j2ee.persistence.wizard.unit.PersistenceUnitWizardDescriptor;
@@ -104,6 +103,7 @@ import org.netbeans.modules.web.jsf.api.facesmodel.ResourceBundle;
 import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
 import org.netbeans.modules.web.jsf.wizards.FacesConfigIterator;
 import org.netbeans.modules.web.primefaces.crudgenerator.palette.items.FromEntityBase;
+import org.netbeans.modules.web.primefaces.crudgenerator.util.CustomJpaControllerUtil;
 import org.netbeans.modules.web.primefaces.crudgenerator.util.StringHelper;
 import org.netbeans.modules.web.primefaces.crudgenerator.util.Version;
 import org.netbeans.modules.web.spi.webmodule.WebModuleExtender;
@@ -244,7 +244,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             }
         }
 
-        final JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport = new JpaControllerUtil.EmbeddedPkSupport();
+        final CustomJpaControllerUtil.CustomEmbeddedPkSupport embeddedPkSupport = new CustomJpaControllerUtil.CustomEmbeddedPkSupport();
 
         final String title = NbBundle.getMessage(PersistenceClientIterator.class, "TITLE_Progress_Jsf_Pages"); //NOI18N
         final ProgressContributor progressContributor = AggregateProgressFactory.createProgressContributor(title);
@@ -411,7 +411,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             String jsfGenericIncludeFolder,
             String jsfEntityIncludeFolder,
             FileObject jpaControllerPackageFileObject,
-            JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport,
+            CustomJpaControllerUtil.CustomEmbeddedPkSupport embeddedPkSupport,
             boolean genSessionBean,
             int progressIndex,
             FileObject webRoot,
@@ -544,7 +544,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         
         for (int i = 0; i < controllerFileObjects.length; i++) {
             String entityClass = entities.get(i);
-            String simpleClassName = JpaControllerUtil.simpleClassName(entityClass);
+            String simpleClassName = CustomJpaControllerUtil.simpleClassName(entityClass);
             String simpleJpaControllerName = simpleClassName + (genSessionBean ? FACADE_SUFFIX : "JpaController"); //NOI18N
 
             progressMsg = NbBundle.getMessage(PersistenceClientIterator.class, "MSG_Progress_Jsf_Now_Generating", simpleClassName + "." + JAVA_EXT); //NOI18N
@@ -823,7 +823,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     }
 
     private static boolean showImportStatement(String packageName, String fqn) {
-        String simpleName = JpaControllerUtil.simpleClassName(fqn);
+        String simpleName = CustomJpaControllerUtil.simpleClassName(fqn);
         return !(packageName + "." + simpleName).equals(fqn); //NOI18N
     }
 
@@ -894,22 +894,22 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     }
 
     private static String getControllerFileName(String entityClass) {
-        String simpleClassName = JpaControllerUtil.simpleClassName(entityClass);
+        String simpleClassName = CustomJpaControllerUtil.simpleClassName(entityClass);
         return simpleClassName + CONTROLLER_SUFFIX;
     }
 
     private static String getConverterFileName(String entityClass) {
-        String simpleClassName = JpaControllerUtil.simpleClassName(entityClass);
+        String simpleClassName = CustomJpaControllerUtil.simpleClassName(entityClass);
         return simpleClassName + CONVERTER_SUFFIX;
     }
 
     private static String getFacadeFileName(String entityClass) {
-        String simpleClassName = JpaControllerUtil.simpleClassName(entityClass);
+        String simpleClassName = CustomJpaControllerUtil.simpleClassName(entityClass);
         return simpleClassName + FACADE_SUFFIX;
     }
 
     private static String getJsfFileName(String entityClass, String jsfFolder, String name) {
-        String simpleClassName = JpaControllerUtil.simpleClassName(entityClass);
+        String simpleClassName = CustomJpaControllerUtil.simpleClassName(entityClass);
         String firstLower = simpleClassName.substring(0, 1).toLowerCase() + simpleClassName.substring(1);
         if (jsfFolder.endsWith("/")) {
             jsfFolder = jsfFolder.substring(0, jsfFolder.length() - 1);
