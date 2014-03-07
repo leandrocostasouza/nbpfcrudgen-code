@@ -107,10 +107,10 @@
 <p:separator/>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if relationshipEntityDescriptor.relationshipOne>
-                    <p:menuitem value="${r"#{"}${bundle}.${relationshipEntityDescriptor.relationClassName}Heading${r"}"}" icon="ui-icon-search"  actionListener="${r"#{"}${managedBean}.prepare${relationshipEntityDescriptor.relationClassName}${r"}"}" update=":${relationshipEntityDescriptor.relationClassName}ViewForm" oncomplete="${relationshipEntityDescriptor.relationClassName}ViewDialog.show()"/>  
+                    <p:menuitem value="${r"#{"}${bundle}.View${relationshipEntityDescriptor.relationClassName}Title_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search"  actionListener="${r"#{"}${managedBean}.prepare${relationshipEntityDescriptor.id?cap_first}${r"}"}" update=":${relationshipEntityDescriptor.relationClassName}ViewForm" oncomplete="${relationshipEntityDescriptor.relationClassName}ViewDialog.show()"/>  
 </#if>
 <#if relationshipEntityDescriptor.relationshipMany>
-                    <p:menuitem value="${r"#{"}${bundle}.${relationshipEntityDescriptor.relationClassName}Heading${r"}"}..." icon="ui-icon-search"  action="${r"#{"}${managedBean}.navigate${relationshipEntityDescriptor.relationClassName}${r"}"}"/>  
+                    <p:menuitem value="${r"#{"}${bundle}.View${relationshipEntityDescriptor.relationClassName}Title_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}..." icon="ui-icon-search"  action="${r"#{"}${managedBean}.navigate${relationshipEntityDescriptor.id?cap_first}${r"}"}"/>  
 </#if>
 </#list>
 </#if>

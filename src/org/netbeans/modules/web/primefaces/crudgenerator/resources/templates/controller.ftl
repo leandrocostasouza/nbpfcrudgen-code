@@ -60,11 +60,6 @@ import ${entityFullClassName};
 import ${ejbFullClassName};
 </#if>
 </#if>
-<#if doRelationshipNavigation == true && hasRelationships>
-<#list relationshipEntityDescriptors as relationshipEntityDescriptor>
-import ${controllerPackageName}.${relationshipEntityDescriptor.relationClassName}Controller;
-</#list>
-</#if>
 import java.io.Serializable;
 <#if managedBeanName??>
 <#if cdiEnabled?? && cdiEnabled == true>
@@ -116,7 +111,7 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 <#if doRelationshipNavigation == true && hasRelationships>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
     @Inject
-    ${relationshipEntityDescriptor.relationClassName}Controller ${relationshipEntityDescriptor.relationClassName?uncap_first}Controller;
+    ${relationshipEntityDescriptor.relationClassName}Controller ${relationshipEntityDescriptor.id?uncap_first}Controller;
 </#list>
 </#if>
 
@@ -142,16 +137,16 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 <#if doRelationshipNavigation == true && hasRelationships>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if relationshipEntityDescriptor.relationshipOne>
-    public void prepare${relationshipEntityDescriptor.relationClassName}() {
+    public void prepare${relationshipEntityDescriptor.id?cap_first}() {
         if (this.getSelected() != null) {
-            ${relationshipEntityDescriptor.relationClassName?uncap_first}Controller.setSelected(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
+            ${relationshipEntityDescriptor.id?uncap_first}Controller.setSelected(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
         }
     }
 </#if>
 <#if relationshipEntityDescriptor.relationshipMany>
-    public String navigate${relationshipEntityDescriptor.relationClassName}() {
+    public String navigate${relationshipEntityDescriptor.id?cap_first}() {
         if (this.getSelected() != null) {
-            ${relationshipEntityDescriptor.relationClassName?uncap_first}Controller.setItems(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
+            ${relationshipEntityDescriptor.id?uncap_first}Controller.setItems(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
         }
         return "${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index?faces-redirect=true"}";
     }
