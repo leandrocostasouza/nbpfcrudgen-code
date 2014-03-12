@@ -47,6 +47,10 @@
 </#if>
 <#assign crud = "Edit">
 <#assign textThreshold = 255>
+<#assign maxFields = 20>
+<#assign fieldCount = 0>
+<#assign firstField = true>
+<#assign tabCount = 0>
 <#if growlMessages>
   <#assign messageUpdate = ":growl">
 <#else>
@@ -72,7 +76,11 @@
 
 </#if>
                 <h:panelGroup id="display">
+<#if (entityDescriptors?size > maxFields)>
+                    <p:tabView id="${entityName}TabView">
+<#else>
                     <p:panelGrid  columns="2" columnClasses="column" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
+</#if>
     <#list entityDescriptors as entityDescriptor>
      <#-- Skip this field if we are dealing with many:many and this entity is not the owner -->
      <#if !entityDescriptor.versionField &&
@@ -86,14 +94,34 @@
               <#assign relationLabelName = "">
             </#if>
         </#if>
+        <#assign fieldCount = fieldCount + 1>
+        <#if (entityDescriptors?size > maxFields) && (fieldCount > maxFields || firstField)>
+        <#assign tabCount = tabCount + 1>
+        <#if (tabCount > 1)>
+                            </p:panelGrid>
+                        </p:tab>
+        </#if>
+                        <p:tab id="${entityName}Tab${tabCount}" title="${r"#{"}${bundle}.TabHeaderPrefix${r"}"} ${tabCount}">
+                            <p:panelGrid  columns="2" columnClasses="column" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
+        <#if (fieldCount > maxFields)>
+        <#assign fieldCount = 0>
+        </#if>
+        </#if>
         <#if entityDescriptor.readOnly>
           <@viewOneFieldTemplate?interpret/>
         <#else>
           <@editOneFieldTemplate?interpret/>
         </#if>
+     <#assign firstField = false>
      </#if>
     </#list>
+<#if (entityDescriptors?size > maxFields)>
+                            </p:panelGrid>
+                        </p:tab>
+                    </p:tabView>
+<#else>
                     </p:panelGrid>
+</#if>
     <#if (primeFacesVersion.compareTo("4.0") >= 0 && doConfirmationDialogs) >
                     <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListForm:datalist,${messageUpdate}" oncomplete="handleSubmit(xhr,status,args,${entityName}EditDialog);">
                         <p:confirm header="${r"#{"}${bundle}.ConfirmationHeader${r"}"}" message="${r"#{"}${bundle}.ConfirmEditMessage${r"}"}" icon="ui-icon-alert"/>

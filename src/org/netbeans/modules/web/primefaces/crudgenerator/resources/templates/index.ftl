@@ -28,6 +28,7 @@
     servletMapping - Prefix mapping of the JSF servlet inside web.xml (type: String)
     growlMessages - Indicates whether to utilize Growl widget or traditional messages (type: Boolean)
     growlLife - Default display life time in ms for Growl widget (type: Integer)
+    uniqueRelationshipEntityDescriptor - list of unique parent/child entities. Bean has same properties as entityDescriptors.
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
@@ -59,9 +60,9 @@
             <ui:include src="${entityIncludeFolder}/${entityName?uncap_first}/Create.xhtml"/>
 </#if>
 <#if doRelationshipNavigation == true && hasRelationships && doRead>
-<#list relationshipEntityDescriptors as relationshipEntityDescriptor>
-<#if relationshipEntityDescriptor.relationshipOne>
-            <ui:include src="${entityIncludeFolder}/${relationshipEntityDescriptor.relationClassName?uncap_first}/View.xhtml"/>
+<#list uniqueRelationshipEntityDescriptors as uniqueRelationshipEntityDescriptor>
+<#if uniqueRelationshipEntityDescriptor.relationshipOne>
+            <ui:include src="${entityIncludeFolder}/${uniqueRelationshipEntityDescriptor.relationClassName?uncap_first}/View.xhtml"/>
 </#if>
 </#list>
 </#if>

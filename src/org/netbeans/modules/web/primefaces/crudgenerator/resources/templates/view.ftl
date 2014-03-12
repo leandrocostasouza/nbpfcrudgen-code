@@ -47,6 +47,10 @@
 </#if>
 <#assign crud = "View">
 <#assign textThreshold = 255>
+<#assign maxFields = 20>
+<#assign fieldCount = 0>
+<#assign firstField = true>
+<#assign tabCount = 0>
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -62,7 +66,11 @@
             <h:form id="${entityName}ViewForm">
 
                 <h:panelGroup id="display">
+<#if (entityDescriptors?size > maxFields)>
+                    <p:tabView id="${entityName}TabView">
+<#else>
                     <p:panelGrid columns="2" columnClasses="column" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
+</#if>
     <#list entityDescriptors as entityDescriptor>
      <#-- Skip this field if we are dealing with many:many and this entity is not the owner -->
      <#if !entityDescriptor.versionField &&
@@ -76,11 +84,31 @@
               <#assign relationLabelName = "">
             </#if>
         </#if>
+        <#assign fieldCount = fieldCount + 1>
+        <#if (entityDescriptors?size > maxFields) && (fieldCount > maxFields || firstField)>
+        <#assign tabCount = tabCount + 1>
+        <#if (tabCount > 1)>
+                            </p:panelGrid>
+                        </p:tab>
+        </#if>
+                        <p:tab id="${entityName}Tab${tabCount}" title="${r"#{"}${bundle}.TabHeaderPrefix${r"}"} ${tabCount}">
+                            <p:panelGrid columns="2" columnClasses="column" rendered="${r"#{"}${managedBeanProperty} != null${r"}"}">
+        <#if (fieldCount > maxFields)>
+        <#assign fieldCount = 0>
+        </#if>
+        </#if>
         <@viewOneFieldTemplate?interpret/>
+     <#assign firstField = false>
      </#if>
     </#list>
+<#if (entityDescriptors?size > maxFields)>
+                            </p:panelGrid>
+                        </p:tab>
+                    </p:tabView>
+<#else>
                     </p:panelGrid>
-                    <p:commandButton value="${r"#{"}${bundle}.Close${r"}"}" onclick="${entityName}ViewDialog.hide()"/>
+</#if>
+                  <p:commandButton value="${r"#{"}${bundle}.Close${r"}"}" onclick="${entityName}ViewDialog.hide()"/>
                 </h:panelGroup>
 
             </h:form>

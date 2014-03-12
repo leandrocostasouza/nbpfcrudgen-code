@@ -48,8 +48,24 @@ ConfirmationHeader=Confirmation
 ConfirmDeleteMessage=Are you sure you want to proceed?
 ConfirmEditMessage=Do you want to apply the changes?
 ConfirmCreateMessage=Ready to create?
+TabHeaderPrefix=Detail Page
 
 <#list entities as entity>
+<#list entity.entityDescriptors as entityDescriptor>
+<#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
+<#assign fieldName = entityDescriptor.label/>
+<#assign fieldNameLength = fieldName?length/>
+<#if fieldName?ends_with("Collection")><#assign fieldName = fieldName?substring(0,fieldNameLength - 10)/></#if>
+<#if fieldName?ends_with("List")><#assign fieldName = fieldName?substring(0,fieldNameLength - 4)/></#if>
+<#if fieldName?ends_with("Set")><#assign fieldName = fieldName?substring(0,fieldNameLength - 3)/></#if>
+<#assign fieldName = fieldName?trim/>
+<#if entityDescriptor.relationshipOne>
+${entity.entityClassName}MenuItem_${entityDescriptor.id?replace(".","_")}=View ${fieldName}
+<#else>
+${entity.entityClassName}MenuItem_${entityDescriptor.id?replace(".","_")}=View ${fieldName}s...
+</#if>
+</#if>
+</#list>
 ${entity.entityClassName}Heading=${entity.entityNaturalName}
 ${entity.entityClassName}Title=${entity.entityNaturalName} Maintenance
 ${entity.entityClassName}Created=${entity.entityNaturalName} was successfully created.

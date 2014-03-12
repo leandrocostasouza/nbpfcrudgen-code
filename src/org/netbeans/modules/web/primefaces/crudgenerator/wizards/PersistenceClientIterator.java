@@ -51,12 +51,15 @@ import java.awt.Image;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -570,6 +573,17 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                 }
             }
             relationshipParams = null; // Destroy
+            
+            // Some tables may have multiple relationships to the same parent or child entity
+            // To avoid duplicate form includes on the index.ftl template, we have to determine
+            // all the unique entities in the list to pass along just to the index.ftl.
+            Map<String, FromEntityBase.TemplateData> uniqueRelationshipEntityDescriptorMap = new HashMap<String, FromEntityBase.TemplateData>();
+            for (FromEntityBase.TemplateData relationshipEntityDescriptor : relationshipEntityDescriptors) {
+                if (!uniqueRelationshipEntityDescriptorMap.containsKey(relationshipEntityDescriptor.getRelationClassName())) {
+                    uniqueRelationshipEntityDescriptorMap.put(relationshipEntityDescriptor.getRelationClassName(), relationshipEntityDescriptor);
+                }
+            }
+            Collection<FromEntityBase.TemplateData> uniqueRelationshipEntityDescriptors = uniqueRelationshipEntityDescriptorMap.values();
 
             params.put("managedBeanName", managedBean);
             params.put("cdiEnabled", isCdiEnabled(project));
@@ -680,6 +694,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("doRelationshipNavigation", relationshipNavigation);
             params.put("hasRelationships", hasRelationships);
             params.put("relationshipEntityDescriptors", relationshipEntityDescriptors);
+            params.put("uniqueRelationshipEntityDescriptors", uniqueRelationshipEntityDescriptors);
             params.put("doContextMenus", contextMenus);
             params.put("maxTableCols", maxTableCols);
             expandSingleJSFTemplate("list.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
