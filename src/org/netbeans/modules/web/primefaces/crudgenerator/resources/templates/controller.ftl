@@ -111,7 +111,7 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 <#if doRelationshipNavigation == true && hasRelationships>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
     @Inject
-    ${relationshipEntityDescriptor.relationClassName}Controller ${relationshipEntityDescriptor.id?uncap_first}Controller;
+    private ${relationshipEntityDescriptor.relationClassName}Controller ${relationshipEntityDescriptor.id?uncap_first}Controller;
 </#list>
 </#if>
 
