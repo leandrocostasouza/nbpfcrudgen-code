@@ -6,6 +6,8 @@
   is performed using FreeMaker (http://freemarker.org/) - see its documentation
   for full syntax. Variables available for templating are:
 
+    cdiEnabled - whether the project is CDI-Enabled (type: boolean)
+    injectAbstractEJB - whether CDI-EJB Injection should happen in AbstractController (type: boolean)
     controllerClassName - controller class name (type: String)
     controllerPackageName - controller package name (type: String)
     entityClassName - entity class name without package (type: String)
@@ -23,6 +25,8 @@
     keyGetter - entity getter method returning primary key instance
     keySetter - entity setter method to set primary key instance
     embeddedIdFields - contains information about embedded primary Ids
+    doRelationshipNavigation - Whether to perform navigation to related entities (CDI) (type: boolean)
+    hasRelationships - Whether this entity has other relationship to navigate to (CDI) (type: boolean)
     relationShipEntityDescriptors - list of beans describing individual entities. Bean has following properties:
         label - field label (type: String)
         name - field property name (type: String)
@@ -55,7 +59,7 @@ package ${controllerPackageName};
 <#if importEntityFullClassName?? && importEntityFullClassName == true>
 import ${entityFullClassName};
 </#if>
-<#if !cdiEnabled?? || cdiEnabled == false>
+<#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
 <#if importEjbFullClassName?? && importEjbFullClassName == true>
 import ${ejbFullClassName};
 </#if>
@@ -72,13 +76,15 @@ import javax.faces.view.ViewScoped;
 import javax.enterprise.context.SessionScoped;
 </#if>
 <#else>
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 </#if>
 </#if>
-<#if doRelationshipNavigation == true && hasRelationships>
+<#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
+import javax.annotation.PostConstruct;
+</#if>
+<#if (doRelationshipNavigation == true && hasRelationships) || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
 import javax.inject.Inject;
 </#if>
 <#if managedBeanName??>
@@ -98,21 +104,29 @@ import javax.inject.Inject;
 </#if>
 public class ${controllerClassName} extends ${abstractControllerClassName}<${entityClassName}> implements Serializable {
 
+<#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
 <#if !cdiEnabled?? || cdiEnabled == false>
     @EJB
+</#if>
+<#if (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
+    @Inject
+</#if>
     private ${ejbClassName} ejbFacade;
+</#if>
+<#if doRelationshipNavigation == true && hasRelationships>
+<#list relationshipEntityDescriptors as relationshipEntityDescriptor>
+
+    @Inject
+    private ${relationshipEntityDescriptor.relationClassName}Controller ${relationshipEntityDescriptor.id?uncap_first}Controller;
+</#list>
+</#if>
+<#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
 
     @PostConstruct
     @Override
     public void init() {
         super.setFacade(ejbFacade);
     }
-</#if>
-<#if doRelationshipNavigation == true && hasRelationships>
-<#list relationshipEntityDescriptors as relationshipEntityDescriptor>
-    @Inject
-    private ${relationshipEntityDescriptor.relationClassName}Controller ${relationshipEntityDescriptor.id?uncap_first}Controller;
-</#list>
 </#if>
 
     public ${controllerClassName}() {

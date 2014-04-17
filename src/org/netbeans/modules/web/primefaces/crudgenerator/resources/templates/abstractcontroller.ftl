@@ -7,6 +7,8 @@
   for full syntax. Variables available for templating are:
 
     bundle - name of the bundle set in faces-config.xml (type: String)
+    cdiEnabled - whether the project is CDI-Enabled (type: boolean)
+    injectAbstractEJB - whether CDI-EJB Injection should happen in AbstractController (type: boolean)
     controllerClassName - controller class name (type: String)
     controllerPackageName - controller package name (type: String)
     entityClassName - entity class name without package (type: String)
@@ -49,7 +51,7 @@ import javax.validation.ConstraintViolationException;
  */
 public abstract class ${abstractControllerClassName}<T> {
 
-<#if cdiEnabled?? && cdiEnabled == true>
+<#if cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == true>
     @Inject
 </#if>
     private ${ejbFacadeClassName}<T> ejbFacade;
@@ -70,7 +72,7 @@ public abstract class ${abstractControllerClassName}<T> {
         this.itemClass = itemClass;
     }
 
-<#if !cdiEnabled?? || cdiEnabled == false>
+<#if !cdiEnabled?? || cdiEnabled == false || injectAbstractEJB == false>
 
     public abstract void init();
 

@@ -88,4 +88,6 @@ public class WizardProperties {
     public static final String RELATIONSHIP_NAVIGATION = "RelationshipNavigation"; //NOI18N
     public static final String CONTEXT_MENUS = "ContextMenus"; //NOI18N
     public static final String MAX_DATATABLE_COLS = "MaxDataTableColumns"; //NOI18N
+    //2014-04-17 Kay Wrobel: Allow user to control where EJB injection happens
+    public static final String CDI_EJB_ABSTRACT_INJECTION = "CDIEJBAbstractInjection"; //NOI18N
 }

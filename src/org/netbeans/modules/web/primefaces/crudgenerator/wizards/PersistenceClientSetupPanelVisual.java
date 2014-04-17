@@ -198,6 +198,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         contextMenusCheckBox = new javax.swing.JCheckBox();
         jLabel9 = new javax.swing.JLabel();
         maxDataTableColumnsTextField = new javax.swing.JTextField();
+        injectEJBAbstractCheckBox = new javax.swing.JCheckBox();
 
         setName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_JSFPagesAndClasses")); // NOI18N
 
@@ -366,6 +367,10 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         maxDataTableColumnsTextField.setText("6");
         maxDataTableColumnsTextField.setToolTipText("Enter 0 for ALL columns");
 
+        injectEJBAbstractCheckBox.setSelected(true);
+        injectEJBAbstractCheckBox.setText("EJB Injection in AbstractController (CDI)");
+        injectEJBAbstractCheckBox.setToolTipText("Controls whether injection of EJB Facade objects happens on AbstractController or each Entity Controller. Some containers may not support injection inside an abstract class. Uncheck this box if that is the case. Note: CDI-enabled projects only.");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -452,7 +457,9 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(contextMenusCheckBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(relationshipNavigationCheckBox))
+                                .addComponent(relationshipNavigationCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(injectEJBAbstractCheckBox))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(defaultRowsPerPageTemplateLabel)
@@ -549,7 +556,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(relationshipNavigationCheckBox)
-                    .addComponent(contextMenusCheckBox))
+                    .addComponent(contextMenusCheckBox)
+                    .addComponent(injectEJBAbstractCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(overrideExistingCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -687,6 +695,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JTextField genericIncludeFolder;
     private javax.swing.JCheckBox growlCheckBox;
     private javax.swing.JSpinner growlLifeSpinner;
+    private javax.swing.JCheckBox injectEJBAbstractCheckBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -937,6 +946,14 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
             this.relationshipNavigationCheckBox.setSelected(false);
             this.relationshipNavigationCheckBox.setEnabled(false);
         }
+        
+        if (!PersistenceClientIterator.isCdiEnabled(project)) {
+            this.injectEJBAbstractCheckBox.setEnabled(false);
+        }
+        
+        if (jsfVersion.compareTo("2.2") < 0 || !PersistenceClientIterator.isCdiEnabled(project)) {
+            this.injectEJBAbstractCheckBox.setSelected(false);
+        }
     }
 
     void store(WizardDescriptor settings) {
@@ -976,6 +993,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         settings.putProperty(WizardProperties.RELATIONSHIP_NAVIGATION, Boolean.valueOf(relationshipNavigationCheckBox.isSelected()));
         //2014-02-09 Kay Wrobel
         settings.putProperty(WizardProperties.CONTEXT_MENUS, Boolean.valueOf(contextMenusCheckBox.isSelected()));
+        //2014-04-17 Kay Wrobel
+        settings.putProperty(WizardProperties.CDI_EJB_ABSTRACT_INJECTION, Boolean.valueOf(injectEJBAbstractCheckBox.isSelected()));
     }
 
     private void updateSourceGroupPackages() {

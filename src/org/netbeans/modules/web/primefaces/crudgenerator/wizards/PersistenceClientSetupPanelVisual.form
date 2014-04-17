@@ -149,6 +149,8 @@
                                       <Component id="contextMenusCheckBox" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="relationshipNavigationCheckBox" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="injectEJBAbstractCheckBox" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -272,6 +274,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="relationshipNavigationCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="contextMenusCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="injectEJBAbstractCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="overrideExistingCheckBox" min="-2" max="-2" attributes="0"/>
@@ -738,6 +741,13 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="6"/>
                 <Property name="toolTipText" type="java.lang.String" value="Enter 0 for ALL columns"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="injectEJBAbstractCheckBox">
+              <Properties>
+                <Property name="selected" type="boolean" value="true"/>
+                <Property name="text" type="java.lang.String" value="EJB Injection in AbstractController (CDI)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Controls whether injection of EJB Facade objects happens on AbstractController or each Entity Controller. Some containers may not support injection inside an abstract class. Uncheck this box if that is the case. Note: CDI-enabled projects only."/>
               </Properties>
             </Component>
           </SubComponents>
