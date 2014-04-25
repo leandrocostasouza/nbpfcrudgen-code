@@ -77,7 +77,7 @@
                 </h:panelGroup>
 
 </#if>
-                <h:panelGroup id="display">
+                <h:panelGroup id="display" rendered="${r"#{"}${managedBean}${r".selected != null}"}">
 <#if (entityDescriptors?size > maxFields)>
                     <p:tabView id="${entityName}TabView">
 <#else>

@@ -25,8 +25,8 @@
     keyGetter - entity getter method returning primary key instance
     keySetter - entity setter method to set primary key instance
     embeddedIdFields - contains information about embedded primary Ids
-    doRelationshipNavigation - Whether to perform navigation to related entities (CDI) (type: boolean)
-    hasRelationships - Whether this entity has other relationship to navigate to (CDI) (type: boolean)
+    doRelationshipNavigation - Whether to perform navigation to related entities (type: boolean)
+    hasRelationships - Whether this entity has other relationship to navigate to (type: boolean)
     relationShipEntityDescriptors - list of beans describing individual entities. Bean has following properties:
         label - field label (type: String)
         name - field property name (type: String)
@@ -78,13 +78,19 @@ import javax.enterprise.context.SessionScoped;
 <#else>
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+<#if doRelationshipNavigation == true && hasRelationships>
+import javax.faces.bean.ManagedProperty;
+</#if>
 import javax.faces.bean.ViewScoped;
 </#if>
+</#if>
+<#if doRelationshipNavigation && !myFacesCodiVersion??>
+import javax.faces.context.FacesContext;
 </#if>
 <#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
 import javax.annotation.PostConstruct;
 </#if>
-<#if (doRelationshipNavigation == true && hasRelationships) || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
+<#if (cdiEnabled?? && cdiEnabled == true) && ((doRelationshipNavigation == true && hasRelationships == true) || injectAbstractEJB == false)>
 import javax.inject.Inject;
 </#if>
 <#if managedBeanName??>
@@ -115,9 +121,15 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 </#if>
 <#if doRelationshipNavigation == true && hasRelationships>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
+<#if (cdiEnabled?? && cdiEnabled == true) || relationshipEntityDescriptor.relationshipOne == true>
 
+<#if (cdiEnabled?? && cdiEnabled == true) >
     @Inject
+<#else>
+    @ManagedProperty("${r"#{"}${relationshipEntityDescriptor.id?uncap_first}Controller${r"}"}")
+</#if>
     private ${relationshipEntityDescriptor.relationClassName}Controller ${relationshipEntityDescriptor.id?uncap_first}Controller;
+</#if>
 </#list>
 </#if>
 <#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
@@ -160,9 +172,17 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 <#if relationshipEntityDescriptor.relationshipMany>
     public String navigate${relationshipEntityDescriptor.id?cap_first}() {
         if (this.getSelected() != null) {
+<#if myFacesCodiVersion??>
             ${relationshipEntityDescriptor.id?uncap_first}Controller.setItems(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
+<#else>
+            FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("items", this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
+</#if>
         }
+<#if myFacesCodiVersion??>
         return "${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index?faces-redirect=true"}";
+<#else>
+        return "${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index"}";
+</#if>
     }
 </#if>
 </#list>

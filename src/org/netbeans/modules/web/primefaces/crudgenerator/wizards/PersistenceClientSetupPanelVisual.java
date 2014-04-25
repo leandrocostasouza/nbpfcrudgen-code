@@ -664,9 +664,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     }//GEN-LAST:event_browseFolderButtonActionPerformed
 
     private void contextMenusCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contextMenusCheckBoxActionPerformed
-        if (codiVersion != null) {
-            relationshipNavigationCheckBox.setSelected(contextMenusCheckBox.isSelected());
-        }
+        relationshipNavigationCheckBox.setSelected(contextMenusCheckBox.isSelected());
     }//GEN-LAST:event_contextMenusCheckBoxActionPerformed
 
     private void supportPrimeFacesCheckboxActionPerformed(java.awt.event.ActionEvent evt) {
@@ -937,20 +935,17 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         codiVersionLabel.setText(codiVersionString);
         jsfVersionLabel.setText(jsfVersionString);
         cdiLabel.setText((new Boolean(PersistenceClientIterator.isCdiEnabled(project))).toString());
-        if (pfVersion.compareTo("4.0") < 0) {
+        if (pfVersion != null && pfVersion.compareTo("4.0") < 0) {
             this.confirmDialogsCheckBox.setSelected(false);
             this.confirmDialogsCheckBox.setEnabled(false); //2014-01-24 changed from visible to enabled to show users that it's there
         }
 
-        if (codiVersion == null) {
-            this.relationshipNavigationCheckBox.setSelected(false);
-            this.relationshipNavigationCheckBox.setEnabled(false);
-        }
-        
+        this.relationshipNavigationCheckBox.setSelected(this.contextMenusCheckBox.isSelected());
+
         if (!PersistenceClientIterator.isCdiEnabled(project)) {
             this.injectEJBAbstractCheckBox.setEnabled(false);
         }
-        
+
         if (jsfVersion.compareTo("2.2") < 0 || !PersistenceClientIterator.isCdiEnabled(project)) {
             this.injectEJBAbstractCheckBox.setSelected(false);
         }

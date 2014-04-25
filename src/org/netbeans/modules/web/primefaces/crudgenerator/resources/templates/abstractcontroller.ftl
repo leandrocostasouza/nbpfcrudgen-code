@@ -22,6 +22,8 @@
     keyStringBody - body of Controller.Converter.getStringKey() method
     keyGetter - entity getter method returning primaty key instance
     keySetter - entity setter method to set primary key instance
+    doRelationshipNavigation - Whether to perform navigation to related entities (type: boolean)
+    myFacesCodiVersion - The version of MyFaces CODI, if any (type: Version)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
@@ -41,6 +43,10 @@ import javax.inject.Inject;
 
 import java.util.ResourceBundle;
 import javax.ejb.EJBException;
+<#if doRelationshipNavigation && !myFacesCodiVersion??>
+import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
+</#if>
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
@@ -237,4 +243,14 @@ public abstract class ${abstractControllerClassName}<T> {
         return JsfUtil.getComponentMessages(clientComponent, defaultMessage);
     }
 
+<#if doRelationshipNavigation && !myFacesCodiVersion??>
+    @PostConstruct
+    public void initParams() {
+        Object paramItems = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("items");
+        if (paramItems != null) {
+            this.items = (Collection<T>) paramItems;
+        }
+    }
+
+</#if>
 }
