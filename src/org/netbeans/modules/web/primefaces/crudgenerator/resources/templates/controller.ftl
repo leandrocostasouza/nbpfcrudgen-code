@@ -78,14 +78,14 @@ import javax.enterprise.context.SessionScoped;
 <#else>
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-<#if doRelationshipNavigation == true && hasRelationships>
-import javax.faces.bean.ManagedProperty;
-</#if>
 import javax.faces.bean.ViewScoped;
 </#if>
 </#if>
-<#if doRelationshipNavigation && !myFacesCodiVersion??>
+<#if doRelationshipNavigation == true && !myFacesCodiVersion??>
 import javax.faces.context.FacesContext;
+</#if>
+<#if doRelationshipNavigation == true && hasRelationships>
+import javax.faces.event.ActionEvent;
 </#if>
 <#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
 import javax.annotation.PostConstruct;
@@ -122,11 +122,9 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 <#if doRelationshipNavigation == true && hasRelationships>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if (cdiEnabled?? && cdiEnabled == true) || relationshipEntityDescriptor.relationshipOne == true>
-
 <#if (cdiEnabled?? && cdiEnabled == true) >
     @Inject
 <#else>
-    @ManagedProperty("${r"#{"}${relationshipEntityDescriptor.id?uncap_first}Controller${r"}"}")
 </#if>
     private ${relationshipEntityDescriptor.relationClassName}Controller ${relationshipEntityDescriptor.id?uncap_first}Controller;
 </#if>
@@ -138,6 +136,14 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
     @Override
     public void init() {
         super.setFacade(ejbFacade);
+<#if doRelationshipNavigation == true && hasRelationships && (!cdiEnabled?? || cdiEnabled == false)>
+        FacesContext context = FacesContext.getCurrentInstance();
+<#list relationshipEntityDescriptors as relationshipEntityDescriptor>
+<#if relationshipEntityDescriptor.relationshipOne == true>
+        ${relationshipEntityDescriptor.id?uncap_first}Controller = context.getApplication().evaluateExpressionGet(context, "${r"#{"}${relationshipEntityDescriptor.relationClassName?uncap_first}Controller${r"}"}", ${relationshipEntityDescriptor.relationClassName}Controller.class);
+</#if>
+</#list>
+</#if>
     }
 </#if>
 
@@ -163,7 +169,7 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 <#if doRelationshipNavigation == true && hasRelationships>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if relationshipEntityDescriptor.relationshipOne>
-    public void prepare${relationshipEntityDescriptor.id?cap_first}() {
+    public void prepare${relationshipEntityDescriptor.id?cap_first}(ActionEvent event) {
         if (this.getSelected() != null) {
             ${relationshipEntityDescriptor.id?uncap_first}Controller.setSelected(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
         }
@@ -175,7 +181,7 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 <#if myFacesCodiVersion??>
             ${relationshipEntityDescriptor.id?uncap_first}Controller.setItems(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
 <#else>
-            FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("items", this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
+            FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("${relationshipEntityDescriptor.relationClassName?cap_first}_items", this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
 </#if>
         }
 <#if myFacesCodiVersion??>

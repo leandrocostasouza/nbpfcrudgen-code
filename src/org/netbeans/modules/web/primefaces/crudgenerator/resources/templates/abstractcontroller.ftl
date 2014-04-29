@@ -246,7 +246,7 @@ public abstract class ${abstractControllerClassName}<T> {
 <#if doRelationshipNavigation && !myFacesCodiVersion??>
     @PostConstruct
     public void initParams() {
-        Object paramItems = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("items");
+        Object paramItems = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(itemClass.getSimpleName() + "_items");
         if (paramItems != null) {
             this.items = (Collection<T>) paramItems;
         }
