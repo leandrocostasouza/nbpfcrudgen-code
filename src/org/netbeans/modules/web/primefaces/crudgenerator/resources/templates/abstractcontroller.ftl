@@ -33,6 +33,7 @@ package ${controllerPackageName};
 
 import ${ejbFacadeFullClassName};
 import ${controllerPackageName}.util.JsfUtil;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,7 +56,7 @@ import javax.validation.ConstraintViolationException;
  * AJAX-enabled applications. No outcomes will be generated from its methods
  * since handling is designed to be done inside one page.
  */
-public abstract class ${abstractControllerClassName}<T> {
+public abstract class ${abstractControllerClassName}<T> implements Serializable {
 
 <#if cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == true>
     @Inject

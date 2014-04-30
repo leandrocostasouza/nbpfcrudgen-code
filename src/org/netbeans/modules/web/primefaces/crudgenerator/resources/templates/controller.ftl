@@ -64,7 +64,6 @@ import ${entityFullClassName};
 import ${ejbFullClassName};
 </#if>
 </#if>
-import java.io.Serializable;
 <#if managedBeanName??>
 <#if cdiEnabled?? && cdiEnabled == true>
 import javax.inject.Named;
@@ -108,7 +107,7 @@ import javax.inject.Inject;
 @ViewScoped
 </#if>
 </#if>
-public class ${controllerClassName} extends ${abstractControllerClassName}<${entityClassName}> implements Serializable {
+public class ${controllerClassName} extends ${abstractControllerClassName}<${entityClassName}> {
 
 <#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
 <#if !cdiEnabled?? || cdiEnabled == false>
