@@ -60,15 +60,19 @@
 <#assign readButton    = "viewButton"/>
 <#assign updateButton  = "editButton"/>
 <#assign deleteButton  = "deleteButton"/>
+<#if doContextMenus>
+<#assign contextMenu   = entityName + "DataTableContextMenu"/>
+</#if>
 <#assign ajaxUpdateIds = "">
 <#if doContextMenus>
 <#if doCreate><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + createButton/></#if>
-<#if doRead><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + readButton/></#if>
+<#if doRead><#assign   ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + readButton/></#if>
 <#if doUpdate><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + updateButton/></#if>
 <#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + deleteButton/></#if>
+<#if doRead><#assign   ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + contextMenu/></#if>
 <#else>
 <#if doCreate><#assign ajaxUpdateIds = ajaxUpdateIds + " " + createButton/></#if>
-<#if doRead><#assign ajaxUpdateIds = ajaxUpdateIds + " " + readButton/></#if>
+<#if doRead><#assign   ajaxUpdateIds = ajaxUpdateIds + " " + readButton/></#if>
 <#if doUpdate><#assign ajaxUpdateIds = ajaxUpdateIds + " " + updateButton/></#if>
 <#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " " + deleteButton/></#if>
 </#if>
@@ -90,27 +94,27 @@
 
             <p:panel header="${r"#{"}${bundle}.List${entityName}Title${r"}"}">
 <#if doContextMenus>
-                <p:contextMenu for="datalist">  
+                <p:contextMenu id="${contextMenu}" for="datalist">  
 <#if doCreate>
-                        <p:menuitem id="createMenuItem" icon="ui-icon-plus" value="${r"#{"}${bundle}.Create${r"}"}" onclick="document.getElementById('${entityName}ListForm:${createButton}').click();"/>
+                    <p:menuitem value="${r"#{"}${bundle}.Create${r"}"}" onclick="document.getElementById('${entityName}ListForm:${createButton}').click();" icon="ui-icon-plus"/>
 </#if>
 <#if doRead>
-                        <p:menuitem id="readMenuItem" icon="ui-icon-search" value="${r"#{"}${bundle}.View${r"}"}" onclick="document.getElementById('${entityName}ListForm:${readButton}').click();"/>
+                    <p:menuitem value="${r"#{"}${bundle}.View${r"}"}" onclick="document.getElementById('${entityName}ListForm:${readButton}').click();" icon="ui-icon-search"/>
 </#if>
 <#if doUpdate>
-                        <p:menuitem id="updateMenuItem" icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" onclick="document.getElementById('${entityName}ListForm:${updateButton}').click();"/>
+                    <p:menuitem value="${r"#{"}${bundle}.Edit${r"}"}" onclick="document.getElementById('${entityName}ListForm:${updateButton}').click();" icon="ui-icon-pencil"/>
 </#if>
 <#if doDelete>
-                        <p:menuitem id="deleteMenuItem" icon="ui-icon-trash" value="${r"#{"}${bundle}.Delete${r"}"}" onclick="document.getElementById('${entityName}ListForm:${deleteButton}').click();"/>
+                    <p:menuitem value="${r"#{"}${bundle}.Delete${r"}"}" onclick="document.getElementById('${entityName}ListForm:${deleteButton}').click();" icon="ui-icon-trash"/>
 </#if>
-<#if doRelationshipNavigation == true && hasRelationships && doRead>
-<p:separator/>
+<#if doRelationshipNavigation && hasRelationships && doRead>
+                    <p:separator/>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if relationshipEntityDescriptor.relationshipOne>
-                    <p:menuitem value="${r"#{"}${bundle}.${entityName}MenuItem_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search"  actionListener="${r"#{"}${managedBean}.prepare${relationshipEntityDescriptor.id?cap_first}${r"}"}" update=":${relationshipEntityDescriptor.relationClassName}ViewForm" oncomplete="${relationshipEntityDescriptor.relationClassName}ViewDialog.show()"/>  
+                    <p:menuitem value="${r"#{"}${bundle}.${entityName}MenuItem_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search"  actionListener="${r"#{"}${managedBean}.prepare${relationshipEntityDescriptor.id?cap_first}${r"}"}" update=":${relationshipEntityDescriptor.relationClassName}ViewForm" oncomplete="${relationshipEntityDescriptor.relationClassName}ViewDialog.show()" disabled="${r"#{"}empty ${managedBean}.selected.${relationshipEntityDescriptor.id?uncap_first}${r"}"}"/>  
 </#if>
 <#if relationshipEntityDescriptor.relationshipMany>
-                    <p:menuitem value="${r"#{"}${bundle}.${entityName}MenuItem_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search"  action="${r"#{"}${managedBean}.navigate${relationshipEntityDescriptor.id?cap_first}${r"}"}"/>  
+                    <p:menuitem value="${r"#{"}${bundle}.${entityName}MenuItem_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search"  action="${r"#{"}${managedBean}.navigate${relationshipEntityDescriptor.id?cap_first}${r"}"}" disabled="${r"#{"}empty ${managedBean}.selected.${relationshipEntityDescriptor.id?uncap_first}${r"}"}" ajax="false"/>  
 </#if>
 </#list>
 </#if>
@@ -137,8 +141,8 @@
                              selection="${r"#{"}${managedBean}${r".selected}"}">
 <#if ajaxUpdateIds?? && ajaxUpdateIds != "">
 
-                    <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"/>
-                    <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"/>
+                    <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
+                    <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
 <#if doContextMenus && doRead>
                     <p:ajax event="rowDblselect" onsuccess="document.getElementById('${entityName}ListForm:${readButton}').click();"/>
 </#if>
@@ -179,7 +183,7 @@
                         <h:outputText value="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"/>
             <#else>
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}">
-<#if (jsfVersion.compareTo("2.2") < 0) && cdiEnabled?? && cdiEnabled == true>
+<#if (jsfVersion.compareTo("2.2") < 0) && cdiEnabled?? && cdiEnabled>
                             <f:converter binding="${r"#{"}${entityDescriptor.valuesConverter}${r"}"}"/>
 <#else>
                             <f:converter converterId="${entityDescriptor.valuesConverter}"/>

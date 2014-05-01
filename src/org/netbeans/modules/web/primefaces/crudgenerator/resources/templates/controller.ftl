@@ -56,16 +56,16 @@
 </#if>
 package ${controllerPackageName};
 
-<#if importEntityFullClassName?? && importEntityFullClassName == true>
+<#if importEntityFullClassName?? && importEntityFullClassName>
 import ${entityFullClassName};
 </#if>
-<#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
-<#if importEjbFullClassName?? && importEjbFullClassName == true>
+<#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled && injectAbstractEJB == false)>
+<#if importEjbFullClassName?? && importEjbFullClassName>
 import ${ejbFullClassName};
 </#if>
 </#if>
 <#if managedBeanName??>
-<#if cdiEnabled?? && cdiEnabled == true>
+<#if cdiEnabled?? && cdiEnabled>
 import javax.inject.Named;
 <#if myFacesCodiVersion??>
 import org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessScoped;
@@ -80,20 +80,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 </#if>
 </#if>
-<#if doRelationshipNavigation == true && !myFacesCodiVersion??>
+<#if doRelationshipNavigation && !myFacesCodiVersion??>
 import javax.faces.context.FacesContext;
 </#if>
-<#if doRelationshipNavigation == true && hasRelationships>
+<#if doRelationshipNavigation && hasRelationships>
 import javax.faces.event.ActionEvent;
 </#if>
-<#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
+<#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled && injectAbstractEJB == false)>
 import javax.annotation.PostConstruct;
 </#if>
-<#if (cdiEnabled?? && cdiEnabled == true) && ((doRelationshipNavigation == true && hasRelationships == true) || injectAbstractEJB == false)>
+<#if (cdiEnabled?? && cdiEnabled) && ((doRelationshipNavigation && hasRelationships) || injectAbstractEJB == false)>
 import javax.inject.Inject;
 </#if>
 <#if managedBeanName??>
-<#if cdiEnabled?? && cdiEnabled == true>
+<#if cdiEnabled?? && cdiEnabled>
 @Named(value="${managedBeanName}")
 <#if myFacesCodiVersion??>
 @ViewAccessScoped
@@ -109,19 +109,19 @@ import javax.inject.Inject;
 </#if>
 public class ${controllerClassName} extends ${abstractControllerClassName}<${entityClassName}> {
 
-<#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
+<#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled && injectAbstractEJB == false)>
 <#if !cdiEnabled?? || cdiEnabled == false>
     @EJB
 </#if>
-<#if (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
+<#if (cdiEnabled?? && cdiEnabled && injectAbstractEJB == false)>
     @Inject
 </#if>
     private ${ejbClassName} ejbFacade;
 </#if>
-<#if doRelationshipNavigation == true && hasRelationships>
+<#if doRelationshipNavigation && hasRelationships>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
-<#if (cdiEnabled?? && cdiEnabled == true) || relationshipEntityDescriptor.relationshipOne == true>
-<#if (cdiEnabled?? && cdiEnabled == true) >
+<#if (cdiEnabled?? && cdiEnabled) || relationshipEntityDescriptor.relationshipOne>
+<#if (cdiEnabled?? && cdiEnabled) >
     @Inject
 <#else>
 </#if>
@@ -129,16 +129,16 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 </#if>
 </#list>
 </#if>
-<#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == false)>
+<#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled && injectAbstractEJB == false)>
 
     @PostConstruct
     @Override
     public void init() {
         super.setFacade(ejbFacade);
-<#if doRelationshipNavigation == true && hasRelationships && (!cdiEnabled?? || cdiEnabled == false)>
+<#if doRelationshipNavigation && hasRelationships && (!cdiEnabled?? || cdiEnabled == false)>
         FacesContext context = FacesContext.getCurrentInstance();
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
-<#if relationshipEntityDescriptor.relationshipOne == true>
+<#if relationshipEntityDescriptor.relationshipOne>
         ${relationshipEntityDescriptor.id?uncap_first}Controller = context.getApplication().evaluateExpressionGet(context, "${r"#{"}${relationshipEntityDescriptor.relationClassName?uncap_first}Controller${r"}"}", ${relationshipEntityDescriptor.relationClassName}Controller.class);
 </#if>
 </#list>
@@ -164,12 +164,21 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
     protected void initializeEmbeddableKey() {
             this.getSelected().${keySetter}(new ${keyType}());
     }
+
 </#if>
-<#if doRelationshipNavigation == true && hasRelationships>
+<#if doRelationshipNavigation && hasRelationships>
+    public void resetParents() {
+<#list relationshipEntityDescriptors as relationshipEntityDescriptor>
+<#if relationshipEntityDescriptor.relationshipOne>
+        ${relationshipEntityDescriptor.id?uncap_first}Controller.setSelected(null);
+</#if>
+</#list>
+    }
+
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if relationshipEntityDescriptor.relationshipOne>
     public void prepare${relationshipEntityDescriptor.id?cap_first}(ActionEvent event) {
-        if (this.getSelected() != null) {
+        if (this.getSelected() != null && ${relationshipEntityDescriptor.id?uncap_first}Controller.getSelected() == null) {
             ${relationshipEntityDescriptor.id?uncap_first}Controller.setSelected(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
         }
     }
@@ -189,9 +198,8 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
         return "${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index"}";
 </#if>
     }
+
 </#if>
 </#list>
 </#if>
-
-
 }

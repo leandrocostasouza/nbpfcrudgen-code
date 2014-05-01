@@ -58,8 +58,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -192,35 +190,35 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final String searchLabelArtifacts = (String) wizard.getProperty(WizardProperties.SEARCH_LABEL_ARTIFACTS);
         //2013-02-09 Kay Wrobel
         Boolean createBoolean = (Boolean) wizard.getProperty(WizardProperties.CREATE_FUNCTION);
-        final boolean doCreate = createBoolean == null ? true : createBoolean.booleanValue();
+        final boolean doCreate = createBoolean == null ? true : createBoolean;
         Boolean readBoolean = (Boolean) wizard.getProperty(WizardProperties.READ_FUNCTION);
-        final boolean doRead = readBoolean == null ? true : readBoolean.booleanValue();
+        final boolean doRead = readBoolean == null ? true : readBoolean;
         Boolean updateBoolean = (Boolean) wizard.getProperty(WizardProperties.UPDATE_FUNCTION);
-        final boolean doUpdate = updateBoolean == null ? true : updateBoolean.booleanValue();
+        final boolean doUpdate = updateBoolean == null ? true : updateBoolean;
         Boolean deleteBoolean = (Boolean) wizard.getProperty(WizardProperties.DELETE_FUNCTION);
-        final boolean doDelete = deleteBoolean == null ? true : deleteBoolean.booleanValue();
+        final boolean doDelete = deleteBoolean == null ? true : deleteBoolean;
         Boolean sortBoolean = (Boolean) wizard.getProperty(WizardProperties.SORT_FUNCTION);
-        final boolean doSort = sortBoolean == null ? true : sortBoolean.booleanValue();
+        final boolean doSort = sortBoolean == null ? true : sortBoolean;
         Boolean filterBoolean = (Boolean) wizard.getProperty(WizardProperties.FILTER_FUNCTION);
-        final boolean doFilter = filterBoolean == null ? true : filterBoolean.booleanValue();
+        final boolean doFilter = filterBoolean == null ? true : filterBoolean;
         Boolean growlMessagesBoolean = (Boolean) wizard.getProperty(WizardProperties.GROWL_MESSAGES);
-        final boolean growlMessages = growlMessagesBoolean == null ? true : growlMessagesBoolean.booleanValue();
-        final int growlLife = ((Integer) wizard.getProperty(WizardProperties.GROWL_LIFE)).intValue();
+        final boolean growlMessages = growlMessagesBoolean == null ? true : growlMessagesBoolean;
+        final int growlLife = ((Integer) wizard.getProperty(WizardProperties.GROWL_LIFE));
         //2013-10-04 Kay Wrobel
         final String jsfVersionString = (String) wizard.getProperty(WizardProperties.JSF_VERSION);
         final Version jsfVersion = jsfVersionString.isEmpty() ? null : new Version(jsfVersionString);
         Boolean tooltipMessagesBoolean = (Boolean) wizard.getProperty(WizardProperties.TOOLTIP_MESSAGES);
-        final boolean tooltipMessages = tooltipMessagesBoolean == null ? false : tooltipMessagesBoolean.booleanValue();
+        final boolean tooltipMessages = tooltipMessagesBoolean == null ? false : tooltipMessagesBoolean;
         Boolean confirmationDialogsBoolean = (Boolean) wizard.getProperty(WizardProperties.CONFIRMATION_DIALOGS);
-        final boolean confirmationDialogs = confirmationDialogsBoolean == null ? false : confirmationDialogsBoolean.booleanValue();
+        final boolean confirmationDialogs = confirmationDialogsBoolean == null ? false : confirmationDialogsBoolean;
         Boolean relationshipNavigationBoolean = (Boolean) wizard.getProperty(WizardProperties.RELATIONSHIP_NAVIGATION);
-        final boolean relationshipNavigation = relationshipNavigationBoolean == null ? false : relationshipNavigationBoolean.booleanValue();
+        final boolean relationshipNavigation = relationshipNavigationBoolean == null ? false : relationshipNavigationBoolean;
         Boolean contextMenusBoolean = (Boolean) wizard.getProperty(WizardProperties.CONTEXT_MENUS);
-        final boolean contextMenus = contextMenusBoolean == null ? false : contextMenusBoolean.booleanValue();
+        final boolean contextMenus = contextMenusBoolean == null ? false : contextMenusBoolean;
         String maxTableColsString = (String) wizard.getProperty(WizardProperties.MAX_DATATABLE_COLS);
         final int maxTableCols = Integer.parseInt(maxTableColsString);
         Boolean injectAbstractEJBBoolean = (Boolean) wizard.getProperty(WizardProperties.CDI_EJB_ABSTRACT_INJECTION);
-        final boolean injectAbstractEJB = injectAbstractEJBBoolean == null ? false : injectAbstractEJBBoolean.booleanValue();
+        final boolean injectAbstractEJB = injectAbstractEJBBoolean == null ? false : injectAbstractEJBBoolean;
 
         // add framework to project first:
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
@@ -392,10 +390,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             }
         }
         bundleName = getBundleFileName(bundleName);
-        if (javaPackageRoot.getFileObject(bundleName) != null) {
-            return true;
-        }
-        return false;
+        return javaPackageRoot.getFileObject(bundleName) != null;
     }
 
     //2013-01-08 Kay Wrobel:
@@ -458,14 +453,14 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             utilFolder = FileUtil.createFolder(controllerTargetFolder, UTIL_FOLDER_NAME);
         }
         String utilPackage = controllerPkg == null || controllerPkg.length() == 0 ? UTIL_FOLDER_NAME : controllerPkg + "." + UTIL_FOLDER_NAME;
-        for (int i = 0; i < UTIL_CLASS_NAMES2.length; i++) {
-            if (utilFolder.getFileObject(UTIL_CLASS_NAMES2[i], JAVA_EXT) == null) {
-                progressMsg = NbBundle.getMessage(org.netbeans.modules.web.jsf.wizards.PersistenceClientIterator.class, "MSG_Progress_Jsf_Now_Generating", UTIL_CLASS_NAMES2[i] + "." + JAVA_EXT); //NOI18N
+        for (String UTIL_CLASS_NAMES21 : UTIL_CLASS_NAMES2) {
+            if (utilFolder.getFileObject(UTIL_CLASS_NAMES21, JAVA_EXT) == null) {
+                progressMsg = NbBundle.getMessage(org.netbeans.modules.web.jsf.wizards.PersistenceClientIterator.class, "MSG_Progress_Jsf_Now_Generating", UTIL_CLASS_NAMES21 + "." + JAVA_EXT); //NOI18N
                 progressContributor.progress(progressMsg, progressIndex++);
                 progressPanel.setText(progressMsg);
-                FileObject tableTemplate = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_TEMPLATE_PATH + UTIL_CLASS_NAMES2[i] + ".ftl");
-                FileObject target = FileUtil.createData(utilFolder, UTIL_CLASS_NAMES2[i] + "." + JAVA_EXT);//NOI18N
-                HashMap<String, Object> params = new HashMap<String, Object>();
+                FileObject tableTemplate = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_TEMPLATE_PATH + UTIL_CLASS_NAMES21 + ".ftl");
+                FileObject target = FileUtil.createData(utilFolder, UTIL_CLASS_NAMES21 + "." + JAVA_EXT); //NOI18N
+                HashMap<String, Object> params = new HashMap<>();
                 params.put("packageName", utilPackage);
                 params.put("comment", Boolean.FALSE); // NOI18N
                 JSFPaletteUtilities.expandJSFTemplate(tableTemplate, params, target);
@@ -525,7 +520,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             progressPanel.setText(progressMsg);
         }
 
-        List<TemplateData> bundleData = new ArrayList<TemplateData>();
+        List<TemplateData> bundleData = new ArrayList<>();
 
         //2013-06-10 Kay Wrobel: Create a bundle variable name
         //This will be passed on to template engine!
@@ -561,14 +556,14 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             FileObject abstractTemplate = configRoot.getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_ABSTRACTCONTROLLER_TEMPLATE);
             FileObject template = configRoot.getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_CONTROLLER_TEMPLATE);
             FileObject converterTemplate = configRoot.getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_CONVERTER_TEMPLATE);
-            Map<String, Object> params = new HashMap<String, Object>();
+            Map<String, Object> params = new HashMap<>();
             String controllerClassName = controllerFileObjects[i].getName();
             String converterClassName = converterFileObjects[i].getName();
             String managedBean = controllerClassName.substring(0, 1).toLowerCase() + controllerClassName.substring(1);
             //Find out if entity has relationships
             Map<String, Object> relationshipParams = FromEntityBase.createFieldParameters(webRoot, entityClass, managedBean, managedBean + ".selected", false, true, null);
             boolean hasRelationships = false; // SingleRelationships = either OneToMany or ManyToOne. We are skipping ManyToMany for now
-            List<FromEntityBase.TemplateData> relationshipEntityDescriptors = new ArrayList<FromEntityBase.TemplateData>();
+            List<FromEntityBase.TemplateData> relationshipEntityDescriptors = new ArrayList<>();
             for (FromEntityBase.TemplateData relationshipEntityDescriptor : (List<FromEntityBase.TemplateData>) relationshipParams.get("entityDescriptors")) {
                 if (relationshipEntityDescriptor.isRelationshipOne() || relationshipEntityDescriptor.isRelationshipMany()) {
                     hasRelationships = true;
@@ -580,7 +575,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             // Some tables may have multiple relationships to the same parent or child entity
             // To avoid duplicate form includes on the index.ftl template, we have to determine
             // all the unique entities in the list to pass along just to the index.ftl.
-            Map<String, FromEntityBase.TemplateData> uniqueRelationshipEntityDescriptorMap = new HashMap<String, FromEntityBase.TemplateData>();
+            Map<String, FromEntityBase.TemplateData> uniqueRelationshipEntityDescriptorMap = new HashMap<>();
             for (FromEntityBase.TemplateData relationshipEntityDescriptor : relationshipEntityDescriptors) {
                 if (!uniqueRelationshipEntityDescriptorMap.containsKey(relationshipEntityDescriptor.getRelationClassName())) {
                     uniqueRelationshipEntityDescriptorMap.put(relationshipEntityDescriptor.getRelationClassName(), relationshipEntityDescriptor);
@@ -702,7 +697,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("doContextMenus", contextMenus);
             params.put("maxTableCols", maxTableCols);
             expandSingleJSFTemplate("list.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
-            if (jsfEntityIncludeFolder != "/") {
+            if (!"/".equals(jsfEntityIncludeFolder)) {
                 params.put("entityIncludeFolder", jsfEntityIncludeFolder); // NOI18N
             } else {
                 params.put("entityIncludeFolder", ""); // NOI18N
@@ -717,7 +712,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         progressPanel.setText(progressMsg);
 
         FileObject template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_BUNDLE_TEMPLATE);
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("entities", bundleData);
         params.put("comment", Boolean.FALSE);
         params.put("primeFacesVersion", primeFacesVersion); //NOI18N
@@ -816,7 +811,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         model.startTransaction();
         try {
             Application app;
-            if (model.getRootComponent().getApplications().size() == 0) {
+            if (model.getRootComponent().getApplications().isEmpty()) {
                 app = model.getFactory().createApplication();
                 model.getRootComponent().addApplication(app);
             } else {
@@ -891,8 +886,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
     public static final class TemplateData {
 
-        private String entityClassName;
-        private List<FromEntityBase.TemplateData> entityDescriptors;
+        private final String entityClassName;
+        private final List<FromEntityBase.TemplateData> entityDescriptors;
 
         public TemplateData(String entityClassName, List<FromEntityBase.TemplateData> entityDescriptors) {
             this.entityClassName = entityClassName;
@@ -995,9 +990,10 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         // Search the ${src.dir} Source Package Folder first, use the first source group if failed.
         Sources src = ProjectUtils.getSources(project);
         SourceGroup[] grp = src.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        for (int i = 0; i < grp.length; i++) {
-            if ("${src.dir}".equals(grp[i].getName())) { // NOI18N
-                return grp[i].getRootFolder();
+        for (SourceGroup grp1 : grp) {
+            if ("${src.dir}".equals(grp1.getName())) {
+                // NOI18N
+                return grp1.getRootFolder();
             }
         }
         if (grp.length != 0) {
@@ -1044,8 +1040,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
         JSFFrameworkProvider fp = new JSFFrameworkProvider();
         String[] names;
-        ArrayList<WizardDescriptor.Panel> panelsList = new ArrayList<WizardDescriptor.Panel>();
-        ArrayList<String> namesList = new ArrayList<String>();
+        ArrayList<WizardDescriptor.Panel> panelsList = new ArrayList<>();
+        ArrayList<String> namesList = new ArrayList<>();
         panelsList.add(secondPanel);
         panelsList.add(thirdPanel);
         namesList.add(NbBundle.getMessage(PersistenceClientIterator.class, "LBL_EntityClasses"));
@@ -1064,7 +1060,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         try {
             noPuNeeded = ProviderUtil.persistenceExists(project) || !ProviderUtil.isValidServerInstanceOrNone(project);
         } catch (InvalidPersistenceXmlException ex) {
-            Logger.getLogger(JpaControllerIterator.class.getName()).log(Level.FINE, "Invalid persistence.xml: " + ex.getPath()); //NOI18N
+            Logger.getLogger(JpaControllerIterator.class.getName()).log(Level.FINE, "Invalid persistence.xml: {0}", ex.getPath()); //NOI18N
         }
 
         if (!noPuNeeded) {
@@ -1136,10 +1132,12 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         return index < panels.length - 1;
     }
 
+    @Override
     public boolean hasPrevious() {
         return index > 0;
     }
 
+    @Override
     public void nextPanel() {
         if (!hasNext()) {
             throw new NoSuchElementException();
@@ -1147,6 +1145,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         index++;
     }
 
+    @Override
     public void previousPanel() {
         if (!hasPrevious()) {
             throw new NoSuchElementException();
@@ -1154,9 +1153,11 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         index--;
     }
 
+    @Override
     public void addChangeListener(ChangeListener l) {
     }
 
+    @Override
     public void removeChangeListener(ChangeListener l) {
     }
 
