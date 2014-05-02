@@ -131,6 +131,14 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 </#if>
 <#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled && injectAbstractEJB == false)>
 
+    /**
+     * Initialize the concrete ${entityClassName} controller bean.
+     * The AbstractController requires the EJB Facade object for most operations.
+<#if doRelationshipNavigation && hasRelationships>
+     * <p>
+     * In addition, this controller also requires references to controllers for parent entities in order to display their information from a context menu.
+</#if>
+     */
     @PostConstruct
     @Override
     public void init() {
@@ -147,6 +155,7 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 </#if>
 
     public ${controllerClassName}() {
+        // Inform the Abstract parent controller of the concrete ${entityClassName}?cap_first Entity
         super(${entityClassName}.class);
     }
 
@@ -167,6 +176,9 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 
 </#if>
 <#if doRelationshipNavigation && hasRelationships>
+    /**
+     * Resets the "selected" attribute of any parent Entity controllers.
+     */
     public void resetParents() {
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if relationshipEntityDescriptor.relationshipOne>
@@ -177,6 +189,10 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if relationshipEntityDescriptor.relationshipOne>
+    /**
+     * Sets the "selected" attribute of the ${relationshipEntityDescriptor.relationClassName?cap_first} controller
+     * in order to display its data in a dialog. This is reusing existing the existing View dialog.
+     */
     public void prepare${relationshipEntityDescriptor.id?cap_first}(ActionEvent event) {
         if (this.getSelected() != null && ${relationshipEntityDescriptor.id?uncap_first}Controller.getSelected() == null) {
             ${relationshipEntityDescriptor.id?uncap_first}Controller.setSelected(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
@@ -184,6 +200,16 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
     }
 </#if>
 <#if relationshipEntityDescriptor.relationshipMany>
+    /**
+<#if myFacesCodiVersion??>
+    * Passes collection of ${relationshipEntityDescriptor.relationClassName?cap_first} entities that are retrieved from ${entityClassName}?cap_first
+<#else>
+    * Sets the "items" attribute with a collection of ${relationshipEntityDescriptor.relationClassName?cap_first} entities that are retrieved from ${entityClassName}?cap_first
+</#if>
+     * and returns the navigation outcome.
+     *
+     * @return  navigation outcome for ${relationshipEntityDescriptor.relationClassName?cap_first} page
+     */
     public String navigate${relationshipEntityDescriptor.id?cap_first}() {
         if (this.getSelected() != null) {
 <#if myFacesCodiVersion??>

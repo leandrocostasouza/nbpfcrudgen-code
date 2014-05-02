@@ -38,7 +38,7 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.event.ActionEvent;
-<#if cdiEnabled?? && cdiEnabled == true>
+<#if cdiEnabled?? && cdiEnabled  && injectAbstractEJB >
 import javax.inject.Inject;
 </#if>
 
@@ -55,10 +55,11 @@ import javax.validation.ConstraintViolationException;
  * Represents an abstract shell of to be used as JSF Controller to be used in
  * AJAX-enabled applications. No outcomes will be generated from its methods
  * since handling is designed to be done inside one page.
+ * @param <T>   the concrete Entity type of the Controller bean to be created
  */
 public abstract class ${abstractControllerClassName}<T> implements Serializable {
 
-<#if cdiEnabled?? && cdiEnabled == true && injectAbstractEJB == true>
+<#if cdiEnabled?? && cdiEnabled  && injectAbstractEJB >
     @Inject
 </#if>
     private ${ejbFacadeClassName}<T> ejbFacade;
@@ -81,45 +82,80 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
 
 <#if !cdiEnabled?? || cdiEnabled == false || injectAbstractEJB == false>
 
+    /**
+     * Initialize the concrete controller bean.
+     * This AbstractController requires the EJB Facade object for most operations,
+     * and that task is performed by the concrete controller bean.
+<#if doRelationshipNavigation>
+     * <p>
+     * In addition, each controller for an entity that has Many-To-One relationships,
+     * needs to establish references to those entities' controllers in order to display
+     * their information from a context menu.
+</#if>
+     */
     public abstract void init();
 
+    /**
+     * Retrieve the current EJB Facade object so that other beans in this package
+     * can perform additional data layer tasks (e.g. additional queries)
+     *
+     * @return  the concrete EJB Facade associated with the concrete controller bean.
+     */
     protected AbstractFacade<T> getFacade() {
         return ejbFacade;
     }
 
+    /**
+     * Sets the concrete EJB Facade object so that data layer actions can be
+     * performed. This applies to all basic CRUD actions this controller performs.
+     *
+     * @param ejbFacade  the concrete EJB Facade to perform data layer actions with
+     */
     protected void setFacade(AbstractFacade<T> ejbFacade) {
         this.ejbFacade = ejbFacade;
     }
 
 </#if>
     /**
-     * Retrieve the currently selected item
-     * @return
+     * Retrieve the currently selected item.
+     *
+     * @return  the currently selected Entity
      */
     public T getSelected() {
         return selected;
     }
 
     /**
-     * Pass in the currently selected item
-     * @param selected
+     * Pass in the currently selected item.
+     *
+     * @param selected  the Entity that should be set as selected
      */
     public void setSelected(T selected) {
         this.selected = selected;
     }
 
+    /**
+     * Sets any embeddable key fields if an Entity uses composite keys.
+     * If the entity does not have composite keys, this method performs no actions
+     * and exists purely to be overridden inside a concrete controller class.
+     */
     protected void setEmbeddableKeys() {
         // Nothing to do if entity does not have any embeddable key.
     };
 
+    /**
+     * Sets the concrete embedded key of an Entity that uses composite keys.
+     * This method will be overriden inside concrete controller classes and does
+     * nothing if the specific entity has no composite keys.
+     */
     protected void initializeEmbeddableKey() {
         // Nothing to do if entity does not have any embeddable key.
     }
 
     /**
-     * Returns all items as a Collection object
+     * Returns all items as a Collection object.
      *
-     * @return
+     * @return  a collection of Entity items returned by the data layer
      */
     public Collection<T> getItems() {
         if (items == null) {
@@ -130,7 +166,8 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
 
     /**
      * Pass in collection of items
-     * @param items
+     *
+     * @param items a collection of Entity items
      */
     public void setItems(Collection<T> items) {
         this.items = items;
@@ -138,7 +175,8 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
 
     /**
      * Apply changes to an existing item to the data layer.
-     * @param event
+     *
+     * @param event an event from the widget that wants to save an Entity to the data layer
      */
     public void save(ActionEvent event) {
         String msg = ResourceBundle.getBundle("${bundle}").getString(itemClass.getSimpleName() + "Updated");
@@ -147,7 +185,8 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
 
     /**
      * Store a new item in the data layer.
-     * @param event
+     *
+     * @param event an event from the widget that wants to save a new Entity to the data layer
      */
     public void saveNew(ActionEvent event) {
         String msg = ResourceBundle.getBundle("${bundle}").getString(itemClass.getSimpleName() + "Created");
@@ -159,7 +198,8 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
 
     /**
      * Remove an existing item from the data layer.
-     * @param event
+     *
+     * @param event an event from the widget that wants to delete an Entity from the data layer
      */
     public void delete(ActionEvent event) {
         String msg = ResourceBundle.getBundle("${bundle}").getString(itemClass.getSimpleName() + "Deleted");
@@ -170,6 +210,14 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
         }
     }
 
+    /**
+     * Performs any data modification actions for an entity. The actions that
+     * can be performed by this method are controlled by the {@link PersistAction}
+     * enumeration and are either CREATE, EDIT or DELETE.
+     *
+     * @param persistAction     a specific action that should be performed on the current item
+     * @param successMessage    a message that should be displayed when persisting the item succeeds
+     */
     private void persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
             this.setEmbeddableKeys();
@@ -181,7 +229,6 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
                 }
                 JsfUtil.addSuccessMessage(successMessage);
             } catch (EJBException ex) {
-                String msg = "";
                 Throwable cause = JsfUtil.getRootCause(ex.getCause());
                 if (cause != null) {
                     if (cause instanceof ConstraintViolationException) {
@@ -190,7 +237,7 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
                             JsfUtil.addErrorMessage(s.getMessage());
                         }
                     } else {
-                        msg = cause.getLocalizedMessage();
+                        String msg = cause.getLocalizedMessage();
                         if (msg.length() > 0) {
                             JsfUtil.addErrorMessage(msg);
                         } else {
@@ -209,7 +256,8 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
      * Creates a new instance of an underlying entity and assigns it to Selected
      * property.
      *
-     * @return
+     * @param event an event from the widget that wants to create a new, unmanaged Entity for the data layer
+     * @return      a new, unmanaged Entity
      */
     public T prepareCreate(ActionEvent event) {
         T newItem;
@@ -218,9 +266,7 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
             this.selected = newItem;
             initializeEmbeddableKey();
             return newItem;
-        } catch (InstantiationException ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
+        } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -228,7 +274,8 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
 
     /**
      * Inform the user interface whether any validation error exist on a page.
-     * @return
+     *
+     * @return  a logical value whether form validation has passed or failed
      */
     public boolean isValidationFailed() {
         return JsfUtil.isValidationFailed();
@@ -236,15 +283,19 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
 
     /**
      * Retrieve all messages as a String to be displayed on the page.
-     * @param clientComponent
-     * @param defaultMessage
-     * @return
+     *
+     * @param clientComponent   the component for which the message applies
+     * @param defaultMessage    a default message to be shown
+     * @return                  a concatenation of all messages
      */
     public String getComponentMessages(String clientComponent, String defaultMessage) {
         return JsfUtil.getComponentMessages(clientComponent, defaultMessage);
     }
 
 <#if doRelationshipNavigation && !myFacesCodiVersion??>
+    /**
+     * Retrieve a collection of Entity items for a specific Controller from another JSF page via Request parameters.
+     */
     @PostConstruct
     public void initParams() {
         Object paramItems = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(itemClass.getSimpleName() + "_items");
