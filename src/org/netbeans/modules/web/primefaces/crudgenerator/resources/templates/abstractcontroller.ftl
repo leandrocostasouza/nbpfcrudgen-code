@@ -23,7 +23,7 @@
     keyGetter - entity getter method returning primaty key instance
     keySetter - entity setter method to set primary key instance
     doRelationshipNavigation - Whether to perform navigation to related entities (type: boolean)
-    myFacesCodiVersion - The version of MyFaces CODI, if any (type: Version)
+    cdiExtensionVersion - The version of MyFaces CODI, if any (type: Version)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
@@ -44,7 +44,7 @@ import javax.inject.Inject;
 
 import java.util.ResourceBundle;
 import javax.ejb.EJBException;
-<#if doRelationshipNavigation && !myFacesCodiVersion??>
+<#if doRelationshipNavigation && !cdiExtensionVersion??>
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 </#if>
@@ -292,7 +292,7 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
         return JsfUtil.getComponentMessages(clientComponent, defaultMessage);
     }
 
-<#if doRelationshipNavigation && !myFacesCodiVersion??>
+<#if doRelationshipNavigation && !cdiExtensionVersion??>
     /**
      * Retrieve a collection of Entity items for a specific Controller from another JSF page via Request parameters.
      */

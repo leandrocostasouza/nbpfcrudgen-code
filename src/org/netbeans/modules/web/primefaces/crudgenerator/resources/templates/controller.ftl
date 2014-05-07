@@ -17,7 +17,8 @@
     importEjbFullClassName - whether to import ejbFullClassName or not
     ejbFullClassName - fully qualified EJB class name (type: String)
     managedBeanName - name of managed bean (type: String)
-    myFacesCodiVersion - Apache MyFaces CODI Implementation (type: Version)
+    cdiExtensionVersion - CDI Extension Version (type: Version)
+    viewAccessScopedFullClassName - CDI Fully Qualified Class Name of ViewAccessScoped annotation (type: String)
     keyEmbedded - is entity primary key is an embeddable class (type: Boolean)
     keyType - fully qualified class name of entity primary key
     keyBody - body of Controller.Converter.getKey() method
@@ -67,8 +68,8 @@ import ${ejbFullClassName};
 <#if managedBeanName??>
 <#if cdiEnabled?? && cdiEnabled>
 import javax.inject.Named;
-<#if myFacesCodiVersion??>
-import org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessScoped;
+<#if cdiExtensionVersion?? && viewAccessScopedFullClassName??>
+import ${viewAccessScopedFullClassName};
 <#elseif (jsfVersion.compareTo("2.2") >= 0)>
 import javax.faces.view.ViewScoped;
 <#else>
@@ -80,7 +81,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 </#if>
 </#if>
-<#if doRelationshipNavigation && !myFacesCodiVersion??>
+<#if doRelationshipNavigation && !cdiExtensionVersion??>
 import javax.faces.context.FacesContext;
 </#if>
 <#if doRelationshipNavigation && hasRelationships>
@@ -95,7 +96,7 @@ import javax.inject.Inject;
 <#if managedBeanName??>
 <#if cdiEnabled?? && cdiEnabled>
 @Named(value="${managedBeanName}")
-<#if myFacesCodiVersion??>
+<#if cdiExtensionVersion??>
 @ViewAccessScoped
 <#elseif (jsfVersion.compareTo("2.2") >= 0)>
 @ViewScoped
@@ -192,6 +193,8 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
     /**
      * Sets the "selected" attribute of the ${relationshipEntityDescriptor.relationClassName?cap_first} controller
      * in order to display its data in a dialog. This is reusing existing the existing View dialog.
+     *
+     * @param event Event object for the widget that triggered an action
      */
     public void prepare${relationshipEntityDescriptor.id?cap_first}(ActionEvent event) {
         if (this.getSelected() != null && ${relationshipEntityDescriptor.id?uncap_first}Controller.getSelected() == null) {
@@ -201,7 +204,7 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 </#if>
 <#if relationshipEntityDescriptor.relationshipMany>
     /**
-<#if myFacesCodiVersion??>
+<#if cdiExtensionVersion??>
     * Passes collection of ${relationshipEntityDescriptor.relationClassName?cap_first} entities that are retrieved from ${entityClassName}?cap_first
 <#else>
     * Sets the "items" attribute with a collection of ${relationshipEntityDescriptor.relationClassName?cap_first} entities that are retrieved from ${entityClassName}?cap_first
@@ -212,13 +215,13 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
      */
     public String navigate${relationshipEntityDescriptor.id?cap_first}() {
         if (this.getSelected() != null) {
-<#if myFacesCodiVersion??>
+<#if cdiExtensionVersion??>
             ${relationshipEntityDescriptor.id?uncap_first}Controller.setItems(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
 <#else>
             FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("${relationshipEntityDescriptor.relationClassName?cap_first}_items", this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
 </#if>
         }
-<#if myFacesCodiVersion??>
+<#if cdiExtensionVersion??>
         return "${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index?faces-redirect=true"}";
 <#else>
         return "${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index"}";

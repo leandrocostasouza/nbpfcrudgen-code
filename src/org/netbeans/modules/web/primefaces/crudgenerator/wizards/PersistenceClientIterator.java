@@ -184,9 +184,9 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final String defaultDataTableRowsPerPageTemplate = (String) wizard.getProperty(WizardProperties.DEFAULT_DATATABLE_ROWSPERPAGETEMPLATE);
         //2013-01-13 Kay Wrobel: Added support for specific versions of PrimeFaces and MyFaces CODI
         final String primeFacesVersionString = (String) wizard.getProperty(WizardProperties.PRIMEFACES_VERSION);
-        final String myFacesCodiVersionString = (String) wizard.getProperty(WizardProperties.MYFACES_CODI_VERSION);
+        final String cdiExtensionVersionString = (String) wizard.getProperty(WizardProperties.CDIEXT_VERSION);
         final Version primeFacesVersion = primeFacesVersionString.isEmpty() ? null : new Version(primeFacesVersionString);
-        final Version myFacesCodiVersion = myFacesCodiVersionString.isEmpty() ? null : new Version(myFacesCodiVersionString);
+        final Version cdiExtensionVersion = cdiExtensionVersionString.isEmpty() ? null : new Version(cdiExtensionVersionString);
         final String searchLabelArtifacts = (String) wizard.getProperty(WizardProperties.SEARCH_LABEL_ARTIFACTS);
         //2013-02-09 Kay Wrobel
         Boolean createBoolean = (Boolean) wizard.getProperty(WizardProperties.CREATE_FUNCTION);
@@ -219,6 +219,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final int maxTableCols = Integer.parseInt(maxTableColsString);
         Boolean injectAbstractEJBBoolean = (Boolean) wizard.getProperty(WizardProperties.CDI_EJB_ABSTRACT_INJECTION);
         final boolean injectAbstractEJB = injectAbstractEJBBoolean == null ? false : injectAbstractEJBBoolean;
+        //2014-05-07 Kay Wrobel
+        final String viewAccessScopedFullClassName = (String) wizard.getProperty(WizardProperties.VIEW_ACCESS_SCOPED_FULL_CLASSNAME);
 
         // add framework to project first:
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
@@ -286,7 +288,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, myFacesCodiVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages, confirmationDialogs, relationshipNavigation,contextMenus,maxTableCols,injectAbstractEJB);
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, cdiExtensionVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages, confirmationDialogs, relationshipNavigation,contextMenus,maxTableCols,injectAbstractEJB,viewAccessScopedFullClassName);
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }
@@ -421,7 +423,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             String defaultDataTableRows,
             String defaultDataTableRowsPerPageTemplate,
             Version primeFacesVersion,
-            Version myFacesCodiVersion,
+            Version cdiExtensionVersion,
             Version jsfVersion,
             String searchLabelArtifacts,
             boolean doCreate,
@@ -437,7 +439,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             boolean relationshipNavigation,
             boolean contextMenus,
             int maxTableCols,
-            boolean injectAbstractEJB) throws IOException {
+            boolean injectAbstractEJB,
+            String viewAccessScopedFullClassName) throws IOException {
         String progressMsg;
 
         if (jsfGenericIncludeFolder.length() == 0) {
@@ -609,8 +612,11 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             if (persistenceUnitName != null) {
                 params.put("persistenceUnitName", persistenceUnitName); //NOI18N
             }
-            if (myFacesCodiVersion != null) {
-                params.put("myFacesCodiVersion", myFacesCodiVersion); //NOI18N
+            if (cdiExtensionVersion != null) {
+                params.put("cdiExtensionVersion", cdiExtensionVersion); //NOI18N
+            }
+            if (viewAccessScopedFullClassName != null) {
+                params.put("viewAccessScopedFullClassName", viewAccessScopedFullClassName); //NOI18N
             }
             params.put("jsfVersion", jsfVersion); //NOI18N
             params.put("doRelationshipNavigation", relationshipNavigation);

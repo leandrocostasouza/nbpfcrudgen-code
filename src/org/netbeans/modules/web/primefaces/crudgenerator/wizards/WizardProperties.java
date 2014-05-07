@@ -71,7 +71,9 @@ public class WizardProperties {
     public static final String DEFAULT_DATATABLE_ROWSPERPAGETEMPLATE = "DefaultDataTableRowsPerPageTemplate"; //NOI18N
     //2013-01-23 Kay Wrobel
     public static final String PRIMEFACES_VERSION = "PrimeFacesVersion"; //NOI18N
-    public static final String MYFACES_CODI_VERSION = "MyFacesCODIVersion"; //NOI18N
+    public static final String CDIEXT_VERSION = "cdiExtensionVersion"; //NOI18N
+    //2014-05-06 Kay Wrobel
+    public static final String CDIEXT_LIBRARY = "cdiExtensionLibrary"; //NOI18N
     //2013-01-25 Kay Wrobel
     public static final String SEARCH_LABEL_ARTIFACTS = "SearchLabelArtifacts"; //NOI18N
     //2013-02-09 Kay Wrobel: Add some switches for C/R/U/D
@@ -90,4 +92,6 @@ public class WizardProperties {
     public static final String MAX_DATATABLE_COLS = "MaxDataTableColumns"; //NOI18N
     //2014-04-17 Kay Wrobel: Allow user to control where EJB injection happens
     public static final String CDI_EJB_ABSTRACT_INJECTION = "CDIEJBAbstractInjection"; //NOI18N
+    //2014-05-07 Kay Wrobel: Full class name of the ViewAccessScoped annotation
+    public static final String VIEW_ACCESS_SCOPED_FULL_CLASSNAME = "ViewAccessScopedFullClassName"; //NOI18N
 }

@@ -60,6 +60,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
@@ -107,6 +108,9 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     public static final String PRIMEFACES_APPMENU_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/appmenu.ftl"; // NOI18N
     public static final String PRIMEFACES_APPINDEX_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/appindex.ftl"; // NOI18N
     public static final String UTIL_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/JsfUtil.ftl"; // NOI18N
+    public static final String CODI_VIEW_ACCESS_SCOPED = "org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessScoped"; // NOI18N
+    public static final String DELTASPIKE_VIEW_ACCESS_SCOPED = "org.apache.deltaspike.core.api.scope.ViewAccessScoped"; // NOI18N
+    public static final String PRIMEFACES_PACKAGE = "org.primefaces"; // NOI18N
     private WizardDescriptor wizard;
     private Project project;
     private JTextComponent jpaPackageComboBoxEditor, jsfPackageComboBoxEditor, converterPackageComboBoxEditor;
@@ -114,8 +118,9 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private boolean cancelled = false;
     private WebModule wm;
     private Version pfVersion = null;
-    private Version codiVersion = null;
+    private Version cdiExtVersion = null;
     private Version jsfVersion = null;
+    private String viewAccessScopedFullClassName = null;
 
     /**
      * Creates new form CrudSetupPanel
@@ -168,8 +173,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         defaultRowsTextField = new javax.swing.JTextField();
         primeFacesVersionForLabel = new javax.swing.JLabel();
         primeFacesVersionLabel = new javax.swing.JLabel();
-        codiVersionForLabel = new javax.swing.JLabel();
-        codiVersionLabel = new javax.swing.JLabel();
+        cdiExtVersionLabel = new javax.swing.JLabel();
         searchLabelsLabel = new javax.swing.JLabel();
         searchLabelsTextBox = new javax.swing.JTextField();
         converterPackageComboBox = new javax.swing.JComboBox();
@@ -272,9 +276,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         primeFacesVersionLabel.setText("jLabel8");
 
-        codiVersionForLabel.setText("MyFaces CODI Version:");
-
-        codiVersionLabel.setText("jLabel7");
+        cdiExtVersionLabel.setText("jLabel7");
 
         searchLabelsLabel.setText("Field name artifacts for foreign fields:");
 
@@ -378,10 +380,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(searchLabelsLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchLabelsTextBox))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(projectLabel, javax.swing.GroupLayout.Alignment.LEADING)
@@ -414,6 +412,10 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                             .addComponent(browseEIFolderButton, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(searchLabelsLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(searchLabelsTextBox))
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
                             .addComponent(jLabel6)
@@ -430,22 +432,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                                 .addComponent(sortFunctionCheckBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(filterFunctionCheckBox))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(primeFacesVersionForLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(primeFacesVersionLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(codiVersionForLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(codiVersionLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jsfVersionLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cdiLabel))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(growlCheckBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -472,8 +458,22 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(maxDataTableColumnsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE)))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(primeFacesVersionForLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(primeFacesVersionLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jsfVersionLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cdiLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cdiExtVersionLabel)))
+                        .addGap(0, 76, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -564,13 +564,12 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(primeFacesVersionForLabel)
                     .addComponent(primeFacesVersionLabel)
-                    .addComponent(codiVersionForLabel)
-                    .addComponent(codiVersionLabel)
+                    .addComponent(cdiExtVersionLabel)
                     .addComponent(jLabel1)
                     .addComponent(jsfVersionLabel)
                     .addComponent(jLabel8)
                     .addComponent(cdiLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
 
         jLabel2.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_JSF_pages_folder")); // NOI18N
@@ -603,8 +602,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -675,9 +674,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JButton browseEIFolderButton;
     private javax.swing.JButton browseFolderButton;
     private javax.swing.JButton browseGIFolderButton;
+    private javax.swing.JLabel cdiExtVersionLabel;
     private javax.swing.JLabel cdiLabel;
-    private javax.swing.JLabel codiVersionForLabel;
-    private javax.swing.JLabel codiVersionLabel;
     private javax.swing.JCheckBox confirmDialogsCheckBox;
     private javax.swing.JCheckBox contextMenusCheckBox;
     private javax.swing.JComboBox converterPackageComboBox;
@@ -779,17 +777,32 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
             cl = cp.getClassLoader(true);
         }
 
-        pfVersion = LibraryUtil.getVersion(cl, "primefaces");
+        // Try to find library that contains PrimeFaces package
+        String primeFacesLibraryName = LibraryUtil.getLibrary(cp, PRIMEFACES_PACKAGE);
+        if (primeFacesLibraryName != null) {
+            pfVersion = LibraryUtil.getVersion(cl, primeFacesLibraryName);
+        }
+
+        // Try to find library that contains ViewAccessScoped annotation class
+        viewAccessScopedFullClassName = CODI_VIEW_ACCESS_SCOPED;
+        String cdiExtLibraryName = LibraryUtil.getLibrary(cp, viewAccessScopedFullClassName);
+        if (cdiExtLibraryName == null) {
+            viewAccessScopedFullClassName = DELTASPIKE_VIEW_ACCESS_SCOPED;
+            cdiExtLibraryName = LibraryUtil.getLibrary(cp, viewAccessScopedFullClassName);
+            cdiExtVersion = LibraryUtil.getVersion(cl, cdiExtLibraryName);
+        }
+        if (cdiExtLibraryName != null) {
+            cdiExtVersion = LibraryUtil.getVersion(cl, cdiExtLibraryName);
+        } else {
+            viewAccessScopedFullClassName = null;
+        }
+
         String pfVersionString = pfVersion != null ? pfVersion.toString() : "";
         wizard.putProperty(WizardProperties.PRIMEFACES_VERSION, pfVersionString);
 
-        codiVersion = LibraryUtil.getVersion(cl, "MyFaces Extensions-CDI Core-API");
-        // Look for CODI Bundle version as well
-        if (codiVersion == null) {
-            codiVersion = LibraryUtil.getVersion(cl, "MyFaces Extensions-CDI Bundle for JSF 2.0");
-        }
-        String codiVersionString = codiVersion != null ? codiVersion.toString() : "";
-        wizard.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersionString);
+        String cdiExtVersionString = cdiExtVersion != null ? cdiExtVersion.toString() : "";
+        wizard.putProperty(WizardProperties.CDIEXT_VERSION, cdiExtVersionString);
+        wizard.putProperty(WizardProperties.CDIEXT_LIBRARY, cdiExtLibraryName);
 
         jsfVersion = new Version(JSFVersion.get(wm, true).getShortName().replace("JSF ", ""));
         String jsfVersionString = jsfVersion != null ? jsfVersion.toString() : "";
@@ -928,11 +941,17 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         }
 
         String pfVersionString = (String) settings.getProperty(WizardProperties.PRIMEFACES_VERSION);
-        String codiVersionString = (String) settings.getProperty(WizardProperties.MYFACES_CODI_VERSION);
+        String cdiExtVersionString = (String) settings.getProperty(WizardProperties.CDIEXT_VERSION);
+        String cdiExtLibraryString = (String) settings.getProperty(WizardProperties.CDIEXT_LIBRARY);
         String jsfVersionString = (String) settings.getProperty(WizardProperties.JSF_VERSION);
 
         primeFacesVersionLabel.setText(pfVersionString);
-        codiVersionLabel.setText(codiVersionString);
+        if (cdiExtLibraryString != null && cdiExtVersionString != null) {
+            cdiExtVersionLabel.setText("with " + cdiExtLibraryString + " (" + cdiExtVersionString + ")");
+            cdiExtVersionLabel.setVisible(true);
+        } else {
+            cdiExtVersionLabel.setVisible(false);
+        }
         jsfVersionLabel.setText(jsfVersionString);
         cdiLabel.setText((new Boolean(PersistenceClientIterator.isCdiEnabled(project))).toString());
         if (pfVersion != null && pfVersion.compareTo("4.0") < 0) {
@@ -967,8 +986,12 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         settings.putProperty(WizardProperties.DEFAULT_DATATABLE_ROWS, defaultRowsTextField.getText());
         settings.putProperty(WizardProperties.DEFAULT_DATATABLE_ROWSPERPAGETEMPLATE, defaultRowsPerPageTemplate.getText());
         settings.putProperty(WizardProperties.MAX_DATATABLE_COLS, maxDataTableColumnsTextField.getText());
-        settings.putProperty(WizardProperties.PRIMEFACES_VERSION, primeFacesVersionLabel.getText());
-        settings.putProperty(WizardProperties.MYFACES_CODI_VERSION, codiVersionLabel.getText());
+        settings.putProperty(WizardProperties.PRIMEFACES_VERSION, pfVersion.toString());
+        if (cdiExtVersion != null) {
+            settings.putProperty(WizardProperties.CDIEXT_VERSION, cdiExtVersion.toString());
+        }
+        //2013-10-04 Kay Wrobel
+        settings.putProperty(WizardProperties.JSF_VERSION, jsfVersion.toString());
         //2013-01-25 Kay Wrobel
         settings.putProperty(WizardProperties.SEARCH_LABEL_ARTIFACTS, searchLabelsTextBox.getText());
         //2013-02-09 Kay Wrobel
@@ -980,8 +1003,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         settings.putProperty(WizardProperties.FILTER_FUNCTION, Boolean.valueOf(filterFunctionCheckBox.isSelected()));
         settings.putProperty(WizardProperties.GROWL_MESSAGES, Boolean.valueOf(growlCheckBox.isSelected()));
         settings.putProperty(WizardProperties.GROWL_LIFE, growlLifeSpinner.getValue());
-        //2013-10-04 Kay Wrobel
-        settings.putProperty(WizardProperties.JSF_VERSION, jsfVersionLabel.getText());
         settings.putProperty(WizardProperties.TOOLTIP_MESSAGES, Boolean.valueOf(tooltipMessagesCheckBox.isSelected()));
         settings.putProperty(WizardProperties.CONFIRMATION_DIALOGS, Boolean.valueOf(confirmDialogsCheckBox.isSelected()));
         //2014-01-24 Kay Wrobel
@@ -990,6 +1011,10 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         settings.putProperty(WizardProperties.CONTEXT_MENUS, Boolean.valueOf(contextMenusCheckBox.isSelected()));
         //2014-04-17 Kay Wrobel
         settings.putProperty(WizardProperties.CDI_EJB_ABSTRACT_INJECTION, Boolean.valueOf(injectEJBAbstractCheckBox.isSelected()));
+        //2014-05-07 Kay Wrobel
+        if (viewAccessScopedFullClassName != null) {
+        settings.putProperty(WizardProperties.VIEW_ACCESS_SCOPED_FULL_CLASSNAME, viewAccessScopedFullClassName);
+        }
     }
 
     private void updateSourceGroupPackages() {

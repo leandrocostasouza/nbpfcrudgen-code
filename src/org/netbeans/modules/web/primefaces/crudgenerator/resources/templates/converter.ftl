@@ -13,7 +13,7 @@
     ejbClassName - EJB class name (type: String)
     ejbFullClassName - fully qualified EJB class name (type: String)
     managedBeanName - name of managed bean (type: String)
-    myFacesCodiVersion - Apache MyFaces CODI Implementation (type: Version)
+    cdiExtensionVersion - CDI Extension Version (type: Version)
     keyEmbedded - is entity primary key is an embeddable class (type: Boolean)
     keyType - fully qualified class name of entity primary key
     keyBody - body of Controller.Converter.getKey() method

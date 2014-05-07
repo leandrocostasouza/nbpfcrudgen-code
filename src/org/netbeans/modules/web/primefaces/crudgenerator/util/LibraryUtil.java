@@ -4,19 +4,29 @@
  */
 package org.netbeans.modules.web.primefaces.crudgenerator.util;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.JarFileSystem;
+import org.openide.util.Exceptions;
 
 /**
  * Helper class for libraries. Key feature is to determine if a given library
  * name exists in the project class path and at what version level.
- * 
+ *
  * @author Kay Wrobel
  */
 public class LibraryUtil {
@@ -37,7 +47,7 @@ public class LibraryUtil {
             Logger.getLogger(LibraryUtil.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-        
+
         while (resources.hasMoreElements()) {
             try {
                 //Going to query for following manifest attributes
@@ -60,7 +70,6 @@ public class LibraryUtil {
                     }
                 }
 
-
             } catch (IOException ex) {
                 Logger.getLogger(LibraryUtil.class.getName()).log(Level.SEVERE, null, ex);
                 return null;
@@ -68,4 +77,46 @@ public class LibraryUtil {
         }
         return null;
     }
+
+    public static String getLibrary(ClassPath classPath, String resource) {
+        // Find as resource as a class
+        String classNameAsPath = resource.replace('.', '/') + ".class";
+        FileObject classResource = classPath.findResource(classNameAsPath);
+        if (classResource == null) {
+            // Find as resource as a package
+            classNameAsPath = resource.replace('.', '/');
+            classResource = classPath.findResource(classNameAsPath);
+
+        }
+        if (classResource != null) {
+            FileObject archiveFile = FileUtil.getArchiveFile(classResource);
+            if (archiveFile != null && FileUtil.isArchiveFile(archiveFile)) {
+                File toFile = FileUtil.toFile(archiveFile);
+                try {
+                    JarFile jf = new JarFile(toFile);
+                    Manifest manifest = jf.getManifest();
+                    Attributes mainAttributes = manifest.getMainAttributes();
+
+                    // Find library version by Bundle information (Eclipse/OSGi)
+                    if (mainAttributes.containsKey(BUNDLE_NAME) && mainAttributes.containsKey(BUNDLE_VERSION)) {
+                        if (!mainAttributes.getValue(BUNDLE_NAME).isEmpty()) {
+                            return mainAttributes.getValue(BUNDLE_NAME);
+                        }
+                    }
+
+                    // If unsuccessful, try by default Manifest Headers
+                    if (mainAttributes.containsKey(Name.IMPLEMENTATION_TITLE) && mainAttributes.containsKey(Name.IMPLEMENTATION_VERSION)) {
+                        if (!mainAttributes.getValue(Name.IMPLEMENTATION_TITLE).isEmpty()) {
+                            return mainAttributes.getValue(Name.IMPLEMENTATION_TITLE);
+                        }
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+
+        }
+        return null;
+    }
+
 }
