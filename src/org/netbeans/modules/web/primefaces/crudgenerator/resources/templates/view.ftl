@@ -45,6 +45,7 @@
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
 
 </#if>
+<@templateMacros?interpret/>
 <#assign crud = "View">
 <#assign textThreshold = 255>
 <#assign maxFields = 20>
@@ -108,7 +109,7 @@
 <#else>
                     </p:panelGrid>
 </#if>
-                  <p:commandButton value="${r"#{"}${bundle}.Close${r"}"}" onclick="${entityName}ViewDialog.hide()"/>
+                  <p:commandButton value="${r"#{"}${bundle}.Close${r"}"}" onclick="<@pf>${entityName}ViewDialog</@pf>.hide()"/>
                 </h:panelGroup>
 
             </h:form>

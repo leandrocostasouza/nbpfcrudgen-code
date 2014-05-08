@@ -136,6 +136,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
     static final String TEMPLATE_EDITONE = "editonefield.ftl";
     static final String TEMPLATE_VIEWONE = "viewonefield.ftl";
+    static final String TEMPLATE_MACROS = "template_macros.ftl";
     static final String TEMPLATE_FOLDER = "org/netbeans/modules/web/primefaces/crudgenerator/resources/templates/"; //NOI18N
     static final String PRIMEFACES_CRUD_STYLESHEET = "pfcrud.css"; //NOI18N
     static final String PRIMEFACES_CRUD_SCRIPT = "pfcrud.js"; //NOI18N
@@ -545,6 +546,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         // for dynamic code interpretation.
         String viewOneFieldTemplate = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + TEMPLATE_VIEWONE), "UTF-8"); //NOI18N        FileObject viewOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_VIEWONE);
         String editOneFieldTemplate = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + TEMPLATE_EDITONE), "UTF-8"); //NOI18N        FileObject editOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_EDITONE);
+        String templateMacros = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + TEMPLATE_MACROS), "UTF-8"); //NOI18N        FileObject editOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_MACROS);
         
         for (int i = 0; i < controllerFileObjects.length; i++) {
             String entityClass = entities.get(i);
@@ -658,6 +660,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("bundle", bundleVar); // NOI18N
             params.put("editOneFieldTemplate", editOneFieldTemplate);
             params.put("viewOneFieldTemplate", viewOneFieldTemplate);
+            params.put("templateMacros", templateMacros);
             params.put("doConfirmationDialogs", confirmationDialogs);
             params.put("doRelationshipNavigation", relationshipNavigation);
             params.put("hasRelationships", hasRelationships);
@@ -702,6 +705,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("uniqueRelationshipEntityDescriptors", uniqueRelationshipEntityDescriptors);
             params.put("doContextMenus", contextMenus);
             params.put("maxTableCols", maxTableCols);
+            params.put("templateMacros", templateMacros);
             expandSingleJSFTemplate("list.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
             if (!"/".equals(jsfEntityIncludeFolder)) {
                 params.put("entityIncludeFolder", jsfEntityIncludeFolder); // NOI18N

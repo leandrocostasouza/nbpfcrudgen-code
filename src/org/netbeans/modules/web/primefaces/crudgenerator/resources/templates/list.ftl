@@ -55,6 +55,7 @@
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
 
 </#if>
+<@templateMacros?interpret/>
 <#assign columnCounter = 0/>
 <#assign createButton  = "createButton"/>
 <#assign readButton    = "viewButton"/>
@@ -111,7 +112,7 @@
                     <p:separator/>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if relationshipEntityDescriptor.relationshipOne>
-                    <p:menuitem value="${r"#{"}${bundle}.${entityName}MenuItem_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search"  actionListener="${r"#{"}${managedBean}.prepare${relationshipEntityDescriptor.id?cap_first}${r"}"}" update=":${relationshipEntityDescriptor.relationClassName}ViewForm" oncomplete="${relationshipEntityDescriptor.relationClassName}ViewDialog.show()" disabled="${r"#{"}empty ${managedBean}.selected.${relationshipEntityDescriptor.id?uncap_first}${r"}"}"/>  
+                    <p:menuitem value="${r"#{"}${bundle}.${entityName}MenuItem_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search"  actionListener="${r"#{"}${managedBean}.prepare${relationshipEntityDescriptor.id?cap_first}${r"}"}" update=":${relationshipEntityDescriptor.relationClassName}ViewForm" oncomplete="<@pf>${relationshipEntityDescriptor.relationClassName}ViewDialog</@pf>.show()" disabled="${r"#{"}empty ${managedBean}.selected.${relationshipEntityDescriptor.id?uncap_first}${r"}"}"/>  
 </#if>
 <#if relationshipEntityDescriptor.relationshipMany>
                     <p:menuitem value="${r"#{"}${bundle}.${entityName}MenuItem_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search"  action="${r"#{"}${managedBean}.navigate${relationshipEntityDescriptor.id?cap_first}${r"}"}" disabled="${r"#{"}empty ${managedBean}.selected.${relationshipEntityDescriptor.id?uncap_first}${r"}"}" ajax="false"/>  
@@ -206,13 +207,13 @@
 
 </#if>
 <#if doCreate>
-                        <p:commandButton id="${createButton}"<#if doContextMenus>                            </#if> icon="ui-icon-plus"   value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="${entityName}CreateDialog.show()"/>
+                        <p:commandButton id="${createButton}"<#if doContextMenus>                            </#if> icon="ui-icon-plus"   value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreateForm" oncomplete="<@pf>${entityName}CreateDialog</@pf>.show()"/>
 </#if>
 <#if doRead>
-                        <p:commandButton id="${readButton}"  <#if doContextMenus> style="visibility: hidden;"</#if> icon="ui-icon-search" value="${r"#{"}${bundle}.View${r"}"}" update=":${entityName}ViewForm" oncomplete="${entityName}ViewDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${readButton}"  <#if doContextMenus> style="visibility: hidden;"</#if> icon="ui-icon-search" value="${r"#{"}${bundle}.View${r"}"}" update=":${entityName}ViewForm" oncomplete="<@pf>${entityName}ViewDialog</@pf>.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
 <#if doUpdate>
-                        <p:commandButton id="${updateButton}"  <#if doContextMenus> style="visibility: hidden;"</#if> icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" update=":${entityName}EditForm" oncomplete="${entityName}EditDialog.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+                        <p:commandButton id="${updateButton}"  <#if doContextMenus> style="visibility: hidden;"</#if> icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" update=":${entityName}EditForm" oncomplete="<@pf>${entityName}EditDialog</@pf>.show()" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
 </#if>
 <#if doDelete>
     <#if (primeFacesVersion.compareTo("4.0") >= 0 && doConfirmationDialogs) >

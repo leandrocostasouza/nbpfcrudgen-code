@@ -45,6 +45,7 @@
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
 
 </#if>
+<@templateMacros?interpret/>
 <#assign crud = "Edit">
 <#assign textThreshold = 255>
 <#assign maxFields = 20>
@@ -129,7 +130,7 @@
     <#else>
                     <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListForm:datalist,${messageUpdate}" oncomplete="handleSubmit(xhr,status,args,${entityName}EditDialog);"/>
     </#if>
-                    <p:commandButton value="${r"#{"}${bundle}.Cancel${r"}"}" onclick="${entityName}EditDialog.hide()"/>
+                    <p:commandButton value="${r"#{"}${bundle}.Cancel${r"}"}" onclick="<@pf>${entityName}EditDialog</@pf>.hide()"/>
                 </h:panelGroup>
 
             </h:form>
