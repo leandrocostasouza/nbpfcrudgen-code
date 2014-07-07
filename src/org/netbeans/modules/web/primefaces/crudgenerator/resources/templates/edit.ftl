@@ -124,11 +124,11 @@
                     </p:panelGrid>
 </#if>
     <#if (primeFacesVersion.compareTo("4.0") >= 0 && doConfirmationDialogs) >
-                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListForm:datalist,${messageUpdate}" oncomplete="handleSubmit(xhr,status,args,${entityName}EditDialog);">
+                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListForm:datalist,${messageUpdate}" oncomplete="handleSubmit(xhr,status,args,<@pf>${entityName}EditDialog</@pf>);">
                         <p:confirm header="${r"#{"}${bundle}.ConfirmationHeader${r"}"}" message="${r"#{"}${bundle}.ConfirmEditMessage${r"}"}" icon="ui-icon-alert"/>
                     </p:commandButton>
     <#else>
-                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListForm:datalist,${messageUpdate}" oncomplete="handleSubmit(xhr,status,args,${entityName}EditDialog);"/>
+                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListForm:datalist,${messageUpdate}" oncomplete="handleSubmit(xhr,status,args,<@pf>${entityName}EditDialog</@pf>);"/>
     </#if>
                     <p:commandButton value="${r"#{"}${bundle}.Cancel${r"}"}" onclick="<@pf>${entityName}EditDialog</@pf>.hide()"/>
                 </h:panelGroup>
