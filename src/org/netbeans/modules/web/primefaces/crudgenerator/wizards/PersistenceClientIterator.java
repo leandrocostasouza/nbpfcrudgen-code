@@ -100,6 +100,7 @@ import org.netbeans.modules.web.jsf.JSFUtils;
 import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.Application;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigModel;
+import org.netbeans.modules.web.jsf.api.facesmodel.NavigationHandler;
 import org.netbeans.modules.web.jsf.api.facesmodel.ResourceBundle;
 import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
 import org.netbeans.modules.web.jsf.wizards.FacesConfigIterator;
@@ -138,6 +139,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     static final String TEMPLATE_VIEWONE = "viewonefield.ftl";
     static final String TEMPLATE_MACROS = "template_macros.ftl";
     static final String TEMPLATE_FOLDER = "org/netbeans/modules/web/primefaces/crudgenerator/resources/templates/"; //NOI18N
+    static final String TEMPLATE_MOBILE_FOLDER = "org/netbeans/modules/web/primefaces/crudgenerator/resources/templates/mobile/"; //NOI18N
     static final String PRIMEFACES_CRUD_STYLESHEET = "pfcrud.css"; //NOI18N
     static final String PRIMEFACES_CRUD_SCRIPT = "pfcrud.js"; //NOI18N
     //2013-01-08 Kay Wrobel: PrimeFaces additions
@@ -164,6 +166,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     private static final String CSS_FOLDER = "resources/css/";  //NOI18N
     private static final String SCRIPT_FOLDER = "resources/scripts/";  //NOI18N
     private static final String PRIMEFACES_CONFIRMATION_PAGE = "confirmation.xhtml"; //NOI18N
+    private static final String PRIMEFACES_MOBILE_NAVIGATION_HANDLER = "org.primefaces.mobile.application.MobileNavigationHandler"; //NOI18N
     private transient WebModuleExtender wme;
     private transient ExtenderController ec;
 
@@ -289,7 +292,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, cdiExtensionVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages, confirmationDialogs, relationshipNavigation,contextMenus,maxTableCols,injectAbstractEJB,viewAccessScopedFullClassName);
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, cdiExtensionVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages, confirmationDialogs, relationshipNavigation, contextMenus, maxTableCols, injectAbstractEJB, viewAccessScopedFullClassName, true, "", "", "");
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }
@@ -441,7 +444,11 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             boolean contextMenus,
             int maxTableCols,
             boolean injectAbstractEJB,
-            String viewAccessScopedFullClassName) throws IOException {
+            String viewAccessScopedFullClassName,
+            boolean doMobile,
+            String jsfMobileFolder,
+            String jsfMobileGenericIncludeFolder,
+            String jsfMobileEntityIncludeFolder) throws IOException {
         String progressMsg;
 
         if (jsfGenericIncludeFolder.length() == 0) {
@@ -449,6 +456,15 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         }
         if (jsfEntityIncludeFolder.length() == 0) {
             jsfEntityIncludeFolder = "/";
+        }
+        if (jsfMobileFolder.length() == 0) {
+            jsfMobileFolder = "/mobile";
+        }
+        if (jsfMobileGenericIncludeFolder.length() == 0) {
+            jsfMobileGenericIncludeFolder = "/mobile";
+        }
+        if (jsfMobileEntityIncludeFolder.length() == 0) {
+            jsfMobileEntityIncludeFolder = "/mobile";
         }
 
         //copy util classes
@@ -537,6 +553,21 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                 jsfGenericIncludeFolder = jsfGenericIncludeFolder + "/";
             }
         }
+        if (jsfEntityIncludeFolder.length() > 0) {
+            if (!jsfEntityIncludeFolder.endsWith("/")) {
+                jsfEntityIncludeFolder = jsfEntityIncludeFolder + "/";
+            }
+        }
+        if (jsfMobileGenericIncludeFolder.length() > 0) {
+            if (!jsfMobileGenericIncludeFolder.endsWith("/")) {
+                jsfMobileGenericIncludeFolder = jsfMobileGenericIncludeFolder + "/";
+            }
+        }
+        if (jsfMobileEntityIncludeFolder.length() > 0) {
+            if (!jsfMobileEntityIncludeFolder.endsWith("/")) {
+                jsfMobileEntityIncludeFolder = jsfMobileEntityIncludeFolder + "/";
+            }
+        }
 
         // 2013-11-11 Kay Wrobel: 
         // To fix ticket #16, we have to avoid using <#include> directive inside
@@ -546,8 +577,10 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         // for dynamic code interpretation.
         String viewOneFieldTemplate = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + TEMPLATE_VIEWONE), "UTF-8"); //NOI18N        FileObject viewOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_VIEWONE);
         String editOneFieldTemplate = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + TEMPLATE_EDITONE), "UTF-8"); //NOI18N        FileObject editOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_EDITONE);
+        String viewOneFieldMobileTemplate = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_MOBILE_FOLDER + TEMPLATE_VIEWONE), "UTF-8"); //NOI18N        FileObject viewOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_VIEWONE);
+        String editOneFieldMobileTemplate = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_MOBILE_FOLDER + TEMPLATE_EDITONE), "UTF-8"); //NOI18N        FileObject editOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_EDITONE);
         String templateMacros = JSFFrameworkProvider.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(TEMPLATE_FOLDER + TEMPLATE_MACROS), "UTF-8"); //NOI18N        FileObject editOneFieldTemplate = tmpRoot.getFileObject(TEMPLATE_MACROS);
-        
+
         for (int i = 0; i < controllerFileObjects.length; i++) {
             String entityClass = entities.get(i);
             String simpleClassName = CustomJpaControllerUtil.simpleClassName(entityClass);
@@ -576,7 +609,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                 }
             }
             relationshipParams = null; // Destroy
-            
+
             // Some tables may have multiple relationships to the same parent or child entity
             // To avoid duplicate form includes on the index.ftl template, we have to determine
             // all the unique entities in the list to pass along just to the index.ftl.
@@ -633,6 +666,15 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             } else {
                 params.put("jsfFolder", "");
             }
+            if (jsfMobileFolder.length() > 0) {
+                if (jsfMobileFolder.startsWith("/")) {
+                    params.put("jsfMobileFolder", jsfMobileFolder);
+                } else {
+                    params.put("jsfMobileFolder", "/" + jsfMobileFolder);
+                }
+            } else {
+                params.put("jsfMobileFolder", "mobile");
+            }
             FromEntityBase.createParamsForConverterTemplate(params, controllerTargetFolder, entityClass, embeddedPkSupport);
 
             //Generate abstract controller on first loop
@@ -660,6 +702,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("bundle", bundleVar); // NOI18N
             params.put("editOneFieldTemplate", editOneFieldTemplate);
             params.put("viewOneFieldTemplate", viewOneFieldTemplate);
+            params.put("editOneFieldMobileTemplate", editOneFieldMobileTemplate);
+            params.put("viewOneFieldMobileTemplate", viewOneFieldMobileTemplate);
             params.put("templateMacros", templateMacros);
             params.put("doConfirmationDialogs", confirmationDialogs);
             params.put("doRelationshipNavigation", relationshipNavigation);
@@ -669,12 +713,22 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
             if (doCreate) {
                 expandSingleJSFTemplate("create.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "Create", params, progressContributor, progressPanel, progressIndex++);
+                if (doMobile) {
+                    expandSingleJSFMobileTemplate("create.ftl", entityClass, jsfMobileEntityIncludeFolder, webRoot, "Create", params, progressContributor, progressPanel, progressIndex++);
+                }
+
             }
             if (doUpdate) {
                 expandSingleJSFTemplate("edit.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "Edit", params, progressContributor, progressPanel, progressIndex++);
+                if (doMobile) {
+                    expandSingleJSFMobileTemplate("edit.ftl", entityClass, jsfMobileEntityIncludeFolder, webRoot, "Edit", params, progressContributor, progressPanel, progressIndex++);
+                }
             }
             if (doRead) {
                 expandSingleJSFTemplate("view.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "View", params, progressContributor, progressPanel, progressIndex++);
+                if (doMobile) {
+                    expandSingleJSFMobileTemplate("view.ftl", entityClass, jsfMobileEntityIncludeFolder, webRoot, "View", params, progressContributor, progressPanel, progressIndex++);
+                }
             }
 
             params = FromEntityBase.createFieldParameters(webRoot, entityClass, managedBean, managedBean + ".items", true, true, null);
@@ -707,13 +761,25 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("maxTableCols", maxTableCols);
             params.put("templateMacros", templateMacros);
             expandSingleJSFTemplate("list.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
+            if (doMobile) {
+                expandSingleJSFMobileTemplate("list.ftl", entityClass, jsfMobileEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
+            }
             if (!"/".equals(jsfEntityIncludeFolder)) {
                 params.put("entityIncludeFolder", jsfEntityIncludeFolder); // NOI18N
             } else {
                 params.put("entityIncludeFolder", ""); // NOI18N
             }
+            if (!"/mobile/".equals(jsfMobileEntityIncludeFolder)) {
+                params.put("mobileEntityIncludeFolder", jsfMobileEntityIncludeFolder); // NOI18N
+            } else {
+                params.put("mobileEntityIncludeFolder", "/mobile"); // NOI18N
+            }
             params.put("templatePage", jsfGenericIncludeFolder + PRIMEFACES_TEMPLATE_PAGE);
+            params.put("mobileTemplatePage", jsfMobileGenericIncludeFolder + PRIMEFACES_TEMPLATE_PAGE);
             expandSingleJSFTemplate("index.ftl", entityClass, jsfFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
+            if (doMobile) {
+                expandSingleJSFMobileTemplate("index.ftl", entityClass, jsfMobileEntityIncludeFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
+            }
 
         }
 
@@ -788,6 +854,18 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         }
         JSFPaletteUtilities.expandJSFTemplate(template, params, target);
 
+        // Add PrimeFaces Mobile Application Template Page to be overwritten
+        template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_MOBILE_TEMPLATE_TEMPLATE);
+        target = webRoot.getFileObject(jsfMobileGenericIncludeFolder + PRIMEFACES_TEMPLATE_PAGE);
+        params.put("appMenu", jsfMobileGenericIncludeFolder + PRIMEFACES_APPMENU_PAGE);
+        params.put("styleFile", PRIMEFACES_CRUD_STYLESHEET);
+        params.put("scriptFile", PRIMEFACES_CRUD_SCRIPT);
+        params.put("bundle", bundleVar); // NOI18N
+        if (target == null) {
+            target = FileUtil.createData(webRoot, jsfMobileGenericIncludeFolder + PRIMEFACES_TEMPLATE_PAGE);
+        }
+        JSFPaletteUtilities.expandJSFTemplate(template, params, target);
+
         // Add PrimeFaces Confirmation Dialog Page Include File
         // We only support PF 4.0+ due to its new "global" mode, whic
         // is utilized in all CRUD pages via the <p:confirm> tag on buttons
@@ -818,6 +896,12 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         rb.setVar(bundleVar);
         rb.setBaseName(bundleName);
         ResourceBundle existing = findBundle(model, rb);
+
+        // Create and identify existing PrimeFaces Mobile Navigation Handler
+        NavigationHandler nh = model.getFactory().createNavigationHandler();
+        nh.setFullyQualifiedClassType(PRIMEFACES_MOBILE_NAVIGATION_HANDLER);
+        NavigationHandler existingNavigationHandler = findNavigationHandler(model, nh);
+
         model.startTransaction();
         try {
             Application app;
@@ -827,10 +911,16 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             } else {
                 app = model.getRootComponent().getApplications().get(0);
             }
-            if (existing != null) {
-                app.removeResourceBundle(existing);
+            
+            if (existing == null) {
+                app.addResourceBundle(rb);
             }
-            app.addResourceBundle(rb);
+
+            // Add PrimeFaces Mobile Navigation Handler if it doesn't exist
+            if (existingNavigationHandler == null) {
+                app.addNavigationHandler(nh);
+
+            }
         } finally {
             try {
                 model.endTransaction();
@@ -894,6 +984,17 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         return bundleName;
     }
 
+    private static NavigationHandler findNavigationHandler(JSFConfigModel model, NavigationHandler nh) {
+        for (Application app : model.getRootComponent().getApplications()) {
+            for (NavigationHandler handler : app.getNavigationHandler()) {
+                if (handler.getFullyQualifiedClassType().equals(nh.getFullyQualifiedClassType())) {
+                    return handler;
+                }
+            }
+        }
+        return null;
+    }
+
     public static final class TemplateData {
 
         private final String entityClassName;
@@ -907,7 +1008,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         public String getEntityClassName() {
             return entityClassName;
         }
-        
+
         public String getEntityNaturalName() {
             return StringHelper.toNatural(entityClassName);
         }
@@ -954,6 +1055,16 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
 
         //Call out specifying the default JSF Template Directory
         expandSingleJSFTemplate(templateName, PersistenceClientSetupPanelVisual.PRIMEFACES_TEMPLATE_PATH, entityClass,
+                jsfFolder, webRoot, name, params,
+                progressContributor, progressPanel, progressIndex);
+    }
+
+    private static void expandSingleJSFMobileTemplate(String templateName, String entityClass,
+            String jsfFolder, FileObject webRoot, String name, Map<String, Object> params,
+            ProgressContributor progressContributor, ProgressPanel progressPanel, int progressIndex) throws IOException {
+
+        //Call out specifying the default JSF Template Directory
+        expandSingleJSFTemplate(templateName, PersistenceClientSetupPanelVisual.PRIMEFACES_MOBILE_TEMPLATE_PATH, entityClass,
                 jsfFolder, webRoot, name, params,
                 progressContributor, progressPanel, progressIndex);
     }

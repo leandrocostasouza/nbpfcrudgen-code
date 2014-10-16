@@ -127,6 +127,47 @@ made subject to such option by the copyright holder.
                     <attr name="template" boolvalue="true"/>
                 </file>
 
+                <folder name="Mobile">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                    <attr name="position" intvalue="10"/>
+                    <attr name="templateCategory" stringvalue="always-hidden"/>
+
+                    <file name="create.ftl" url="templates/mobile/create.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="edit.ftl" url="templates/mobile/edit.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="editonefield.ftl" url="templates/mobile/editonefield.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="index.ftl" url="templates/mobile/index.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="list.ftl" url="templates/mobile/list.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="template.ftl" url="templates/mobile/template.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="view.ftl" url="templates/mobile/view.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="viewonefield.ftl" url="templates/mobile/viewonefield.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+
+                </folder>
+
+
             </folder>
             
             <file name="PrimeFaces_From_Entity" url="templates/dummy.template">

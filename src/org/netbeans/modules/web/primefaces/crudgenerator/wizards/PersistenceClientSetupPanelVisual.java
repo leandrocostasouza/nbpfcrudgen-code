@@ -112,6 +112,10 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     public static final String CODI_VIEW_ACCESS_SCOPED = "org.apache.myfaces.extensions.cdi.core.api.scope.conversation.ViewAccessScoped"; // NOI18N
     public static final String DELTASPIKE_VIEW_ACCESS_SCOPED = "org.apache.deltaspike.core.api.scope.ViewAccessScoped"; // NOI18N
     public static final String PRIMEFACES_PACKAGE = "org.primefaces"; // NOI18N
+    // 2014-10-15 Kay Wrobel: more constants for PrimeFaces Mobile Templates
+    public static final String PRIMEFACES_MOBILE_TEMPLATE_PATH = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/Mobile/"; // NOI18N
+    public static final String PRIMEFACES_MOBILE_TEMPLATE_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/Mobile/template.ftl"; // NOI18N
+
     private WizardDescriptor wizard;
     private Project project;
     private JTextComponent jpaPackageComboBoxEditor, jsfPackageComboBoxEditor, converterPackageComboBoxEditor;
