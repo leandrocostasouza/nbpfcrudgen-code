@@ -762,6 +762,16 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("templateMacros", templateMacros);
             expandSingleJSFTemplate("list.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
             if (doMobile) {
+                if (jsfMobileFolder.length() > 0) {
+                    if (jsfMobileFolder.startsWith("/")) {
+                        params.put("jsfMobileFolder", jsfMobileFolder);
+                    } else {
+                        params.put("jsfMobileFolder", "/" + jsfMobileFolder);
+                    }
+                } else {
+                    params.put("jsfMobileFolder", "mobile");
+                }
+                params.put("appIndex", PRIMEFACES_APPINDEX_PAGE.replace(".xhtml", ""));
                 expandSingleJSFMobileTemplate("list.ftl", entityClass, jsfMobileEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
             }
             if (!"/".equals(jsfEntityIncludeFolder)) {
@@ -827,6 +837,19 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         } else {
             params.put("jsfFolder", "");
         }
+        params.put("doMobile", doMobile); // NOI18N
+        if (doMobile) {
+            if (jsfMobileFolder.length() > 0) {
+                if (jsfMobileFolder.startsWith("/")) {
+                    params.put("jsfMobileFolder", jsfMobileFolder);
+                } else {
+                    params.put("jsfMobileFolder", "/" + jsfMobileFolder);
+                }
+            } else {
+                params.put("jsfMobileFolder", "mobile");
+            }
+            
+        }
         if (target == null) {
             target = FileUtil.createData(webRoot, jsfGenericIncludeFolder2 + PRIMEFACES_APPMENU_PAGE);
         }
@@ -854,17 +877,56 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         }
         JSFPaletteUtilities.expandJSFTemplate(template, params, target);
 
-        // Add PrimeFaces Mobile Application Template Page to be overwritten
-        template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_MOBILE_TEMPLATE_TEMPLATE);
-        target = webRoot.getFileObject(jsfMobileGenericIncludeFolder + PRIMEFACES_TEMPLATE_PAGE);
-        params.put("appMenu", jsfMobileGenericIncludeFolder + PRIMEFACES_APPMENU_PAGE);
-        params.put("styleFile", PRIMEFACES_CRUD_STYLESHEET);
-        params.put("scriptFile", PRIMEFACES_CRUD_SCRIPT);
-        params.put("bundle", bundleVar); // NOI18N
-        if (target == null) {
-            target = FileUtil.createData(webRoot, jsfMobileGenericIncludeFolder + PRIMEFACES_TEMPLATE_PAGE);
+        if (doMobile) {
+            String jsfMobileGenericIncludeFolder2 = jsfMobileGenericIncludeFolder;
+            if (jsfMobileGenericIncludeFolder2.length() > 0) {
+                if (jsfMobileGenericIncludeFolder2.startsWith("/")) {
+                    jsfMobileGenericIncludeFolder2 = jsfMobileGenericIncludeFolder2.replaceFirst("/", "");
+                }
+            }
+
+            template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_MOBILE_APPMENU_TEMPLATE);
+            target = webRoot.getFileObject(jsfMobileGenericIncludeFolder2 + PRIMEFACES_APPMENU_PAGE);
+
+            params.put("appIndex", PRIMEFACES_APPINDEX_PAGE.replace(".xhtml", ""));
+            params.put("servletMapping", servletMapping);
+            params.put("bundle", bundleVar); // NOI18N
+            if (jsfMobileFolder.length() > 0) {
+                if (jsfMobileFolder.startsWith("/")) {
+                    params.put("jsfMobileFolder", jsfMobileFolder);
+                } else {
+                    params.put("jsfMobileFolder", "/" + jsfMobileFolder);
+                }
+            } else {
+                params.put("jsfMobileFolder", "mobile");
+            }
+            if (target == null) {
+                target = FileUtil.createData(webRoot, jsfMobileGenericIncludeFolder2 + PRIMEFACES_APPMENU_PAGE);
+            }
+            JSFPaletteUtilities.expandJSFTemplate(template, params, target);
+
+            // Add PrimeFaces Application Home Page to be overwritten as index.xhtml
+            template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_MOBILE_APPINDEX_TEMPLATE);
+            target = webRoot.getFileObject(jsfMobileGenericIncludeFolder2 + WELCOME_JSF_FL_PAGE);
+            params.put("bundle", bundleVar); // NOI18N
+            params.put("mobileTemplatePage", jsfMobileGenericIncludeFolder + PRIMEFACES_TEMPLATE_PAGE);
+            params.put("appMobileMenu", jsfMobileGenericIncludeFolder + PRIMEFACES_APPMENU_PAGE);
+            if (target == null) {
+                target = FileUtil.createData(webRoot, jsfMobileGenericIncludeFolder2 + WELCOME_JSF_FL_PAGE);
+            }
+            JSFPaletteUtilities.expandJSFTemplate(template, params, target);
+
+            // Add PrimeFaces Mobile Application Template Page to be overwritten
+            template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_MOBILE_TEMPLATE_TEMPLATE);
+            target = webRoot.getFileObject(jsfMobileGenericIncludeFolder + PRIMEFACES_TEMPLATE_PAGE);
+            params.put("styleFile", PRIMEFACES_CRUD_STYLESHEET);
+            params.put("scriptFile", PRIMEFACES_CRUD_SCRIPT);
+            params.put("bundle", bundleVar); // NOI18N
+            if (target == null) {
+                target = FileUtil.createData(webRoot, jsfMobileGenericIncludeFolder + PRIMEFACES_TEMPLATE_PAGE);
+            }
+            JSFPaletteUtilities.expandJSFTemplate(template, params, target);
         }
-        JSFPaletteUtilities.expandJSFTemplate(template, params, target);
 
         // Add PrimeFaces Confirmation Dialog Page Include File
         // We only support PF 4.0+ due to its new "global" mode, whic
@@ -911,7 +973,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             } else {
                 app = model.getRootComponent().getApplications().get(0);
             }
-            
+
             if (existing == null) {
                 app.addResourceBundle(rb);
             }

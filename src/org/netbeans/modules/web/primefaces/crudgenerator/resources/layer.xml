@@ -132,6 +132,14 @@ made subject to such option by the copyright holder.
                     <attr name="position" intvalue="10"/>
                     <attr name="templateCategory" stringvalue="always-hidden"/>
 
+                    <file name="appindex.ftl" url="templates/mobile/appindex.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="appmenu.ftl" url="templates/mobile/appmenu.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
                     <file name="create.ftl" url="templates/mobile/create.ftl">
                         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
                         <attr name="template" boolvalue="true"/>

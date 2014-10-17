@@ -80,7 +80,8 @@
         <pm:header title="${r"#{"}${bundle}.List${entityName}Title${r"}"}">
 <#if doCreate>
             <h:form>
-                <p:commandButton id="${createButton}" styleClass="ui-btn-left ui-btn-inline" icon="ui-icon-plus" value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreatePage:${entityName}CreateForm" action="pm:${entityName}CreatePage"/>
+                <p:button styleClass="ui-btn-left ui-btn-inline" value="${r"#{"}${bundle}.Menu${r"}"}" icon="ui-icon-arrow-l" outcome="${jsfMobileFolder}${r"/"}${appIndex}"/>
+                <p:commandButton id="${createButton}" styleClass="ui-btn-right ui-btn-inline" icon="ui-icon-plus" value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreatePage:${entityName}CreateForm" action="pm:${entityName}CreatePage"/>
             </h:form>
 </#if>
         </pm:header>

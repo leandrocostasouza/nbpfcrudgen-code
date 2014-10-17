@@ -34,34 +34,21 @@
 </#if>
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
 
-    <ui:composition>
         <h:form id="menuForm">
-            <p:menubar>
-    <#if (primeFacesVersion.compareTo("3.4") >= 0)>
-                <p:menuitem value="${r"#{"}${bundle}.Home${r"}"}" outcome="${r"/"}${appIndex}" icon="ui-icon-home"/>
-    <#else>
-                <p:menuitem value="${r"#{"}${bundle}.Home${r"}"}" url="${servletMapping}${r"/"}${appIndex}.xhtml" icon="ui-icon-home"/>
-    </#if>
+            <p:menu>
                 <p:submenu label="${r"#{"}${bundle}.Maintenance${r"}"}">
 <#list entities as entity>
-    <#if (primeFacesVersion.compareTo("3.4") >= 0)>
-                    <p:menuitem value="${r"#{"}${bundle}.${entity.entityClassName}Heading${r"}"}..." outcome="${jsfFolder}${r"/"}${entity.entityClassName?uncap_first}${r"/index"}" />
-    <#else>
-                    <p:menuitem value="${r"#{"}${bundle}.${entity.entityClassName}Heading${r"}"}..." url="${servletMapping}${jsfFolder}${r"/"}${entity.entityClassName?uncap_first}${r"/index.xhtml"}" />
-    </#if>
+                    <p:menuitem value="${r"#{"}${bundle}.${entity.entityClassName}Heading${r"}"}..." outcome="${jsfMobileFolder}${r"/"}${entity.entityClassName?uncap_first}${r"/index"}" />
 </#list>
                 </p:submenu>
-    <#if (doMobile && primeFacesVersion.compareTo("5.0") >= 0)>
-                <p:menuitem value="${r"#{"}${bundle}.Mobile${r"}"}" outcome="${jsfMobileFolder}${r"/"}${appIndex}" icon="ui-icon-signal"/>
-    </#if>
-            </p:menubar>
+                <p:menuitem value="${r"#{"}${bundle}.FullApp${r"}"}" outcome="${r"/"}${appIndex}" icon="ui-icon-home"/>
+            </p:menu>
         </h:form>
-    </ui:composition>
-
-</html>
+</ui:composition>
