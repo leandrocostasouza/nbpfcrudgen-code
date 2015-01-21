@@ -6,3 +6,9 @@ function handleSubmit(xhr, status, args, dialog) {
         dialog.hide();
     }
 }
+function fixPFMDialogs() {
+    jQuery("body > div[data-role='page']").each(function (i) {
+        var pageId = jQuery(this).attr("id");
+        jQuery("body > div[id*='" + pageId + "'][class*='ui-popup']").appendTo("#" + pageId);
+    });
+}

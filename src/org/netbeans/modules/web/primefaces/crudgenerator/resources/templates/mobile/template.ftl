@@ -34,6 +34,13 @@
         <title><ui:insert name="title">Default Title</ui:insert></title>
         <h:outputStylesheet library="css" name="${styleFile}"/>
         <h:outputScript library="scripts" name="${scriptFile}"/>
+        <h:outputScript target="head">
+            jQuery(document).ready(function() {
+                jQuery(document).ready(function() {
+                    fixPFMDialogs();
+                });
+            });
+        </h:outputScript>
     </h:head>
 
     <h:body>

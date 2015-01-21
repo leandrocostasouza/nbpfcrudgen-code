@@ -225,6 +225,12 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final boolean injectAbstractEJB = injectAbstractEJBBoolean == null ? false : injectAbstractEJBBoolean;
         //2014-05-07 Kay Wrobel
         final String viewAccessScopedFullClassName = (String) wizard.getProperty(WizardProperties.VIEW_ACCESS_SCOPED_FULL_CLASSNAME);
+        //2015-01-19 Kay Wrobel: Mobile support
+        final String jsfMobileFolder = (String) wizard.getProperty(WizardProperties.JSF_MOBILE_FOLDER);
+        final String jsfMobileGenericIncludeFolder = (String) wizard.getProperty(WizardProperties.JSF_MOBILE_GI_FOLDER);
+        final String jsfMobileEntityIncludeFolder = (String) wizard.getProperty(WizardProperties.JSF_MOBILE_EI_FOLDER);
+        Boolean doMobileBoolean = (Boolean) wizard.getProperty(WizardProperties.DO_MOBILE);
+        final boolean doMobile = doMobileBoolean == null ? false : doMobileBoolean;
 
         // add framework to project first:
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
@@ -292,7 +298,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, cdiExtensionVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages, confirmationDialogs, relationshipNavigation, contextMenus, maxTableCols, injectAbstractEJB, viewAccessScopedFullClassName, true, "", "", "");
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, cdiExtensionVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages, confirmationDialogs, relationshipNavigation, contextMenus, maxTableCols, injectAbstractEJB, viewAccessScopedFullClassName, doMobile, jsfMobileFolder, jsfMobileGenericIncludeFolder, jsfMobileEntityIncludeFolder);
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }

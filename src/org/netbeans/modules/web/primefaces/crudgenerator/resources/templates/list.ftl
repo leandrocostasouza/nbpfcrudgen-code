@@ -65,11 +65,13 @@
 <#assign contextMenu   = entityName + "DataTableContextMenu"/>
 </#if>
 <#assign ajaxUpdateIds = "">
+<#assign ajaxUpdateIdsExceptContextMenu = "">
 <#if doContextMenus>
 <#if doCreate><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + createButton/></#if>
 <#if doRead><#assign   ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + readButton/></#if>
 <#if doUpdate><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + updateButton/></#if>
 <#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + deleteButton/></#if>
+<#assign ajaxUpdateIdsExceptContextMenu = ajaxUpdateIds/>
 <#if doRead><#assign   ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + contextMenu/></#if>
 <#else>
 <#if doCreate><#assign ajaxUpdateIds = ajaxUpdateIds + " " + createButton/></#if>
@@ -144,6 +146,9 @@
 
                     <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
                     <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
+<#if doContextMenus>
+                    <p:ajax event="contextMenu" update="${ajaxUpdateIdsExceptContextMenu}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
+</#if>
 <#if doContextMenus && doRead>
                     <p:ajax event="rowDblselect" onsuccess="document.getElementById('${entityName}ListForm:${readButton}').click();"/>
 </#if>

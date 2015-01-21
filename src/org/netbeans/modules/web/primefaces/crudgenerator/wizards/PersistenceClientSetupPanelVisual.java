@@ -145,6 +145,9 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         genericIncludeFolder.getDocument().addDocumentListener(this);
         entityIncludeFolder.getDocument().addDocumentListener(this);
         localizationBundleTextField.getDocument().addDocumentListener(this);
+        jsfMobileFolder.getDocument().addDocumentListener(this);
+        genericMobileIncludeFolder.getDocument().addDocumentListener(this);
+        entityMobileIncludeFolder.getDocument().addDocumentListener(this);
     }
 
     /**
@@ -155,24 +158,46 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jsfFolder = new javax.swing.JTextField();
-        browseFolderButton = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        projectLabel = new javax.swing.JLabel();
-        projectTextField = new javax.swing.JTextField();
-        locationLabel = new javax.swing.JLabel();
-        locationComboBox = new javax.swing.JComboBox();
-        jsfPackageLabel = new javax.swing.JLabel();
-        jsfPackageComboBox = new javax.swing.JComboBox();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        javaPackagesPanel = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
+        projectLabel = new javax.swing.JLabel();
+        locationLabel = new javax.swing.JLabel();
         jpaPackageLabel = new javax.swing.JLabel();
+        jsfPackageLabel = new javax.swing.JLabel();
+        converterPackageLabel = new javax.swing.JLabel();
+        projectTextField = new javax.swing.JTextField();
+        locationComboBox = new javax.swing.JComboBox();
         jpaPackageComboBox = new javax.swing.JComboBox();
-        overrideExistingCheckBox = new javax.swing.JCheckBox();
+        jsfPackageComboBox = new javax.swing.JComboBox();
+        converterPackageComboBox = new javax.swing.JComboBox();
         localizationBundleLabel = new javax.swing.JLabel();
         localizationBundleTextField = new javax.swing.JTextField();
+        jsfPagesPanel = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jsfFolder = new javax.swing.JTextField();
+        genericIncludeFolder = new javax.swing.JTextField();
+        entityIncludeFolder = new javax.swing.JTextField();
+        browseFolderButton = new javax.swing.JButton();
+        browseGIFolderButton = new javax.swing.JButton();
+        browseEIFolderButton = new javax.swing.JButton();
+        mobilePagesPanel = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jsfMobileFolder = new javax.swing.JTextField();
+        genericMobileIncludeFolder = new javax.swing.JTextField();
+        entityMobileIncludeFolder = new javax.swing.JTextField();
+        browseMobileFolderButton = new javax.swing.JButton();
+        browseMobileGIFolderButton = new javax.swing.JButton();
+        browseMobileEIFolderButton = new javax.swing.JButton();
+        doMobile = new javax.swing.JCheckBox();
+        optionsPanel = new javax.swing.JPanel();
+        overrideExistingCheckBox = new javax.swing.JCheckBox();
         defaultRowsLabel = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         defaultRowsPerPageTemplateLabel = new javax.swing.JLabel();
@@ -183,8 +208,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         cdiExtVersionLabel = new javax.swing.JLabel();
         searchLabelsLabel = new javax.swing.JLabel();
         searchLabelsTextBox = new javax.swing.JTextField();
-        converterPackageComboBox = new javax.swing.JComboBox();
-        converterPackageLabel = new javax.swing.JLabel();
         createFunctionCheckBox = new javax.swing.JCheckBox();
         updateFunctionCheckBox = new javax.swing.JCheckBox();
         deleteFunctionCheckBox = new javax.swing.JCheckBox();
@@ -195,12 +218,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         growlLifeSpinner = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
         jsfVersionLabel = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        genericIncludeFolder = new javax.swing.JTextField();
-        browseGIFolderButton = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
-        entityIncludeFolder = new javax.swing.JTextField();
-        browseEIFolderButton = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         cdiLabel = new javax.swing.JLabel();
         tooltipMessagesCheckBox = new javax.swing.JCheckBox();
@@ -213,12 +230,145 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         setName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_JSFPagesAndClasses")); // NOI18N
 
-        jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle"); // NOI18N
+        jLabel6.setText(bundle.getString("MSG_Jpa_Jsf_Packages")); // NOI18N
+
+        projectLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle").getString("MNE_Project").charAt(0));
+        projectLabel.setLabelFor(projectTextField);
+        projectLabel.setText(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Project")); // NOI18N
+
+        locationLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle").getString("MNE_Location").charAt(0));
+        locationLabel.setLabelFor(locationComboBox);
+        org.openide.awt.Mnemonics.setLocalizedText(locationLabel, org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_SrcLocation")); // NOI18N
+
+        jpaPackageLabel.setLabelFor(jpaPackageComboBox);
+        jpaPackageLabel.setText(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Jpa_Controller_Package")); // NOI18N
+
+        jsfPackageLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle").getString("MNE_Package").charAt(0));
+        jsfPackageLabel.setLabelFor(jsfPackageComboBox);
+        jsfPackageLabel.setText(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Package")); // NOI18N
+
+        converterPackageLabel.setText("Converter Package:");
+
+        projectTextField.setEditable(false);
+        projectTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                projectTextFieldActionPerformed(evt);
+            }
+        });
+
+        locationComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                locationComboBoxActionPerformed(evt);
+            }
+        });
+
+        jpaPackageComboBox.setEditable(true);
+
+        jsfPackageComboBox.setEditable(true);
+
+        converterPackageComboBox.setEditable(true);
+
+        localizationBundleLabel.setLabelFor(localizationBundleTextField);
+        localizationBundleLabel.setText(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.localizationBundle")); // NOI18N
+
+        localizationBundleTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                localizationBundleTextFieldActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout javaPackagesPanelLayout = new javax.swing.GroupLayout(javaPackagesPanel);
+        javaPackagesPanel.setLayout(javaPackagesPanelLayout);
+        javaPackagesPanelLayout.setHorizontalGroup(
+            javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javaPackagesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addGroup(javaPackagesPanelLayout.createSequentialGroup()
+                        .addGroup(javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javaPackagesPanelLayout.createSequentialGroup()
+                                .addGroup(javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(projectLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(locationLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jpaPackageLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jsfPackageLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(converterPackageLabel, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addGap(30, 30, 30))
+                            .addGroup(javaPackagesPanelLayout.createSequentialGroup()
+                                .addComponent(localizationBundleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(locationComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jpaPackageComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 515, Short.MAX_VALUE)
+                            .addComponent(jsfPackageComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(converterPackageComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(projectTextField)
+                            .addComponent(localizationBundleTextField))))
+                .addContainerGap(74, Short.MAX_VALUE))
+        );
+        javaPackagesPanelLayout.setVerticalGroup(
+            javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javaPackagesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addGap(13, 13, 13)
+                .addGroup(javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(projectLabel)
+                    .addComponent(projectTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(locationLabel)
+                    .addComponent(locationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jpaPackageLabel)
+                    .addComponent(jpaPackageComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jsfPackageLabel)
+                    .addComponent(jsfPackageComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(converterPackageComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(converterPackageLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(localizationBundleLabel)
+                    .addComponent(localizationBundleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(33, Short.MAX_VALUE))
+        );
+
+        jLabel6.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "MSG_Jpa_Jsf_Packages")); // NOI18N
+        jLabel6.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "MSG_Jpa_Jsf_Packages")); // NOI18N
+        projectLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Project")); // NOI18N
+        projectLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Project")); // NOI18N
+        locationLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_SrcLocation")); // NOI18N
+        locationLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_SrcLocation")); // NOI18N
+        jpaPackageLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Jpa_Controller_Package")); // NOI18N
+        jpaPackageLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Jpa_Controller_Package")); // NOI18N
+        jsfPackageLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Package")); // NOI18N
+        jsfPackageLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Package")); // NOI18N
+        projectTextField.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_Project")); // NOI18N
+        locationComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_Location")); // NOI18N
+        jpaPackageComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_Package")); // NOI18N
+        jsfPackageComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_Package")); // NOI18N
+        converterPackageComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_Package")); // NOI18N
+
+        jTabbedPane1.addTab("Java Packages", javaPackagesPanel);
+
+        jLabel4.setText(bundle.getString("MSG_Jsf_Pages_Location")); // NOI18N
 
         jLabel2.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle").getString("MNE_JSF_Pages").charAt(0));
         jLabel2.setLabelFor(jsfFolder);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle"); // NOI18N
         jLabel2.setText(bundle.getString("LBL_JSF_pages_folder")); // NOI18N
+
+        jLabel5.setLabelFor(genericIncludeFolder);
+        jLabel5.setText("Generic Include Folder:");
+
+        jLabel7.setLabelFor(entityIncludeFolder);
+        jLabel7.setText("Entity Include Folder:");
 
         browseFolderButton.setMnemonic(java.util.ResourceBundle.getBundle("org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle").getString("MNE_Browse").charAt(0));
         browseFolderButton.setText(bundle.getString("LBL_Browse")); // NOI18N
@@ -228,36 +378,176 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
             }
         });
 
-        jLabel4.setText(bundle.getString("MSG_Jsf_Pages_Location")); // NOI18N
-
-        projectLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle").getString("MNE_Project").charAt(0));
-        projectLabel.setLabelFor(projectTextField);
-        projectLabel.setText(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Project")); // NOI18N
-
-        projectTextField.setEditable(false);
-
-        locationLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle").getString("MNE_Location").charAt(0));
-        locationLabel.setLabelFor(locationComboBox);
-        org.openide.awt.Mnemonics.setLocalizedText(locationLabel, org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_SrcLocation")); // NOI18N
-
-        locationComboBox.addActionListener(new java.awt.event.ActionListener() {
+        browseGIFolderButton.setText(bundle.getString("LBL_Browse")); // NOI18N
+        browseGIFolderButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                locationComboBoxActionPerformed(evt);
+                browseGIFolderButtonActionPerformed(evt);
             }
         });
 
-        jsfPackageLabel.setDisplayedMnemonic(java.util.ResourceBundle.getBundle("org/netbeans/modules/web/primefaces/crudgenerator/wizards/Bundle").getString("MNE_Package").charAt(0));
-        jsfPackageLabel.setLabelFor(jsfPackageComboBox);
-        jsfPackageLabel.setText(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Package")); // NOI18N
+        browseEIFolderButton.setText(bundle.getString("LBL_Browse")); // NOI18N
+        browseEIFolderButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseEIFolderButtonActionPerformed(evt);
+            }
+        });
 
-        jsfPackageComboBox.setEditable(true);
+        javax.swing.GroupLayout jsfPagesPanelLayout = new javax.swing.GroupLayout(jsfPagesPanel);
+        jsfPagesPanel.setLayout(jsfPagesPanelLayout);
+        jsfPagesPanelLayout.setHorizontalGroup(
+            jsfPagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jsfPagesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jsfPagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jsfPagesPanelLayout.createSequentialGroup()
+                        .addGroup(jsfPagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jsfPagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(entityIncludeFolder)
+                            .addComponent(genericIncludeFolder, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jsfFolder, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jsfPagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jsfPagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(browseFolderButton)
+                                .addComponent(browseGIFolderButton))
+                            .addComponent(browseEIFolderButton, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(jsfPagesPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(0, 533, Short.MAX_VALUE)))
+                .addGap(8, 8, 8))
+        );
+        jsfPagesPanelLayout.setVerticalGroup(
+            jsfPagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jsfPagesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jsfPagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jsfFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseFolderButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jsfPagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(genericIncludeFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseGIFolderButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jsfPagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(browseEIFolderButton)
+                    .addComponent(entityIncludeFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(135, Short.MAX_VALUE))
+        );
 
-        jLabel6.setText(bundle.getString("MSG_Jpa_Jsf_Packages")); // NOI18N
+        jLabel4.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "MSG_Jsf_Pages_Location")); // NOI18N
+        jLabel4.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "MSG_Jsf_Pages_Location")); // NOI18N
+        jLabel2.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_JSF_pages_folder")); // NOI18N
+        jLabel2.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_JSF_pages_folder")); // NOI18N
+        jsfFolder.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_JSF_Pages")); // NOI18N
+        browseFolderButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_Browser")); // NOI18N
 
-        jpaPackageLabel.setLabelFor(jpaPackageComboBox);
-        jpaPackageLabel.setText(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Jpa_Controller_Package")); // NOI18N
+        jTabbedPane1.addTab("JSF Pages", jsfPagesPanel);
 
-        jpaPackageComboBox.setEditable(true);
+        jLabel10.setText(bundle.getString("MSG_Jsf_Pages_Location")); // NOI18N
+
+        jLabel11.setLabelFor(jsfMobileFolder);
+        jLabel11.setText(bundle.getString("LBL_JSF_pages_folder")); // NOI18N
+
+        jLabel12.setLabelFor(genericMobileIncludeFolder);
+        jLabel12.setText("Generic Include Folder:");
+
+        jLabel13.setLabelFor(entityMobileIncludeFolder);
+        jLabel13.setText("Entity Include Folder:");
+
+        browseMobileFolderButton.setText(bundle.getString("LBL_Browse")); // NOI18N
+        browseMobileFolderButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseMobileFolderButtonActionPerformed(evt);
+            }
+        });
+
+        browseMobileGIFolderButton.setText(bundle.getString("LBL_Browse")); // NOI18N
+        browseMobileGIFolderButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseMobileGIFolderButtonActionPerformed(evt);
+            }
+        });
+
+        browseMobileEIFolderButton.setText(bundle.getString("LBL_Browse")); // NOI18N
+        browseMobileEIFolderButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseMobileEIFolderButtonActionPerformed(evt);
+            }
+        });
+
+        doMobile.setSelected(true);
+        doMobile.setText("Generate Mobile Pages");
+
+        javax.swing.GroupLayout mobilePagesPanelLayout = new javax.swing.GroupLayout(mobilePagesPanel);
+        mobilePagesPanel.setLayout(mobilePagesPanelLayout);
+        mobilePagesPanelLayout.setHorizontalGroup(
+            mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mobilePagesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mobilePagesPanelLayout.createSequentialGroup()
+                        .addGroup(mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(mobilePagesPanelLayout.createSequentialGroup()
+                                .addGroup(mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(entityMobileIncludeFolder)
+                                    .addComponent(genericMobileIncludeFolder, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jsfMobileFolder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(browseMobileFolderButton)
+                                        .addComponent(browseMobileGIFolderButton))
+                                    .addComponent(browseMobileEIFolderButton, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(mobilePagesPanelLayout.createSequentialGroup()
+                                .addComponent(doMobile)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(8, 8, 8))
+                    .addGroup(mobilePagesPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+        mobilePagesPanelLayout.setVerticalGroup(
+            mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mobilePagesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(doMobile)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(jsfMobileFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseMobileFolderButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(genericMobileIncludeFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseMobileGIFolderButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(browseMobileEIFolderButton)
+                    .addComponent(entityMobileIncludeFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(106, Short.MAX_VALUE))
+        );
+
+        jsfMobileFolder.getAccessibleContext().setAccessibleDescription("");
+
+        jTabbedPane1.addTab("Mobile Pages", mobilePagesPanel);
 
         overrideExistingCheckBox.setText(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.overrideExistingFiles")); // NOI18N
         overrideExistingCheckBox.addActionListener(new java.awt.event.ActionListener() {
@@ -265,9 +555,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                 overrideExistingCheckBoxActionPerformed(evt);
             }
         });
-
-        localizationBundleLabel.setLabelFor(localizationBundleTextField);
-        localizationBundleLabel.setText(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.localizationBundle")); // NOI18N
 
         defaultRowsLabel.setText("Default Rows Displayed:");
 
@@ -289,10 +576,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         searchLabelsTextBox.setText("descr,name");
         searchLabelsTextBox.setToolTipText("Comma-separated list of field name artifacts to look for");
-
-        converterPackageComboBox.setEditable(true);
-
-        converterPackageLabel.setText("Converter Package:");
 
         createFunctionCheckBox.setSelected(true);
         createFunctionCheckBox.setText("Create");
@@ -331,26 +614,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
 
         jsfVersionLabel.setText("jLabel5");
 
-        jLabel5.setLabelFor(genericIncludeFolder);
-        jLabel5.setText("Generic Include Folder:");
-
-        browseGIFolderButton.setText(bundle.getString("LBL_Browse")); // NOI18N
-        browseGIFolderButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browseGIFolderButtonActionPerformed(evt);
-            }
-        });
-
-        jLabel7.setLabelFor(entityIncludeFolder);
-        jLabel7.setText("Entity Include Folder:");
-
-        browseEIFolderButton.setText(bundle.getString("LBL_Browse")); // NOI18N
-        browseEIFolderButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browseEIFolderButtonActionPerformed(evt);
-            }
-        });
-
         jLabel8.setText("CDI:");
 
         cdiLabel.setText("jLabel9");
@@ -380,174 +643,96 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         injectEJBAbstractCheckBox.setText("EJB Injection in AbstractController (CDI)");
         injectEJBAbstractCheckBox.setToolTipText("Controls whether injection of EJB Facade objects happens on AbstractController or each Entity Controller. Some containers may not support injection inside an abstract class. Uncheck this box if that is the case. Note: CDI-enabled projects only.");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(projectLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(locationLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jpaPackageLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jsfPackageLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(converterPackageLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(localizationBundleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
+        optionsPanel.setLayout(optionsPanelLayout);
+        optionsPanelLayout.setHorizontalGroup(
+            optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(optionsPanelLayout.createSequentialGroup()
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(optionsPanelLayout.createSequentialGroup()
+                        .addComponent(searchLabelsLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(entityIncludeFolder)
-                            .addComponent(genericIncludeFolder, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(localizationBundleTextField)
-                            .addComponent(jsfFolder, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(converterPackageComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, 304, Short.MAX_VALUE)
-                                    .addComponent(projectTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(locationComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jpaPackageComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jsfPackageComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(searchLabelsTextBox))
+                    .addComponent(jLabel3)
+                    .addComponent(overrideExistingCheckBox)
+                    .addGroup(optionsPanelLayout.createSequentialGroup()
+                        .addComponent(createFunctionCheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(browseFolderButton)
-                                .addComponent(browseGIFolderButton))
-                            .addComponent(browseEIFolderButton, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(searchLabelsLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(searchLabelsTextBox))
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel6)
-                            .addComponent(overrideExistingCheckBox)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(createFunctionCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(updateFunctionCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(deleteFunctionCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(readFunctionCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sortFunctionCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(filterFunctionCheckBox))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(growlCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tooltipMessagesCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(confirmDialogsCheckBox))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(contextMenusCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(relationshipNavigationCheckBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(injectEJBAbstractCheckBox))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(defaultRowsPerPageTemplateLabel)
-                                    .addComponent(defaultRowsLabel)
-                                    .addComponent(jLabel9))
-                                .addGap(27, 27, 27)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(defaultRowsPerPageTemplate)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(maxDataTableColumnsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE))))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(primeFacesVersionForLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(primeFacesVersionLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jsfVersionLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cdiLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cdiExtVersionLabel)))
-                        .addGap(0, 76, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(updateFunctionCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteFunctionCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(readFunctionCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(sortFunctionCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(filterFunctionCheckBox))
+                    .addGroup(optionsPanelLayout.createSequentialGroup()
+                        .addComponent(growlCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tooltipMessagesCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(confirmDialogsCheckBox))
+                    .addGroup(optionsPanelLayout.createSequentialGroup()
+                        .addComponent(contextMenusCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(relationshipNavigationCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(injectEJBAbstractCheckBox))
+                    .addGroup(optionsPanelLayout.createSequentialGroup()
+                        .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(defaultRowsPerPageTemplateLabel)
+                            .addComponent(defaultRowsLabel)
+                            .addComponent(jLabel9))
+                        .addGap(27, 27, 27)
+                        .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(defaultRowsPerPageTemplate)
+                            .addGroup(optionsPanelLayout.createSequentialGroup()
+                                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(maxDataTableColumnsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(optionsPanelLayout.createSequentialGroup()
+                        .addComponent(primeFacesVersionForLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(primeFacesVersionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jsfVersionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cdiLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cdiExtVersionLabel)))
+                .addContainerGap(235, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel6)
-                .addGap(13, 13, 13)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(projectLabel)
-                    .addComponent(projectTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(locationLabel)
-                    .addComponent(locationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jpaPackageLabel)
-                    .addComponent(jpaPackageComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jsfPackageLabel)
-                    .addComponent(jsfPackageComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(converterPackageComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(converterPackageLabel))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jsfFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(browseFolderButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(genericIncludeFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(browseGIFolderButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(browseEIFolderButton)
-                    .addComponent(entityIncludeFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(localizationBundleLabel)
-                    .addComponent(localizationBundleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+        optionsPanelLayout.setVerticalGroup(
+            optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(optionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(defaultRowsLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(defaultRowsPerPageTemplateLabel)
                     .addComponent(defaultRowsPerPageTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(maxDataTableColumnsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchLabelsLabel)
                     .addComponent(searchLabelsTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(createFunctionCheckBox)
                     .addComponent(updateFunctionCheckBox)
                     .addComponent(deleteFunctionCheckBox)
@@ -555,20 +740,20 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                     .addComponent(sortFunctionCheckBox)
                     .addComponent(filterFunctionCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(growlCheckBox)
                     .addComponent(growlLifeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tooltipMessagesCheckBox)
                     .addComponent(confirmDialogsCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(relationshipNavigationCheckBox)
                     .addComponent(contextMenusCheckBox)
                     .addComponent(injectEJBAbstractCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(overrideExistingCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(primeFacesVersionForLabel)
                     .addComponent(primeFacesVersionLabel)
                     .addComponent(cdiExtVersionLabel)
@@ -576,49 +761,25 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                     .addComponent(jsfVersionLabel)
                     .addComponent(jLabel8)
                     .addComponent(cdiLabel))
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel2.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_JSF_pages_folder")); // NOI18N
-        jLabel2.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_JSF_pages_folder")); // NOI18N
-        jsfFolder.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_JSF_Pages")); // NOI18N
-        browseFolderButton.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_Browser")); // NOI18N
-        jLabel4.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "MSG_Jsf_Pages_Location")); // NOI18N
-        jLabel4.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "MSG_Jsf_Pages_Location")); // NOI18N
-        projectLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Project")); // NOI18N
-        projectLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Project")); // NOI18N
-        projectTextField.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_Project")); // NOI18N
-        locationLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_SrcLocation")); // NOI18N
-        locationLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_SrcLocation")); // NOI18N
-        locationComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_Location")); // NOI18N
-        jsfPackageLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Package")); // NOI18N
-        jsfPackageLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Package")); // NOI18N
-        jsfPackageComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_Package")); // NOI18N
-        jLabel6.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "MSG_Jpa_Jsf_Packages")); // NOI18N
-        jLabel6.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "MSG_Jpa_Jsf_Packages")); // NOI18N
-        jpaPackageLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Jpa_Controller_Package")); // NOI18N
-        jpaPackageLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_Jpa_Controller_Package")); // NOI18N
-        jpaPackageComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_Package")); // NOI18N
-        converterPackageComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ACSD_Package")); // NOI18N
-
-        jScrollPane1.setViewportView(jPanel1);
+        jTabbedPane1.addTab("Options", optionsPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
+                .addContainerGap(14, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        jTabbedPane1.getAccessibleContext().setAccessibleName("Package Locations");
     }// </editor-fold>//GEN-END:initComponents
 
     private void browseEIFolderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseEIFolderButtonActionPerformed
@@ -673,6 +834,44 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         relationshipNavigationCheckBox.setSelected(contextMenusCheckBox.isSelected());
     }//GEN-LAST:event_contextMenusCheckBoxActionPerformed
 
+    private void projectTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_projectTextFieldActionPerformed
+
+    private void localizationBundleTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_localizationBundleTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_localizationBundleTextFieldActionPerformed
+
+    private void browseMobileEIFolderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseMobileEIFolderButtonActionPerformed
+        Sources s = (Sources) ProjectUtils.getSources(Templates.getProject(wizard));
+        org.netbeans.api.project.SourceGroup[] groups = s.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
+        org.openide.filesystems.FileObject fo = BrowseFolders.showDialog(groups);
+        if (fo != null) {
+            String res = "/" + JSFConfigUtilities.getResourcePath(groups, fo, '/', true);
+            entityMobileIncludeFolder.setText(res);
+        }
+    }//GEN-LAST:event_browseMobileEIFolderButtonActionPerformed
+
+    private void browseMobileGIFolderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseMobileGIFolderButtonActionPerformed
+        Sources s = (Sources) ProjectUtils.getSources(Templates.getProject(wizard));
+        org.netbeans.api.project.SourceGroup[] groups = s.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
+        org.openide.filesystems.FileObject fo = BrowseFolders.showDialog(groups);
+        if (fo != null) {
+            String res = "/" + JSFConfigUtilities.getResourcePath(groups, fo, '/', true);
+            genericMobileIncludeFolder.setText(res);
+        }
+    }//GEN-LAST:event_browseMobileGIFolderButtonActionPerformed
+
+    private void browseMobileFolderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseMobileFolderButtonActionPerformed
+        Sources s = (Sources) ProjectUtils.getSources(Templates.getProject(wizard));
+        org.netbeans.api.project.SourceGroup[] groups = s.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
+        org.openide.filesystems.FileObject fo = BrowseFolders.showDialog(groups);
+        if (fo != null) {
+            String res = "/" + JSFConfigUtilities.getResourcePath(groups, fo, '/', true);
+            jsfMobileFolder.setText(res);
+        }
+    }//GEN-LAST:event_browseMobileFolderButtonActionPerformed
+
     private void supportPrimeFacesCheckboxActionPerformed(java.awt.event.ActionEvent evt) {
         changeSupport.fireChange();
     }
@@ -681,6 +880,9 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JButton browseEIFolderButton;
     private javax.swing.JButton browseFolderButton;
     private javax.swing.JButton browseGIFolderButton;
+    private javax.swing.JButton browseMobileEIFolderButton;
+    private javax.swing.JButton browseMobileFolderButton;
+    private javax.swing.JButton browseMobileGIFolderButton;
     private javax.swing.JLabel cdiExtVersionLabel;
     private javax.swing.JLabel cdiLabel;
     private javax.swing.JCheckBox confirmDialogsCheckBox;
@@ -693,13 +895,20 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JLabel defaultRowsPerPageTemplateLabel;
     private javax.swing.JTextField defaultRowsTextField;
     private javax.swing.JCheckBox deleteFunctionCheckBox;
+    private javax.swing.JCheckBox doMobile;
     private javax.swing.JTextField entityIncludeFolder;
+    private javax.swing.JTextField entityMobileIncludeFolder;
     private javax.swing.JCheckBox filterFunctionCheckBox;
     private javax.swing.JTextField genericIncludeFolder;
+    private javax.swing.JTextField genericMobileIncludeFolder;
     private javax.swing.JCheckBox growlCheckBox;
     private javax.swing.JSpinner growlLifeSpinner;
     private javax.swing.JCheckBox injectEJBAbstractCheckBox;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -708,19 +917,23 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel javaPackagesPanel;
     private javax.swing.JComboBox jpaPackageComboBox;
     private javax.swing.JLabel jpaPackageLabel;
     private javax.swing.JTextField jsfFolder;
+    private javax.swing.JTextField jsfMobileFolder;
     private javax.swing.JComboBox jsfPackageComboBox;
     private javax.swing.JLabel jsfPackageLabel;
+    private javax.swing.JPanel jsfPagesPanel;
     private javax.swing.JLabel jsfVersionLabel;
     private javax.swing.JLabel localizationBundleLabel;
     private javax.swing.JTextField localizationBundleTextField;
     private javax.swing.JComboBox locationComboBox;
     private javax.swing.JLabel locationLabel;
     private javax.swing.JTextField maxDataTableColumnsTextField;
+    private javax.swing.JPanel mobilePagesPanel;
+    private javax.swing.JPanel optionsPanel;
     private javax.swing.JCheckBox overrideExistingCheckBox;
     private javax.swing.JLabel primeFacesVersionForLabel;
     private javax.swing.JLabel primeFacesVersionLabel;
@@ -859,6 +1072,30 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
             return false;
         }
 
+        String jsfMobileFolderText = jsfMobileFolder.getText();
+        try {
+            String canonPath = new File(pagesRootFolderAsFile, jsfMobileFolderText).getCanonicalPath();
+        } catch (IOException ioe) {
+            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ERR_JsfTargetChooser_InvalidMobileFolder"));
+            return false;
+        }
+
+        String genericMobileIncludeFolderText = genericMobileIncludeFolder.getText();
+        try {
+            String canonPath = new File(pagesRootFolderAsFile, genericMobileIncludeFolderText).getCanonicalPath();
+        } catch (IOException ioe) {
+            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ERR_JsfTargetChooser_InvalidMobileGenericIncludeFolder"));
+            return false;
+        }
+
+        String entityMobileIncludeFolderText = entityMobileIncludeFolder.getText();
+        try {
+            String canonPath = new File(pagesRootFolderAsFile, entityMobileIncludeFolderText).getCanonicalPath();
+        } catch (IOException ioe) {
+            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ERR_JsfTargetChooser_InvalidMobileEntityIncludeFolder"));
+            return false;
+        }
+
         String[] packageNames = {getJpaPackage(), getJsfPackage(), getConverterPackage()};
         for (int i = 0; i < packageNames.length; i++) {
             if (packageNames[i].trim().equals("")) { // NOI18N
@@ -925,6 +1162,15 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         genericIncludeFolder.setText((String) settings.getProperty(WizardProperties.JSF_GI_FOLDER));
         entityIncludeFolder.setText((String) settings.getProperty(WizardProperties.JSF_EI_FOLDER));
 
+        // 2015-01-19 Kay Wrobel: Mobile folders
+        String doMobileString = (String) settings.getProperty(WizardProperties.DO_MOBILE);
+        if (doMobileString != null) {
+            doMobile.setSelected(Boolean.valueOf(doMobileString));
+        }
+        jsfMobileFolder.setText((String) settings.getProperty(WizardProperties.JSF_MOBILE_FOLDER));
+        genericMobileIncludeFolder.setText((String) settings.getProperty(WizardProperties.JSF_MOBILE_GI_FOLDER));
+        entityMobileIncludeFolder.setText((String) settings.getProperty(WizardProperties.JSF_MOBILE_EI_FOLDER));
+
         project = Templates.getProject(settings);
         //2013-10-04 Kay Wrobel: Also retrieve the web module
         wm = WebModule.getWebModule(project.getProjectDirectory());
@@ -975,6 +1221,13 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         if (jsfVersion.compareTo("2.2") < 0 || !PersistenceClientIterator.isCdiEnabled(project)) {
             this.injectEJBAbstractCheckBox.setSelected(false);
         }
+
+        // 2015-01-19 Kay Wrobel: Hide the Mobile Pages tab if PF version is less than 5.0
+        if (pfVersion != null && pfVersion.compareTo("5.0") >= 0) {
+            this.mobilePagesPanel.setVisible(true);
+        } else {
+            this.mobilePagesPanel.setVisible(false);
+        }
     }
 
     void store(WizardDescriptor settings) {
@@ -1020,8 +1273,17 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         settings.putProperty(WizardProperties.CDI_EJB_ABSTRACT_INJECTION, Boolean.valueOf(injectEJBAbstractCheckBox.isSelected()));
         //2014-05-07 Kay Wrobel
         if (viewAccessScopedFullClassName != null) {
-        settings.putProperty(WizardProperties.VIEW_ACCESS_SCOPED_FULL_CLASSNAME, viewAccessScopedFullClassName);
+            settings.putProperty(WizardProperties.VIEW_ACCESS_SCOPED_FULL_CLASSNAME, viewAccessScopedFullClassName);
         }
+        //2015-01-19 Kay Wrobel: Mobile support
+        if (mobilePagesPanel.isVisible()) {
+            settings.putProperty(WizardProperties.DO_MOBILE, Boolean.valueOf(doMobile.isSelected()));
+        } else {
+            settings.putProperty(WizardProperties.DO_MOBILE, Boolean.valueOf(false));
+        }
+        settings.putProperty(WizardProperties.JSF_MOBILE_FOLDER, jsfMobileFolder.getText());
+        settings.putProperty(WizardProperties.JSF_MOBILE_GI_FOLDER, genericMobileIncludeFolder.getText());
+        settings.putProperty(WizardProperties.JSF_MOBILE_EI_FOLDER, entityMobileIncludeFolder.getText());
     }
 
     private void updateSourceGroupPackages() {

@@ -94,4 +94,9 @@ public class WizardProperties {
     public static final String CDI_EJB_ABSTRACT_INJECTION = "CDIEJBAbstractInjection"; //NOI18N
     //2014-05-07 Kay Wrobel: Full class name of the ViewAccessScoped annotation
     public static final String VIEW_ACCESS_SCOPED_FULL_CLASSNAME = "ViewAccessScopedFullClassName"; //NOI18N
+    //2015-01-19 Kay Wrobel: Folders for PrimeFaces Mobile Pages
+    public static final String JSF_MOBILE_FOLDER = "JSFMobileFolder"; //NOI18N
+    public static final String JSF_MOBILE_GI_FOLDER = "JSFMobileGIFolder"; //NOI18N
+    public static final String JSF_MOBILE_EI_FOLDER = "JSFMobileEIFolder"; //NOI18N
+    public static final String DO_MOBILE = "DoMobile"; //NOI18N
 }
