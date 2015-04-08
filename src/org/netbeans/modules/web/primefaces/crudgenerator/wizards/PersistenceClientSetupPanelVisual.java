@@ -114,6 +114,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     public static final String PRIMEFACES_PACKAGE = "org.primefaces"; // NOI18N
     // 2014-10-15 Kay Wrobel: more constants for PrimeFaces Mobile Templates
     public static final String PRIMEFACES_MOBILE_TEMPLATE_PATH = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/Mobile/"; // NOI18N
+    public static final String PRIMEFACES_MOBILE_CONFIRMATION_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/Mobile/confirmation.ftl"; // NOI18N
     public static final String PRIMEFACES_MOBILE_TEMPLATE_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/Mobile/template.ftl"; // NOI18N
     public static final String PRIMEFACES_MOBILE_APPMENU_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/Mobile/appmenu.ftl"; // NOI18N
     public static final String PRIMEFACES_MOBILE_APPINDEX_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/Mobile/appindex.ftl"; // NOI18N

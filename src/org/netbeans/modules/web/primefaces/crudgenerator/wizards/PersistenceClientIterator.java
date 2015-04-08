@@ -792,6 +792,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             }
             params.put("templatePage", jsfGenericIncludeFolder + PRIMEFACES_TEMPLATE_PAGE);
             params.put("mobileTemplatePage", jsfMobileGenericIncludeFolder + PRIMEFACES_TEMPLATE_PAGE);
+            params.put("mobileConfirmDialogPage", jsfMobileGenericIncludeFolder + PRIMEFACES_CONFIRMATION_PAGE);
             expandSingleJSFTemplate("index.ftl", entityClass, jsfFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
             if (doMobile) {
                 expandSingleJSFMobileTemplate("index.ftl", entityClass, jsfMobileEntityIncludeFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
@@ -854,7 +855,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             } else {
                 params.put("jsfMobileFolder", "mobile");
             }
-            
+
         }
         if (target == null) {
             target = FileUtil.createData(webRoot, jsfGenericIncludeFolder2 + PRIMEFACES_APPMENU_PAGE);
@@ -935,7 +936,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         }
 
         // Add PrimeFaces Confirmation Dialog Page Include File
-        // We only support PF 4.0+ due to its new "global" mode, whic
+        // We only support PF 4.0+ due to its new "global" mode, which
         // is utilized in all CRUD pages via the <p:confirm> tag on buttons
         if (primeFacesVersion.compareTo("4.0") >= 0 && confirmationDialogs) {
             template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_CONFIRMATION_TEMPLATE);
@@ -943,6 +944,18 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("bundle", bundleVar); // NOI18N
             if (target == null) {
                 target = FileUtil.createData(webRoot, jsfGenericIncludeFolder + PRIMEFACES_CONFIRMATION_PAGE);
+            }
+            JSFPaletteUtilities.expandJSFTemplate(template, params, target);
+        }
+
+        // Add PrimeFaces Confirmation Dialog Page Include File for Mobile
+        // ConfirmDialogs were introduced with PF 5.1.13+.
+        if (doMobile && confirmationDialogs && primeFacesVersion.compareTo("5.1.13") >= 0) {
+            template = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_MOBILE_CONFIRMATION_TEMPLATE);
+            target = webRoot.getFileObject(jsfMobileGenericIncludeFolder + PRIMEFACES_CONFIRMATION_PAGE);
+            params.put("bundle", bundleVar); // NOI18N
+            if (target == null) {
+                target = FileUtil.createData(webRoot, jsfMobileGenericIncludeFolder + PRIMEFACES_CONFIRMATION_PAGE);
             }
             JSFPaletteUtilities.expandJSFTemplate(template, params, target);
         }

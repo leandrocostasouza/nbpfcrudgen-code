@@ -129,7 +129,14 @@
 <#else>
                     </p:outputPanel>
 </#if>
+    <#if (primeFacesVersion.compareTo("5.1.13") >= 0 && doConfirmationDialogs) >
+                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".saveNew}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListPage:${entityName}ListForm:datalist,${messageUpdate}" action="pm:${entityName}ListPage">
+                        <p:confirm header="${r"#{"}${bundle}.ConfirmationHeader${r"}"}" message="${r"#{"}${bundle}.ConfirmCreateMessage${r"}"}" icon="ui-icon-alert"/>
+                    </p:commandButton>
+    <#else>
                     <p:commandButton actionListener="${r"#{"}${managedBean}${r".saveNew}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListPage:${entityName}ListForm:datalist,${messageUpdate}" action="pm:${entityName}ListPage"/>
+    </#if>
+
                 </h:panelGroup>
 
             </h:form>
