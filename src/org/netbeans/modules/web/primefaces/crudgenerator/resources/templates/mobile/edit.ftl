@@ -64,8 +64,7 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:pm="http://primefaces.org/mobile"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+                xmlns:pm="http://primefaces.org/mobile">
 
     <pm:page id="${entityName}EditPage" lazy="true">
         <pm:header title="${r"#{"}${bundle}.Edit${entityName}Title${r"}"}">
@@ -129,7 +128,7 @@
 <#else>
                     </p:outputPanel>
 </#if>
-    <#if (primeFacesVersion.compareTo("5.1.13") >= 0 && doConfirmationDialogs) >
+    <#if (doConfirmationDialogs && primeFacesVersion.compareTo("5.1.13") >= 0 && jsfVersion.compareTo("2.2") >= 0) >
                     <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListPage:${entityName}ListForm:datalist,${messageUpdate}" action="pm:${entityName}ListPage">
                         <p:confirm header="${r"#{"}${bundle}.ConfirmationHeader${r"}"}" message="${r"#{"}${bundle}.ConfirmEditMessage${r"}"}" icon="ui-icon-alert"/>
                     </p:commandButton>

@@ -77,8 +77,11 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:pm="http://primefaces.org/mobile"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<#-- Following namespace for Passthrough used by DataList data-inset flag only -->
+<#if (jsfVersion.compareTo("2.2") >= 0 && primeFacesVersion.compareTo("5.1.2") < 0)>
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+</#if>
+                xmlns:pm="http://primefaces.org/mobile">
 
     <pm:page id="${entityName}ListPage">
         <pm:header title="${r"#{"}${bundle}.List${entityName}Title${r"}"}">
@@ -174,7 +177,7 @@
                 <p:commandButton id="${updateButton}"   style="visibility: hidden;" icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" update=":${entityName}EditPage:${entityName}EditForm" disabled="${r"#{empty "}${managedBean}${r".selected}"}" action="pm:${entityName}EditPage"/>
 </#if>
 <#if doDelete>
-    <#if (doConfirmationDialogs) >
+    <#if (doConfirmationDialogs && primeFacesVersion.compareTo("5.1.13") >= 0 && jsfVersion.compareTo("2.2") >= 0) >
                 <p:commandButton id="${deleteButton}" style="visibility: hidden;" icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}">
                     <p:confirm header="${r"#{"}${bundle}.ConfirmationHeader${r"}"}" message="${r"#{"}${bundle}.ConfirmDeleteMessage${r"}"}" icon="ui-icon-alert"/>
                 </p:commandButton>
@@ -185,14 +188,16 @@
 <#-- Use DataList widget for PF5.0+ and < 5.1.2 and DataTable for anything above that -->
 <#else>
                 <p:dataList id="datalist"
-                            value="${r"#{"}${managedBeanProperty}${r"}"}"
-                            var="${item}"
 <#if defaultDataTableRows?? && defaultDataTableRows != "">
                             paginator="true"
                             rows="${defaultDataTableRows}"
                             rowsPerPageTemplate="${defaultDataTableRowsPerPageTemplate}"
 </#if>
-                            pt:data-inset="true">
+<#if (jsfVersion.compareTo("2.2") >= 0 && primeFacesVersion.compareTo("5.1.2") < 0)>
+                            pt:data-inset="true"
+</#if>
+                            value="${r"#{"}${managedBeanProperty}${r"}"}"
+                            var="${item}">
 
                     <f:facet name="header">
                         <h:outputText value="${r"#{"}${bundle}.List${entityName}Title${r"}"}"/>

@@ -59,8 +59,7 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:pm="http://primefaces.org/mobile"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+                xmlns:pm="http://primefaces.org/mobile">
 
     <pm:page id="${entityName}ViewPage" lazy="true">
         <pm:header title="${r"#{"}${bundle}.View${entityName}Title${r"}"}">

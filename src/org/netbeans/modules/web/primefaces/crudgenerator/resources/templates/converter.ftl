@@ -32,25 +32,23 @@ import ${ejbFullClassName};
 import ${controllerPackageName}.util.JsfUtil;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+<#if (jsfVersion.compareTo("2.2") >= 0)>
+import javax.faces.convert.FacesConverter;
+<#elseif cdiEnabled?? && cdiEnabled == true>
+import javax.inject.Named;
+<#else>
+import javax.faces.bean.ManagedBean;
+</#if>
 <#if ejbClassName??>
 <#if cdiEnabled?? && cdiEnabled == true>
-<#if (jsfVersion.compareTo("2.2") < 0)>
-import javax.inject.Named;
-</#if>
 import javax.inject.Inject;
-<#else>
-<#if (jsfVersion.compareTo("2.2") < 0)>
+<#elseif ejbClassName??>
 import javax.ejb.EJB;
-</#if>
-import javax.faces.bean.ManagedBean;
 </#if>
 </#if>
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-<#if (jsfVersion.compareTo("2.2") >= 0)>
-import javax.faces.convert.FacesConverter;
-</#if>
 
 
 <#if (jsfVersion.compareTo("2.2") >= 0)>

@@ -50,7 +50,7 @@
 
         <ui:define name="body">
 
-<#if (primeFacesVersion.compareTo("5.1.13") >= 0 && doConfirmationDialogs) >
+<#if (doConfirmationDialogs && primeFacesVersion.compareTo("5.1.13") >= 0 && jsfVersion.compareTo("2.2") >= 0) >
             <ui:include src="${mobileConfirmDialogPage}"/>
 </#if>
             <ui:include src="${mobileEntityIncludeFolder}/${entityName?uncap_first}/List.xhtml"/>

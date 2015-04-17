@@ -204,9 +204,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         defaultRowsPerPageTemplateLabel = new javax.swing.JLabel();
         defaultRowsPerPageTemplate = new javax.swing.JTextField();
         defaultRowsTextField = new javax.swing.JTextField();
-        primeFacesVersionForLabel = new javax.swing.JLabel();
-        primeFacesVersionLabel = new javax.swing.JLabel();
-        cdiExtVersionLabel = new javax.swing.JLabel();
         searchLabelsLabel = new javax.swing.JLabel();
         searchLabelsTextBox = new javax.swing.JTextField();
         createFunctionCheckBox = new javax.swing.JCheckBox();
@@ -217,10 +214,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         filterFunctionCheckBox = new javax.swing.JCheckBox();
         growlCheckBox = new javax.swing.JCheckBox();
         growlLifeSpinner = new javax.swing.JSpinner();
-        jLabel1 = new javax.swing.JLabel();
-        jsfVersionLabel = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        cdiLabel = new javax.swing.JLabel();
         tooltipMessagesCheckBox = new javax.swing.JCheckBox();
         confirmDialogsCheckBox = new javax.swing.JCheckBox();
         relationshipNavigationCheckBox = new javax.swing.JCheckBox();
@@ -228,6 +221,14 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         jLabel9 = new javax.swing.JLabel();
         maxDataTableColumnsTextField = new javax.swing.JTextField();
         injectEJBAbstractCheckBox = new javax.swing.JCheckBox();
+        jPanel1 = new javax.swing.JPanel();
+        primeFacesVersionForLabel = new javax.swing.JLabel();
+        primeFacesVersionLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jsfVersionLabel = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        cdiLabel = new javax.swing.JLabel();
+        cdiExtVersionLabel = new javax.swing.JLabel();
 
         setName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "LBL_JSFPagesAndClasses")); // NOI18N
 
@@ -298,7 +299,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                                     .addComponent(converterPackageLabel, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addGap(30, 30, 30))
                             .addGroup(javaPackagesPanelLayout.createSequentialGroup()
-                                .addComponent(localizationBundleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                                .addComponent(localizationBundleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(locationComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -307,7 +308,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                             .addComponent(converterPackageComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(projectTextField)
                             .addComponent(localizationBundleTextField))))
-                .addContainerGap(74, Short.MAX_VALUE))
+                .addContainerGap(91, Short.MAX_VALUE))
         );
         javaPackagesPanelLayout.setVerticalGroup(
             javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -338,7 +339,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                 .addGroup(javaPackagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(localizationBundleLabel)
                     .addComponent(localizationBundleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel6.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "MSG_Jpa_Jsf_Packages")); // NOI18N
@@ -418,7 +419,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                             .addComponent(browseEIFolderButton, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(jsfPagesPanelLayout.createSequentialGroup()
                         .addComponent(jLabel4)
-                        .addGap(0, 533, Short.MAX_VALUE)))
+                        .addGap(0, 521, Short.MAX_VALUE)))
                 .addGap(8, 8, 8))
         );
         jsfPagesPanelLayout.setVerticalGroup(
@@ -441,7 +442,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                     .addComponent(jLabel7)
                     .addComponent(browseEIFolderButton)
                     .addComponent(entityIncludeFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(135, Short.MAX_VALUE))
+                .addContainerGap(170, Short.MAX_VALUE))
         );
 
         jLabel4.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "MSG_Jsf_Pages_Location")); // NOI18N
@@ -506,7 +507,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                                 .addGroup(mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(entityMobileIncludeFolder)
                                     .addComponent(genericMobileIncludeFolder, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jsfMobileFolder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE))
+                                    .addComponent(jsfMobileFolder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mobilePagesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -543,7 +544,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                     .addComponent(jLabel13)
                     .addComponent(browseMobileEIFolderButton)
                     .addComponent(entityMobileIncludeFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addContainerGap(141, Short.MAX_VALUE))
         );
 
         jsfMobileFolder.getAccessibleContext().setAccessibleDescription("");
@@ -566,12 +567,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         defaultRowsPerPageTemplate.setText("10,20,30,40,50");
 
         defaultRowsTextField.setText("10");
-
-        primeFacesVersionForLabel.setText("PrimeFaces Version:");
-
-        primeFacesVersionLabel.setText("jLabel8");
-
-        cdiExtVersionLabel.setText("jLabel7");
 
         searchLabelsLabel.setText("Field name artifacts for foreign fields:");
 
@@ -610,14 +605,6 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         });
 
         growlLifeSpinner.setValue(3000);
-
-        jLabel1.setText("JSF:");
-
-        jsfVersionLabel.setText("jLabel5");
-
-        jLabel8.setText("CDI:");
-
-        cdiLabel.setText("jLabel9");
 
         tooltipMessagesCheckBox.setText("Tooltip Messages");
 
@@ -694,22 +681,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                                 .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(defaultRowsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(maxDataTableColumnsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(optionsPanelLayout.createSequentialGroup()
-                        .addComponent(primeFacesVersionForLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(primeFacesVersionLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jsfVersionLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cdiLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cdiExtVersionLabel)))
-                .addContainerGap(235, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addContainerGap(269, Short.MAX_VALUE))
         );
         optionsPanelLayout.setVerticalGroup(
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -753,31 +726,80 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                     .addComponent(injectEJBAbstractCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(overrideExistingCheckBox)
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Options", optionsPanel);
+
+        primeFacesVersionForLabel.setText("PrimeFaces Version:");
+
+        primeFacesVersionLabel.setText("jLabel8");
+
+        jLabel1.setText("JSF:");
+
+        jsfVersionLabel.setText("jLabel5");
+
+        jLabel8.setText("CDI:");
+
+        cdiLabel.setText("jLabel9");
+
+        cdiExtVersionLabel.setText("jLabel7");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(primeFacesVersionForLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(primeFacesVersionLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jsfVersionLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cdiLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cdiExtVersionLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(primeFacesVersionForLabel)
                     .addComponent(primeFacesVersionLabel)
                     .addComponent(cdiExtVersionLabel)
                     .addComponent(jLabel1)
                     .addComponent(jsfVersionLabel)
                     .addComponent(jLabel8)
-                    .addComponent(cdiLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cdiLabel)))
         );
-
-        jTabbedPane1.addTab("Options", optionsPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTabbedPane1)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(14, Short.MAX_VALUE)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Package Locations");
@@ -918,6 +940,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel javaPackagesPanel;
     private javax.swing.JComboBox jpaPackageComboBox;
