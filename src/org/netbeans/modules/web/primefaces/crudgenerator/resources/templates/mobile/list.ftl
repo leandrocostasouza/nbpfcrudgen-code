@@ -66,6 +66,10 @@
 <#else>
   <#assign messageUpdate = ":" + entityName + "ListForm:messagePanel">
 </#if>
+<#assign ajaxUpdateIds = "">
+<#if doUpdate><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListPage:" + entityName + "ListForm:" + updateButton/></#if>
+<#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListPage:" + entityName + "ListForm:" + deleteButton/></#if>
+<#assign ajaxUpdateIds = ajaxUpdateIds?trim>
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
@@ -96,6 +100,90 @@
                 </h:panelGroup>
 
 </#if>
+<#-- Use DataTable widget for PF5.1.2+ and DataList for anything below that -->
+<#if (primeFacesVersion.compareTo("5.1.2") >= 0) >
+                <p:dataTable id="datalist"
+                             value="${r"#{"}${managedBeanProperty}${r"}"}"
+                             var="${item}"
+<#if entityIdField?? && entityIdField != "">
+                             rowKey="${r"#{"}${item}.${entityIdField}${r"}"}"
+</#if>
+<#if defaultDataTableRows?? && defaultDataTableRows != "">
+                             paginator="true"
+                             rows="${defaultDataTableRows}"
+                             rowsPerPageTemplate="${defaultDataTableRowsPerPageTemplate}"
+</#if>
+                             selectionMode="single"
+                             selection="${r"#{"}${managedBean}${r".selected}"}">
+
+                    <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if><#if doUpdate> oncomplete="document.getElementById('${entityName}ListPage:${entityName}ListForm:${updateButton}').click();"</#if>/>
+                    <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
+                    <p:ajax event="swipeleft"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if><#if doDelete> oncomplete="document.getElementById('${entityName}ListPage:${entityName}ListForm:${deleteButton}').click();"</#if>/>
+<#list entityDescriptors as entityDescriptor>
+  <#-- Skip this field if we are dealing with many:many -->
+  <#if !entityDescriptor.relationshipMany && !entityDescriptor.versionField>
+    <#if entityDescriptor.relationshipOne || entityDescriptor.relationshipMany>
+        <#if entityDescriptor.getRelationsLabelName(searchLabels)??>
+          <#assign relationLabelName = entityDescriptor.getRelationsLabelName(searchLabels)>
+        <#else>
+              <#assign relationLabelName = "">
+        </#if>
+    </#if>
+<#assign columnCounter = columnCounter + 1/>
+<#if (maxTableCols != 0 && columnCounter > maxTableCols)><!--</#if>
+<#if entityDescriptor.relationshipOne>
+                <#if relationLabelName?? && relationLabelName != "">
+                    <p:column<#if doSort> sortBy="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"</#if><#if doFilter> filterBy="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"</#if>>
+                <#else>
+                    <#-- Disable sorting if we don't have a foreign field to sort by. -->
+                    <p:column>
+                </#if>
+<#else>
+                    <p:column<#if doSort> sortBy="${r"#{"}${entityDescriptor.name}${r"}"}"</#if><#if doFilter> filterBy="${r"#{"}${entityDescriptor.name}${r"}"}"</#if>>
+</#if>
+                        <f:facet name="header">
+                            <h:outputText value="${r"#{"}${bundle}.List${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
+                        </f:facet>
+    <#if entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
+                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}">
+                            <f:convertDateTime pattern="${entityDescriptor.dateTimeFormat}" />
+                        </h:outputText>
+    <#elseif entityDescriptor.returnType?contains("boolean") || entityDescriptor.returnType?contains("Boolean")>
+                        <h:selectBooleanCheckbox id="${entityDescriptor.id?replace(".","_")}" value="${r"#{"}${entityDescriptor.name}${r"}"}" title="${r"#{"}${bundle}.Edit${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}" <#if entityDescriptor.required>required="true" requiredMessage="${r"#{"}${bundle}.Edit${entityName}RequiredMessage_${entityDescriptor.id?replace(".","_")}${r"}"}"</#if> disabled="true"/>
+    <#elseif entityDescriptor.relationshipOne>
+            <#if relationLabelName?? && relationLabelName != "">
+                        <h:outputText value="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"/>
+            <#else>
+                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}">
+<#if (jsfVersion.compareTo("2.2") < 0) && cdiEnabled?? && cdiEnabled>
+                            <f:converter binding="${r"#{"}${entityDescriptor.valuesConverter}${r"}"}"/>
+<#else>
+                            <f:converter converterId="${entityDescriptor.valuesConverter}"/>
+</#if>
+                        </h:outputText>
+            </#if>
+    <#else>
+                        <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}"/>
+    </#if>
+                    </p:column>
+<#if (maxTableCols != 0 && columnCounter > maxTableCols)>--></#if>
+  </#if>
+</#list>
+                </p:dataTable>
+<#if doUpdate>
+                <p:commandButton id="${updateButton}"   style="visibility: hidden;" icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" update=":${entityName}EditPage:${entityName}EditForm" disabled="${r"#{empty "}${managedBean}${r".selected}"}" action="pm:${entityName}EditPage"/>
+</#if>
+<#if doDelete>
+    <#if (doConfirmationDialogs) >
+                <p:commandButton id="${deleteButton}" style="visibility: hidden;" icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}">
+                    <p:confirm header="${r"#{"}${bundle}.ConfirmationHeader${r"}"}" message="${r"#{"}${bundle}.ConfirmDeleteMessage${r"}"}" icon="ui-icon-alert"/>
+                </p:commandButton>
+    <#else>
+                <p:commandButton id="${deleteButton}" style="visibility: hidden;" icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+    </#if>
+</#if>
+<#-- Use DataList widget for PF5.0+ and < 5.1.2 and DataTable for anything above that -->
+<#else>
                 <p:dataList id="datalist"
                             value="${r"#{"}${managedBeanProperty}${r"}"}"
                             var="${item}"
@@ -159,7 +247,7 @@
                     </f:facet>
 
                 </p:dataList>
-
+</#if>
         </h:form>
 
         </pm:content>

@@ -67,7 +67,7 @@
                 xmlns:pm="http://primefaces.org/mobile"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
-    <pm:page id="${entityName}EditPage">
+    <pm:page id="${entityName}EditPage" lazy="true">
         <pm:header title="${r"#{"}${bundle}.Edit${entityName}Title${r"}"}">
             <p:button styleClass="ui-btn-left ui-btn-inline" value="${r"#{"}${bundle}.Cancel${r"}"}" icon="ui-icon-arrow-l" outcome="pm:${entityName}ListPage"/>
         </pm:header>
