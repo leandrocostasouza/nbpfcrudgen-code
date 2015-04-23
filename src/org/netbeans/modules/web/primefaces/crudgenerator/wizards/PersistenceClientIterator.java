@@ -795,7 +795,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("mobileConfirmDialogPage", jsfMobileGenericIncludeFolder + PRIMEFACES_CONFIRMATION_PAGE);
             expandSingleJSFTemplate("index.ftl", entityClass, jsfFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
             if (doMobile) {
-                expandSingleJSFMobileTemplate("index.ftl", entityClass, jsfMobileEntityIncludeFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
+                expandSingleJSFMobileTemplate("index.ftl", entityClass, jsfMobileFolder, webRoot, "index", params, progressContributor, progressPanel, progressIndex++);
             }
 
         }
