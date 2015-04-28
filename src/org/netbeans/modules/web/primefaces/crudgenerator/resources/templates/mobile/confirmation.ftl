@@ -21,17 +21,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<#if (jsfVersion.compareTo("2.2") >= 0)>
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+</#if>
                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:h="http://xmlns.jcp.org/jsf/html">
+                xmlns:p="http://primefaces.org/ui">
+
 
     <div id="globalConfirmDialogPage" class="ui-page ui-page-theme-a ui-page-active ui-content">
-        <h:form>
-            <p:confirmDialog global="true">  
-                <p:commandButton value="${r"#{"}${bundle}.Yes${r"}"}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
-                <p:commandButton value="${r"#{"}${bundle}.No${r"}"}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
-            </p:confirmDialog>
-        </h:form>
+        <p:confirmDialog global="true">  
+<#if (jsfVersion.compareTo("2.2") >= 0)>
+          <h:form>
+</#if>
+            <p:commandButton value="${r"#{"}${bundle}.Yes${r"}"}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+            <p:commandButton value="${r"#{"}${bundle}.No${r"}"}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+<#if (jsfVersion.compareTo("2.2") >= 0)>
+          </h:form>
+</#if>
+        </p:confirmDialog>
     </div>
     
 </ui:composition>

@@ -128,7 +128,7 @@
 <#else>
                     </p:outputPanel>
 </#if>
-    <#if (doConfirmationDialogs && primeFacesVersion.compareTo("5.1.13") >= 0 && jsfVersion.compareTo("2.2") >= 0) >
+    <#if (doConfirmationDialogs && primeFacesVersion.compareTo("5.1.13") >= 0) >
                     <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListPage:${entityName}ListForm:datalist,${messageUpdate}" action="pm:${entityName}ListPage">
                         <p:confirm header="${r"#{"}${bundle}.ConfirmationHeader${r"}"}" message="${r"#{"}${bundle}.ConfirmEditMessage${r"}"}" icon="ui-icon-alert"/>
                     </p:commandButton>
