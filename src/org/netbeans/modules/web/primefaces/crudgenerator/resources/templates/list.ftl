@@ -46,7 +46,9 @@
     doFilter - Provide FILTER functionality (type: boolean)
     doContextMenus - Use context menus instead of regular buttons (type: boolean)
     doRelationshipNavigation - Navigate to / display child/parent data (type: boolean)
-    hasRelationships - Entity has foreign relationships (type: boolean)
+    hasRelationships - Whether this entity has any relationships to navigate to (type: boolean)
+    hasParentRelationships - Whether this entity has parent relationships to navigate to (type: boolean)
+    hasChildRelationships - Whether this entity has child relationships to navigate to (type: boolean)
     relationshipEntityDescriptors - List of child/parent entities (like entityDescriptors)
     growlMessages - Indicates whether to utilize Growl widget or traditional messages (type: Boolean)
     growlLife - Default display life time in ms for Growl widget (type: Integer)
@@ -71,7 +73,7 @@
 <#if doRead><#assign   ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + readButton/></#if>
 <#if doUpdate><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + updateButton/></#if>
 <#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + deleteButton/></#if>
-<#assign ajaxUpdateIdsExceptContextMenu = ajaxUpdateIds/>
+<#assign ajaxUpdateIdsExceptContextMenu = ajaxUpdateIds?trim/>
 <#if doRead><#assign   ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + contextMenu/></#if>
 <#else>
 <#if doCreate><#assign ajaxUpdateIds = ajaxUpdateIds + " " + createButton/></#if>
@@ -144,10 +146,10 @@
                              selection="${r"#{"}${managedBean}${r".selected}"}">
 <#if ajaxUpdateIds?? && ajaxUpdateIds != "">
 
-                    <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
-                    <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
+                    <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasParentRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
+                    <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasParentRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
 <#if doContextMenus>
-                    <p:ajax event="contextMenu" update="${ajaxUpdateIdsExceptContextMenu}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
+                    <p:ajax event="contextMenu" update="${ajaxUpdateIdsExceptContextMenu}"<#if doRelationshipNavigation && hasParentRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
 </#if>
 <#if doContextMenus && doRead>
                     <p:ajax event="rowDblselect" onsuccess="document.getElementById('${entityName}ListForm:${readButton}').click();"/>

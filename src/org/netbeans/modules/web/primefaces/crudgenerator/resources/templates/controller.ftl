@@ -27,7 +27,9 @@
     keySetter - entity setter method to set primary key instance
     embeddedIdFields - contains information about embedded primary Ids
     doRelationshipNavigation - Whether to perform navigation to related entities (type: boolean)
-    hasRelationships - Whether this entity has other relationship to navigate to (type: boolean)
+    hasRelationships - Whether this entity has any relationships to navigate to (type: boolean)
+    hasParentRelationships - Whether this entity has parent relationships to navigate to (type: boolean)
+    hasChildRelationships - Whether this entity has child relationships to navigate to (type: boolean)
     relationShipEntityDescriptors - list of beans describing individual entities. Bean has following properties:
         label - field label (type: String)
         name - field property name (type: String)
@@ -78,13 +80,16 @@ import javax.enterprise.context.SessionScoped;
 <#else>
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+<#if doRelationshipNavigation && hasParentRelationships && (!cdiEnabled?? || cdiEnabled == false)>
+import javax.faces.bean.ManagedProperty;
+</#if>
 import javax.faces.bean.ViewScoped;
 </#if>
 </#if>
-<#if doRelationshipNavigation && !cdiExtensionVersion??>
+<#if doRelationshipNavigation && hasChildRelationships && !cdiExtensionVersion??>
 import javax.faces.context.FacesContext;
 </#if>
-<#if doRelationshipNavigation && hasRelationships>
+<#if doRelationshipNavigation && hasParentRelationships>
 import javax.faces.event.ActionEvent;
 </#if>
 <#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled && injectAbstractEJB == false)>
@@ -104,7 +109,7 @@ import javax.inject.Inject;
 @SessionScoped
 </#if>
 <#else>
-@ManagedBean(name="${managedBeanName}")
+@ManagedBean(name = "${managedBeanName}")
 @ViewScoped
 </#if>
 </#if>
@@ -121,12 +126,24 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 </#if>
 <#if doRelationshipNavigation && hasRelationships>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
-<#if (cdiEnabled?? && cdiEnabled) || relationshipEntityDescriptor.relationshipOne>
+<#if (cdiEnabled?? && cdiEnabled && cdiExtensionVersion??) || relationshipEntityDescriptor.relationshipOne>
 <#if (cdiEnabled?? && cdiEnabled) >
     @Inject
 <#else>
+    @ManagedProperty(value = "${r"#{"}${relationshipEntityDescriptor.relationClassName?uncap_first}Controller${r"}"}")
 </#if>
     private ${relationshipEntityDescriptor.relationClassName}Controller ${relationshipEntityDescriptor.id?uncap_first}Controller;
+</#if>
+</#list>
+</#if>
+<#if doRelationshipNavigation && hasParentRelationships && (!cdiEnabled?? || cdiEnabled == false)>
+<#list relationshipEntityDescriptors as relationshipEntityDescriptor>
+<#if relationshipEntityDescriptor.relationshipOne>
+
+    /* Setter method for managed property ${relationshipEntityDescriptor.id}Controller */
+    public void set${relationshipEntityDescriptor.id?cap_first}Controller(${relationshipEntityDescriptor.relationClassName}Controller ${relationshipEntityDescriptor.id?uncap_first}Controller) {
+        this.${relationshipEntityDescriptor.id?uncap_first}Controller = ${relationshipEntityDescriptor.id?uncap_first}Controller;
+    }
 </#if>
 </#list>
 </#if>
@@ -135,28 +152,16 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
     /**
      * Initialize the concrete ${entityClassName} controller bean.
      * The AbstractController requires the EJB Facade object for most operations.
-<#if doRelationshipNavigation && hasRelationships>
-     * <p>
-     * In addition, this controller also requires references to controllers for parent entities in order to display their information from a context menu.
-</#if>
      */
     @PostConstruct
     @Override
     public void init() {
         super.setFacade(ejbFacade);
-<#if doRelationshipNavigation && hasRelationships && (!cdiEnabled?? || cdiEnabled == false)>
-        FacesContext context = FacesContext.getCurrentInstance();
-<#list relationshipEntityDescriptors as relationshipEntityDescriptor>
-<#if relationshipEntityDescriptor.relationshipOne>
-        ${relationshipEntityDescriptor.id?uncap_first}Controller = context.getApplication().evaluateExpressionGet(context, "${r"#{"}${relationshipEntityDescriptor.relationClassName?uncap_first}Controller${r"}"}", ${relationshipEntityDescriptor.relationClassName}Controller.class);
-</#if>
-</#list>
-</#if>
     }
 </#if>
 
     public ${controllerClassName}() {
-        // Inform the Abstract parent controller of the concrete ${entityClassName}?cap_first Entity
+        // Inform the Abstract parent controller of the concrete ${entityClassName?cap_first} Entity
         super(${entityClassName}.class);
     }
 
@@ -176,7 +181,7 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
     }
 
 </#if>
-<#if doRelationshipNavigation && hasRelationships>
+<#if doRelationshipNavigation && hasParentRelationships>
     /**
      * Resets the "selected" attribute of any parent Entity controllers.
      */
@@ -187,12 +192,14 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 </#if>
 </#list>
     }
+</#if>
 
+<#if doRelationshipNavigation && hasRelationships>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if relationshipEntityDescriptor.relationshipOne>
     /**
      * Sets the "selected" attribute of the ${relationshipEntityDescriptor.relationClassName?cap_first} controller
-     * in order to display its data in a dialog. This is reusing existing the existing View dialog.
+     * in order to display its data in its View dialog.
      *
      * @param event Event object for the widget that triggered an action
      */

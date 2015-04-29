@@ -607,9 +607,20 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             //Find out if entity has relationships
             Map<String, Object> relationshipParams = FromEntityBase.createFieldParameters(webRoot, entityClass, managedBean, managedBean + ".selected", false, true, null);
             boolean hasRelationships = false; // SingleRelationships = either OneToMany or ManyToOne. We are skipping ManyToMany for now
+            boolean hasParentRelationships = false; // ParentRelationships = only OneToMany, not ManyToOne or ManyToMany.
+            boolean hasChildRelationships = false; // ChildRelationships = only ManyToOney, not OneToMany or ManyToMany.
             List<FromEntityBase.TemplateData> relationshipEntityDescriptors = new ArrayList<>();
             for (FromEntityBase.TemplateData relationshipEntityDescriptor : (List<FromEntityBase.TemplateData>) relationshipParams.get("entityDescriptors")) {
-                if (relationshipEntityDescriptor.isRelationshipOne() || relationshipEntityDescriptor.isRelationshipMany()) {
+
+                if (relationshipEntityDescriptor.isRelationshipOne()) {
+                    hasParentRelationships = true;
+                }
+
+                if (relationshipEntityDescriptor.isRelationshipMany()) {
+                    hasChildRelationships = true;
+                }
+                
+                if (hasParentRelationships || hasChildRelationships) {
                     hasRelationships = true;
                     relationshipEntityDescriptors.add(relationshipEntityDescriptor);
                 }
@@ -662,6 +673,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("jsfVersion", jsfVersion); //NOI18N
             params.put("doRelationshipNavigation", relationshipNavigation);
             params.put("hasRelationships", hasRelationships);
+            params.put("hasParentRelationships", hasParentRelationships);
+            params.put("hasChildRelationships", hasChildRelationships);
             params.put("relationshipEntityDescriptors", relationshipEntityDescriptors);
             if (jsfFolder.length() > 0) {
                 if (jsfFolder.startsWith("/")) {
@@ -714,6 +727,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("doConfirmationDialogs", confirmationDialogs);
             params.put("doRelationshipNavigation", relationshipNavigation);
             params.put("hasRelationships", hasRelationships);
+            params.put("hasParentRelationships", hasParentRelationships);
+            params.put("hasChildRelationships", hasChildRelationships);
             params.put("relationshipEntityDescriptors", relationshipEntityDescriptors);
             params.put("doContextMenus", contextMenus);
 
@@ -761,6 +776,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("confirmDialogPage", jsfGenericIncludeFolder + PRIMEFACES_CONFIRMATION_PAGE);
             params.put("doRelationshipNavigation", relationshipNavigation);
             params.put("hasRelationships", hasRelationships);
+            params.put("hasParentRelationships", hasParentRelationships);
+            params.put("hasChildRelationships", hasChildRelationships);
             params.put("relationshipEntityDescriptors", relationshipEntityDescriptors);
             params.put("uniqueRelationshipEntityDescriptors", uniqueRelationshipEntityDescriptors);
             params.put("doContextMenus", contextMenus);

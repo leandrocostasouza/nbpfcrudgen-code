@@ -54,9 +54,9 @@ import javax.faces.convert.Converter;
 <#if (jsfVersion.compareTo("2.2") >= 0)>
 @FacesConverter(value = "${converterClassName?uncap_first}")
 <#elseif cdiEnabled?? && cdiEnabled == true>
-@Named
+@Named(value = "${converterClassName?uncap_first}")
 <#else>
-@ManagedBean
+@ManagedBean(name = "${converterClassName?uncap_first}")
 </#if>
 public class ${converterClassName?cap_first} implements Converter {
 

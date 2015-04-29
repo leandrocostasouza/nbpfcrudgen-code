@@ -59,6 +59,8 @@ import javax.validation.ConstraintViolationException;
  */
 public abstract class ${abstractControllerClassName}<T> implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
 <#if cdiEnabled?? && cdiEnabled  && injectAbstractEJB >
     @Inject
 </#if>

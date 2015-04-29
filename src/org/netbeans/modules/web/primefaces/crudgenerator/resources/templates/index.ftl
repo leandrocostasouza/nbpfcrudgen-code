@@ -29,6 +29,10 @@
     growlMessages - Indicates whether to utilize Growl widget or traditional messages (type: Boolean)
     growlLife - Default display life time in ms for Growl widget (type: Integer)
     uniqueRelationshipEntityDescriptor - list of unique parent/child entities. Bean has same properties as entityDescriptors.
+    doRelationshipNavigation - Whether to perform navigation to related entities (type: boolean)
+    hasRelationships - Whether this entity has any relationships to navigate to (type: boolean)
+    hasParentRelationships - Whether this entity has parent relationships to navigate to (type: boolean)
+    hasChildRelationships - Whether this entity has child relationships to navigate to (type: boolean)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
