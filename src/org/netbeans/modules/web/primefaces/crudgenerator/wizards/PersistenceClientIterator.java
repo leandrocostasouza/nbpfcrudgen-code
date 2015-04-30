@@ -100,6 +100,7 @@ import org.netbeans.modules.web.jsf.JSFUtils;
 import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.Application;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigModel;
+import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
 import org.netbeans.modules.web.jsf.api.facesmodel.NavigationHandler;
 import org.netbeans.modules.web.jsf.api.facesmodel.ResourceBundle;
 import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
@@ -619,7 +620,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                 if (relationshipEntityDescriptor.isRelationshipMany()) {
                     hasChildRelationships = true;
                 }
-                
+
                 if (hasParentRelationships || hasChildRelationships) {
                     hasRelationships = true;
                     relationshipEntityDescriptors.add(relationshipEntityDescriptor);
@@ -1040,6 +1041,14 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     }
 
     protected static boolean isCdiEnabled(Project project) {
+        
+        // For Java EE 7 or higher assume CDI being enabled since CDI is now
+        // enabled by default, no more beans.xml required.
+        WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
+        if (wm.getJ2eeProfile().isAtLeast(Profile.JAVA_EE_7_WEB)) {
+            return true;
+        }
+
         CdiUtil cdiUtil = project.getLookup().lookup(CdiUtil.class);
         return (cdiUtil == null) ? false : cdiUtil.isCdiEnabled();
     }

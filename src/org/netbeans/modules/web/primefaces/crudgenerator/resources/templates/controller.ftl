@@ -86,7 +86,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 </#if>
 </#if>
-<#if doRelationshipNavigation && hasChildRelationships && !cdiExtensionVersion??>
+<#if doRelationshipNavigation && hasChildRelationships && !(cdiEnabled?? && cdiEnabled && cdiExtensionVersion??)>
 import javax.faces.context.FacesContext;
 </#if>
 <#if doRelationshipNavigation && hasParentRelationships>
@@ -211,7 +211,7 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 </#if>
 <#if relationshipEntityDescriptor.relationshipMany>
     /**
-<#if cdiExtensionVersion??>
+<#if (cdiEnabled?? && cdiEnabled && cdiExtensionVersion??)>
     * Passes collection of ${relationshipEntityDescriptor.relationClassName?cap_first} entities that are retrieved from ${entityClassName}?cap_first
 <#else>
     * Sets the "items" attribute with a collection of ${relationshipEntityDescriptor.relationClassName?cap_first} entities that are retrieved from ${entityClassName}?cap_first
@@ -222,13 +222,13 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
      */
     public String navigate${relationshipEntityDescriptor.id?cap_first}() {
         if (this.getSelected() != null) {
-<#if cdiExtensionVersion??>
+<#if (cdiEnabled?? && cdiEnabled && cdiExtensionVersion??)>
             ${relationshipEntityDescriptor.id?uncap_first}Controller.setItems(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
 <#else>
             FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("${relationshipEntityDescriptor.relationClassName?cap_first}_items", this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
 </#if>
         }
-<#if cdiExtensionVersion??>
+<#if (cdiEnabled?? && cdiEnabled && cdiExtensionVersion??)>
         return "${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index?faces-redirect=true"}";
 <#else>
         return "${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index"}";
