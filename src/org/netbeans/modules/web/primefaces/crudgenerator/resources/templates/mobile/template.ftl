@@ -28,7 +28,9 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:pm="http://primefaces.org/mobile">
     
-    <f:view renderKitId="PRIMEFACES_MOBILE" />
+    <f:view renderKitId="PRIMEFACES_MOBILE">
+        <ui:insert name="metadata"/>
+    </f:view>
 
     <h:head>
         <title><ui:insert name="title">Default Title</ui:insert></title>

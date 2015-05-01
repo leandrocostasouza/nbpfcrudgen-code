@@ -121,9 +121,9 @@
                              selectionMode="single"
                              selection="${r"#{"}${managedBean}${r".selected}"}">
 
-                    <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if><#if doUpdate> oncomplete="document.getElementById('${entityName}ListPage:${entityName}ListForm:${updateButton}').click();"</#if>/>
-                    <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
-                    <p:ajax event="swipeleft"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if><#if doDelete> oncomplete="document.getElementById('${entityName}ListPage:${entityName}ListForm:${deleteButton}').click();"</#if>/>
+                    <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasParentRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if><#if doUpdate> oncomplete="document.getElementById('${entityName}ListPage:${entityName}ListForm:${updateButton}').click();"</#if>/>
+                    <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasParentRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
+                    <p:ajax event="swipeleft"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasParentRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if><#if doDelete> oncomplete="document.getElementById('${entityName}ListPage:${entityName}ListForm:${deleteButton}').click();"</#if>/>
 <#list entityDescriptors as entityDescriptor>
   <#-- Skip this field if we are dealing with many:many -->
   <#if !entityDescriptor.relationshipMany && !entityDescriptor.versionField>
