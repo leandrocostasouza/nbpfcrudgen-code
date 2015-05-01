@@ -89,8 +89,16 @@
         <pm:header title="${r"#{"}${bundle}.List${entityName}Title${r"}"}">
 <#if doCreate>
             <h:form>
+<#if doRelationshipNavigation>
+                <p:button styleClass="ui-btn-left ui-btn-inline" value="${r"#{"}${bundle}.Menu${r"}"}" icon="ui-icon-arrow-l" outcome="${jsfMobileFolder}${r"/"}${appIndex}"/>
+                <p:commandButton id="${createButton}" styleClass="ui-btn-right ui-btn-inline" icon="ui-icon-plus" value="${r"#{"}${bundle}.Create${r"}"}" update=":${entityName}CreatePage:${entityName}CreateForm" action="${r"#{"}mobilePageController.navigateWithHistory('pm:${entityName}CreatePage')${r"}"}">
+                    <f:actionListener binding="${r"#{"}${managedBean}.${r"prepareCreate}"}"/>
+                    <f:actionListener binding="${r"#{"}mobilePageController.currentPageListener${r"}"}"/>
+                </p:commandButton>
+<#else>
                 <p:button styleClass="ui-btn-left ui-btn-inline" value="${r"#{"}${bundle}.Menu${r"}"}" icon="ui-icon-arrow-l" outcome="${jsfMobileFolder}${r"/"}${appIndex}"/>
                 <p:commandButton id="${createButton}" styleClass="ui-btn-right ui-btn-inline" icon="ui-icon-plus" value="${r"#{"}${bundle}.Create${r"}"}" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" update=":${entityName}CreatePage:${entityName}CreateForm" action="pm:${entityName}CreatePage"/>
+</#if>
             </h:form>
 </#if>
         </pm:header>
@@ -176,7 +184,7 @@
 </#list>
                 </p:dataTable>
 <#if doUpdate>
-                <p:commandButton id="${updateButton}"   style="visibility: hidden;" icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" update=":${entityName}EditPage:${entityName}EditForm" disabled="${r"#{empty "}${managedBean}${r".selected}"}" action="pm:${entityName}EditPage"/>
+                <p:commandButton id="${updateButton}"   style="visibility: hidden;" icon="ui-icon-pencil" value="${r"#{"}${bundle}.Edit${r"}"}" update=":${entityName}EditPage:${entityName}EditForm" disabled="${r"#{empty "}${managedBean}${r".selected}"}"<#if doRelationshipNavigation> actionListener="${r"#{"}mobilePageController.currentPageListener${r"}"}" action="${r"#{"}mobilePageController.navigateWithHistory('pm:${entityName}EditPage')${r"}"}"<#else> action="pm:${entityName}EditPage"</#if>/>
 </#if>
 <#if doDelete>
     <#if (doConfirmationDialogs && primeFacesVersion.compareTo("5.1.13") >= 0 && jsfVersion.compareTo("2.2") >= 0) >

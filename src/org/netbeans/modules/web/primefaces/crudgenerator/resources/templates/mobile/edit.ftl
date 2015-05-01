@@ -68,7 +68,13 @@
 
     <pm:page id="${entityName}EditPage" lazy="true">
         <pm:header title="${r"#{"}${bundle}.Edit${entityName}Title${r"}"}">
+<#if doRelationshipNavigation>
+            <h:form>
+                <p:commandButton styleClass="ui-btn-left ui-btn-inline" value="${r"#{"}${bundle}.Cancel${r"}"}" icon="ui-icon-arrow-l" action="${r"#{"}mobilePageController.navigateBackInHistory('pm:${entityName}ListPage')${r"}"}"/>
+            </h:form>
+<#else>
             <p:button styleClass="ui-btn-left ui-btn-inline" value="${r"#{"}${bundle}.Cancel${r"}"}" icon="ui-icon-arrow-l" outcome="pm:${entityName}ListPage"/>
+</#if>
         </pm:header>
 
         <pm:content>
@@ -129,11 +135,11 @@
                     </p:outputPanel>
 </#if>
     <#if (doConfirmationDialogs && primeFacesVersion.compareTo("5.1.13") >= 0) >
-                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListPage:${entityName}ListForm:datalist,${messageUpdate}" action="pm:${entityName}ListPage">
+                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListPage:${entityName}ListForm:datalist,${messageUpdate}"<#if doRelationshipNavigation> action="${r"#{"}mobilePageController.navigateWithHistory('pm:${entityName}ListPage')${r"}"}"<#else> action="pm:${entityName}ListPage"</#if>>
                         <p:confirm header="${r"#{"}${bundle}.ConfirmationHeader${r"}"}" message="${r"#{"}${bundle}.ConfirmEditMessage${r"}"}" icon="ui-icon-alert"/>
                     </p:commandButton>
     <#else>
-                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListPage:${entityName}ListForm:datalist,${messageUpdate}" action="pm:${entityName}ListPage"/>
+                    <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListPage:${entityName}ListForm:datalist,${messageUpdate}"<#if doRelationshipNavigation> action="${r"#{"}mobilePageController.navigateWithHistory('pm:${entityName}ListPage')${r"}"}"<#else> action="pm:${entityName}ListPage"</#if>/>
     </#if>
 
                 </h:panelGroup>

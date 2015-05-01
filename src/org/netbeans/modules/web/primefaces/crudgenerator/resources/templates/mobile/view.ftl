@@ -63,7 +63,13 @@
 
     <pm:page id="${entityName}ViewPage" lazy="true">
         <pm:header title="${r"#{"}${bundle}.View${entityName}Title${r"}"}">
+<#if doRelationshipNavigation>
+            <h:form>
+                <p:commandButton styleClass="ui-btn-left ui-btn-inline" value="${r"#{"}${bundle}.Cancel${r"}"}" icon="ui-icon-arrow-l" action="${r"#{"}mobilePageController.navigateBackInHistory('pm:${entityName}ListPage')${r"}"}"/>
+            </h:form>
+<#else>
             <p:button styleClass="ui-btn-left ui-btn-inline" value="${r"#{"}${bundle}.Cancel${r"}"}" icon="ui-icon-arrow-l" outcome="pm:${entityName}ListPage"/>
+</#if>
         </pm:header>
 
         <pm:content>

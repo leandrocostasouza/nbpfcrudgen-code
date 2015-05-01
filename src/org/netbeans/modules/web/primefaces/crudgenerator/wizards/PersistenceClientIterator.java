@@ -158,6 +158,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     static final String[] UTIL_CLASS_NAMES = {"JsfCrudELResolver", "JsfUtil", "PagingInfo"}; //NOI18N
     static final String[] UTIL_CLASS_NAMES2 = {"JsfUtil"}; //NOI18N
     static final String UTIL_FOLDER_NAME = "util"; //NOI18N
+    static final String[] UTIL_CLASS_NAMES_MOBILE = {"MobilePageController", "MobilePage"}; //NOI18N
     private static final String FACADE_SUFFIX = "Facade"; //NOI18N
     private static final String ABSTRACT_CONTROLLER_CLASSNAME = "AbstractController";  //NOI18N
     private static final String CONTROLLER_SUFFIX = "Controller";  //NOI18N
@@ -493,6 +494,26 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                 JSFPaletteUtilities.expandJSFTemplate(tableTemplate, params, target);
             } else {
                 progressContributor.progress(progressIndex++);
+            }
+        }
+
+        // Copy some mobile util classes as well if mobile and relationship navigation are done
+        if (doMobile && relationshipNavigation) {
+            for (String UTIL_CLASS_NAME_MOBILE : UTIL_CLASS_NAMES_MOBILE) {
+                if (utilFolder.getFileObject(UTIL_CLASS_NAME_MOBILE, JAVA_EXT) == null) {
+                    progressMsg = NbBundle.getMessage(org.netbeans.modules.web.jsf.wizards.PersistenceClientIterator.class, "MSG_Progress_Jsf_Now_Generating", UTIL_CLASS_NAME_MOBILE + "." + JAVA_EXT); //NOI18N
+                    progressContributor.progress(progressMsg, progressIndex++);
+                    progressPanel.setText(progressMsg);
+                    FileObject tableTemplate = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_MOBILE_TEMPLATE_PATH + UTIL_CLASS_NAME_MOBILE.toLowerCase() + ".ftl");
+                    FileObject target = FileUtil.createData(utilFolder, UTIL_CLASS_NAME_MOBILE + "." + JAVA_EXT); //NOI18N
+                    HashMap<String, Object> params = new HashMap<>();
+                    params.put("packageName", utilPackage);
+                    params.put("comment", Boolean.FALSE); // NOI18N
+                    params.put("cdiEnabled", isCdiEnabled(project));
+                    JSFPaletteUtilities.expandJSFTemplate(tableTemplate, params, target);
+                } else {
+                    progressContributor.progress(progressIndex++);
+                }
             }
         }
 
@@ -1041,7 +1062,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     }
 
     protected static boolean isCdiEnabled(Project project) {
-        
+
         // For Java EE 7 or higher assume CDI being enabled since CDI is now
         // enabled by default, no more beans.xml required.
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
