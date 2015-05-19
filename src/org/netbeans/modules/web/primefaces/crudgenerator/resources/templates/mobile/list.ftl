@@ -134,7 +134,8 @@
                              rowsPerPageTemplate="${defaultDataTableRowsPerPageTemplate}"
 </#if>
                              selectionMode="single"
-                             selection="${r"#{"}${managedBean}${r".selected}"}">
+                             selection="${r"#{"}${managedBean}${r".selected}"}"
+                             reflow="true">
 
                     <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasParentRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
                     <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasParentRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
@@ -161,17 +162,14 @@
 <#if (maxTableCols != 0 && columnCounter > maxTableCols)><!--</#if>
 <#if entityDescriptor.relationshipOne>
                 <#if relationLabelName?? && relationLabelName != "">
-                    <p:column<#if doSort> sortBy="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"</#if><#if doFilter> filterBy="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"</#if>>
+                    <p:column<#if doSort> sortBy="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"</#if><#if doFilter> filterBy="${r"#{"}${entityDescriptor.name}.${relationLabelName}${r"}"}"</#if> headerText="${r"#{"}${bundle}.List${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
                 <#else>
                     <#-- Disable sorting if we don't have a foreign field to sort by. -->
                     <p:column>
                 </#if>
 <#else>
-                    <p:column<#if doSort> sortBy="${r"#{"}${entityDescriptor.name}${r"}"}"</#if><#if doFilter> filterBy="${r"#{"}${entityDescriptor.name}${r"}"}"</#if>>
+                    <p:column<#if doSort> sortBy="${r"#{"}${entityDescriptor.name}${r"}"}"</#if><#if doFilter> filterBy="${r"#{"}${entityDescriptor.name}${r"}"}"</#if> headerText="${r"#{"}${bundle}.List${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
 </#if>
-                        <f:facet name="header">
-                            <h:outputText value="${r"#{"}${bundle}.List${entityName}Title_${entityDescriptor.id?replace(".","_")}${r"}"}"/>
-                        </f:facet>
     <#if entityDescriptor.dateTimeFormat?? && entityDescriptor.dateTimeFormat != "">
                         <h:outputText value="${r"#{"}${entityDescriptor.name}${r"}"}">
                             <f:convertDateTime pattern="${entityDescriptor.dateTimeFormat}" />
