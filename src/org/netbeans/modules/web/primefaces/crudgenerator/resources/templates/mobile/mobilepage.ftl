@@ -1,28 +1,39 @@
 package ${packageName};
 
+import java.io.Serializable;
 import java.util.Objects;
-import javax.faces.component.UIComponent;
 
-public class MobilePage {
-    
-    private UIComponent pageComponent;
+public class MobilePage implements Serializable {
 
-    public UIComponent getPageComponent() {
-        return pageComponent;
+    private String pageId;
+    private String viewId;
+
+    public String getPageId() {
+        return pageId;
     }
 
-    public void setPageComponent(UIComponent pageComponent) {
-        this.pageComponent = pageComponent;
+    public void setPageId(String pageId) {
+        this.pageId = pageId;
     }
 
-    public MobilePage(UIComponent pageComponent) {
-        this.pageComponent = pageComponent;
+    public String getViewId() {
+        return viewId;
+    }
+
+    public void setViewId(String viewId) {
+        this.viewId = viewId;
+    }
+
+    public MobilePage(String pageId, String viewId) {
+        this.pageId = pageId;
+        this.viewId = viewId;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 31 * hash + Objects.hashCode(this.pageComponent);
+        int hash = 3;
+        hash = 13 * hash + Objects.hashCode(this.pageId);
+        hash = 13 * hash + Objects.hashCode(this.viewId);
         return hash;
     }
 
@@ -35,12 +46,13 @@ public class MobilePage {
             return false;
         }
         final MobilePage other = (MobilePage) obj;
-        if (!Objects.equals(this.pageComponent, other.pageComponent)) {
+        if (!Objects.equals(this.pageId, other.pageId)) {
+            return false;
+        }
+        if (!Objects.equals(this.viewId, other.viewId)) {
             return false;
         }
         return true;
     }
-    
-   
-    
+
 }

@@ -30,6 +30,7 @@ Previous=Previous
 Next=Next
 
 AppName=Application Name
+Back=Back
 Cancel=Cancel
 Create=Create
 Delete=Delete

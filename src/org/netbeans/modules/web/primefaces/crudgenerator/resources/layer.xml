@@ -168,6 +168,10 @@ made subject to such option by the copyright holder.
                         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
                         <attr name="template" boolvalue="true"/>
                     </file>
+                    <file name="currentpageactionlistener.ftl" url="templates/mobile/currentpageactionlistener.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
                     <file name="template.ftl" url="templates/mobile/template.ftl">
                         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
                         <attr name="template" boolvalue="true"/>

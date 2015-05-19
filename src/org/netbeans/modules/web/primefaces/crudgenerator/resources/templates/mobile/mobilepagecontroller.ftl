@@ -14,13 +14,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.FacesException;
 <#if !(cdiEnabled?? && cdiEnabled)>
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 </#if>
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.mobile.component.page.Page;
+import org.primefaces.expression.SearchExpressionFacade;
 
 <#if cdiEnabled?? && cdiEnabled>
 @Named(value = "mobilePageController")
@@ -29,9 +32,12 @@ import org.primefaces.mobile.component.page.Page;
 </#if>
 @SessionScoped
 public class MobilePageController implements Serializable {
+    
+    private static final String MOBILE_PAGES_PREFIX = "${jsfMobileFolder}";
 
-    List<MobilePage> pageHistory;
+    private List<MobilePage> pageHistory;
     private MobilePage currentPage;
+    private String nextPage;
 
     /**
      * Creates a new instance of HistoryBean
@@ -41,7 +47,7 @@ public class MobilePageController implements Serializable {
     
     public void clearPageHistory(ActionEvent event) {
         this.pageHistory.clear();
-    this.currentPage = null;
+        this.currentPage = null;
     }
 
     public void currentPageListener(ActionEvent event) {
@@ -55,21 +61,49 @@ public class MobilePageController implements Serializable {
         if (currentPage != null) {
             pageHistory.add(currentPage);
         }
+        this.nextPage = null; // Reset next page to avoid any double posting
         return actionName;
     }
 
+    public String navigateWithHistory() {
+        if (nextPage != null) {
+            return navigateWithHistory(nextPage);
+        }
+        return null;
+    }
+
     public String navigateBackInHistory(String fallBackActionName) {
-        if (pageHistory.size() > 0) {
-            MobilePage lastPage = this.pageHistory.get(pageHistory.size() - 1);
-            return "pm:" + lastPage.getPageComponent().getId();
+        MobilePage lastPage = this.getLastPage();
+        if (lastPage != null) {
+            this.pageHistory.remove(lastPage);
+            if (lastPage.getViewId().equals(this.getViewId())) {
+                return "pm:" + lastPage.getPageId();
+            } else {
+                return lastPage.getViewId();
+            }
         }
         return fallBackActionName;
+    }
+    
+    public MobilePage getLastPage() {
+        if (pageHistory.size() > 0) {
+            return this.pageHistory.get(pageHistory.size() - 1);
+        }
+        return null;
+    }
+
+    public String getNextPage() {
+        return nextPage;
+    }
+
+    public void setNextPage(String nextPage) {
+        this.nextPage = nextPage;
     }
 
     private MobilePage getNearestPage(UIComponent component) {
         UIComponent nearestPageComponent = findPageComponent(component);
         if (nearestPageComponent != null) {
-            return(new MobilePage(nearestPageComponent));
+            return(new MobilePage(nearestPageComponent.getId(), this.getViewId()));
         }
         return null;
     }
@@ -85,6 +119,37 @@ public class MobilePageController implements Serializable {
             }
         }
         return null;
+    }
+
+    public String getViewId() {
+        return FacesContext.getCurrentInstance().getViewRoot().getViewId();
+    }
+    
+    public String getMobilePagesPrefix() {
+        if (getViewId().startsWith(MOBILE_PAGES_PREFIX)) {
+            return MOBILE_PAGES_PREFIX;
+        }
+        return "";
+    }
+
+    public String updatableWidgets(UIComponent component, String widgets) {
+        String updatableWidgets = "";
+        FacesContext context = FacesContext.getCurrentInstance();
+        for (String widget : widgets.split(",")) {
+            try {
+                UIComponent widgetComponent = SearchExpressionFacade.resolveComponent(context, component, widget);
+                if (widgetComponent != null) {
+                    if (updatableWidgets.length() == 0) {
+                        updatableWidgets = widget;
+                    } else {
+                        updatableWidgets = updatableWidgets + "," + widget;
+                    }
+                }
+            } catch (FacesException ex) {
+                // Do nothing -> widget that cannot be found will not be included in final expression
+            }
+        }
+        return updatableWidgets;
     }
 
     @PostConstruct

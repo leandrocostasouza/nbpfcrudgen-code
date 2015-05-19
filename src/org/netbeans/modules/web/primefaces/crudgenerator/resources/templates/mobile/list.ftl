@@ -59,19 +59,27 @@
 </#if>
 <@templateMacros?interpret/>
 <#assign columnCounter = 0/>
+<#assign backButton    = "backButton"/>
 <#assign createButton  = "createButton"/>
 <#assign readButton    = "viewButton"/>
 <#assign updateButton  = "editButton"/>
 <#assign deleteButton  = "deleteButton"/>
+<#assign menuButton    = "navigationMenuButton"/>
+<#assign menuPanel     = "navigationMenuPanel"/>
 <#if growlMessages>
   <#assign messageUpdate = ":growl">
 <#else>
   <#assign messageUpdate = ":" + entityName + "ListForm:messagePanel">
 </#if>
 <#assign ajaxUpdateIds = "">
-<#if doUpdate><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListPage:" + entityName + "ListForm:" + updateButton/></#if>
-<#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListPage:" + entityName + "ListForm:" + deleteButton/></#if>
+<#if doUpdate><#assign ajaxUpdateIds = ajaxUpdateIds + " @form:" + updateButton/></#if>
+<#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " @form:" + deleteButton/></#if>
+<#if (doRelationshipNavigation && hasRelationships)>
+<#assign ajaxUpdateIds = ajaxUpdateIds + " @form:" + menuButton/>
+<#assign ajaxUpdateIds = ajaxUpdateIds + " @form:" + menuPanel/>
+</#if>
 <#assign ajaxUpdateIds = ajaxUpdateIds?trim>
+<#assign ajaxUpdateIds = ajaxUpdateIds?replace(" ",",")>
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
@@ -90,10 +98,9 @@
 <#if doCreate>
             <h:form>
 <#if doRelationshipNavigation>
-                <p:button styleClass="ui-btn-left ui-btn-inline" value="${r"#{"}${bundle}.Menu${r"}"}" icon="ui-icon-arrow-l" outcome="${jsfMobileFolder}${r"/"}${appIndex}"/>
-                <p:commandButton id="${createButton}" styleClass="ui-btn-right ui-btn-inline" icon="ui-icon-plus" value="${r"#{"}${bundle}.Create${r"}"}" update=":${entityName}CreatePage:${entityName}CreateForm" action="${r"#{"}mobilePageController.navigateWithHistory('pm:${entityName}CreatePage')${r"}"}">
-                    <f:actionListener binding="${r"#{"}${managedBean}.${r"prepareCreate}"}"/>
-                    <f:actionListener binding="${r"#{"}mobilePageController.currentPageListener${r"}"}"/>
+                <p:commandButton id="${backButton}"   styleClass="ui-btn-left  ui-btn-inline" icon="ui-icon-arrow-l" value="${r"#{"}myBundle.Back${r"}"}" action="${r"#{"}mobilePageController.navigateBackInHistory('${jsfMobileFolder}${r"/"}${appIndex}')${r"}"}"/>
+                <p:commandButton id="${createButton}" styleClass="ui-btn-right ui-btn-inline" icon="ui-icon-plus"    value="${r"#{"}${bundle}.Create${r"}"}" update=":${entityName}CreatePage:${entityName}CreateForm" actionListener="${r"#{"}${managedBean}.${r"prepareCreate}"}" action="${r"#{"}mobilePageController.navigateWithHistory('pm:${entityName}CreatePage')${r"}"}">
+                    <f:actionListener binding="${r"#{"}currentPageListener${r"}"}"/>
                 </p:commandButton>
 <#else>
                 <p:button styleClass="ui-btn-left ui-btn-inline" value="${r"#{"}${bundle}.Menu${r"}"}" icon="ui-icon-arrow-l" outcome="${jsfMobileFolder}${r"/"}${appIndex}"/>
@@ -129,9 +136,17 @@
                              selectionMode="single"
                              selection="${r"#{"}${managedBean}${r".selected}"}">
 
-                    <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasParentRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if><#if doUpdate> oncomplete="document.getElementById('${entityName}ListPage:${entityName}ListForm:${updateButton}').click();"</#if>/>
+                    <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasParentRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
                     <p:ajax event="rowUnselect" update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasParentRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>
-                    <p:ajax event="swipeleft"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasParentRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if><#if doDelete> oncomplete="document.getElementById('${entityName}ListPage:${entityName}ListForm:${deleteButton}').click();"</#if>/>
+<#if doDelete>
+                    <p:ajax event="swipeleft"   oncomplete="document.getElementById('${entityName}ListPage:${entityName}ListForm:${deleteButton}').click();"/>
+</#if>
+<#if doUpdate>
+                    <p:ajax event="tap"         oncomplete="document.getElementById('${entityName}ListPage:${entityName}ListForm:${updateButton}').click();"/>
+</#if>
+<#if doRelationshipNavigation && hasRelationships>
+                    <p:ajax event="taphold"     oncomplete="document.getElementById('${entityName}ListPage:${entityName}ListForm:${menuButton}').click();"/>
+</#if>
 <#list entityDescriptors as entityDescriptor>
   <#-- Skip this field if we are dealing with many:many -->
   <#if !entityDescriptor.relationshipMany && !entityDescriptor.versionField>
@@ -194,6 +209,30 @@
     <#else>
                 <p:commandButton id="${deleteButton}" style="visibility: hidden;" icon="ui-icon-trash"  value="${r"#{"}${bundle}.Delete${r"}"}" actionListener="${r"#{"}${managedBean}${r".delete}"}" update="${messageUpdate},datalist" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
     </#if>
+</#if>
+<#if (doRelationshipNavigation && hasRelationships)>
+                <p:commandButton id="${menuButton}" style="visibility: hidden;" value="${r"#{"}${bundle}.Menu${r"}"}" disabled="${r"#{empty "}${managedBean}${r".selected}"}"/>
+
+                <p:overlayPanel id="${menuPanel}" for="${menuButton}" at="right" showEffect="overlay">
+                    <h2>${r"#{"}${bundle}.${entityName}Heading${r"}"} ${r"#{"}${bundle}.Menu${r"}"}</h2>
+                    <p:menu>
+<#list relationshipEntityDescriptors as relationshipEntityDescriptor>
+<#if relationshipEntityDescriptor.relationshipOne>
+                    <p:menuitem value="${r"#{"}${bundle}.${entityName}MenuItem_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search" update=":${relationshipEntityDescriptor.relationClassName}EditPage:${relationshipEntityDescriptor.relationClassName}EditForm" disabled="${r"#{"}empty ${managedBean}.selected.${relationshipEntityDescriptor.id?uncap_first}${r"}"}" actionListener="${r"#{"}${managedBean}.prepare${relationshipEntityDescriptor.id?cap_first}${r"}"}" action="${r"#{"}mobilePageController.navigateWithHistory${r"}"}">  
+                        <f:actionListener binding="${r"#{"}currentPageActionListener${r"}"}"/>
+                        <f:setPropertyActionListener target="${r"#{"}mobilePageController.nextPage${r"}"}" value="pm:${relationshipEntityDescriptor.relationClassName}EditPage"/>
+                    </p:menuitem>
+</#if>
+<#if relationshipEntityDescriptor.relationshipMany>
+                    <p:menuitem value="${r"#{"}${bundle}.${entityName}MenuItem_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search"  action="${r"#{"}mobilePageController.navigateWithHistory${r"}"}" disabled="${r"#{"}empty ${managedBean}.selected.${relationshipEntityDescriptor.id?uncap_first}${r"}"}" ajax="false">
+                        <f:actionListener binding="${r"#{"}currentPageActionListener${r"}"}"/>
+                        <f:setPropertyActionListener target="${r"#{"}mobilePageController.nextPage${r"}"}" value="${r"#{"}${managedBean}.navigate${relationshipEntityDescriptor.id?cap_first}()${r"}"}"/>
+                    </p:menuitem>  
+</#if>
+</#list>
+                    </p:menu>
+                </p:overlayPanel>
+
 </#if>
 <#-- Use DataList widget for PF5.0+ and < 5.1.2 and DataTable for anything above that -->
 <#else>

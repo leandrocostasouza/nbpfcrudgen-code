@@ -30,6 +30,7 @@
     hasRelationships - Whether this entity has any relationships to navigate to (type: boolean)
     hasParentRelationships - Whether this entity has parent relationships to navigate to (type: boolean)
     hasChildRelationships - Whether this entity has child relationships to navigate to (type: boolean)
+    doMobile - Whether the app also has mobile pages (type: boolean)
     relationShipEntityDescriptors - list of beans describing individual entities. Bean has following properties:
         label - field label (type: String)
         name - field property name (type: String)
@@ -59,6 +60,9 @@
 </#if>
 package ${controllerPackageName};
 
+<#if doMobile>
+import ${controllerUtilPackageName}.MobilePageController;
+</#if>
 <#if importEntityFullClassName?? && importEntityFullClassName>
 import ${entityFullClassName};
 </#if>
@@ -80,7 +84,7 @@ import javax.enterprise.context.SessionScoped;
 <#else>
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-<#if doRelationshipNavigation && hasParentRelationships && (!cdiEnabled?? || cdiEnabled == false)>
+<#if doRelationshipNavigation && (hasParentRelationships || doMobile) && (!cdiEnabled?? || cdiEnabled == false)>
 import javax.faces.bean.ManagedProperty;
 </#if>
 import javax.faces.bean.ViewScoped;
@@ -136,6 +140,14 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 </#if>
 </#list>
 </#if>
+<#if doRelationshipNavigation && doMobile>
+<#if cdiEnabled?? && cdiEnabled == true>
+    @Inject
+<#else>
+    @ManagedProperty(value = "${r"#{"}mobilePageController${r"}"}")
+</#if>
+    private MobilePageController mobilePageController;
+</#if>
 <#if doRelationshipNavigation && hasParentRelationships && (!cdiEnabled?? || cdiEnabled == false)>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if relationshipEntityDescriptor.relationshipOne>
@@ -146,6 +158,13 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
     }
 </#if>
 </#list>
+</#if>
+<#if doRelationshipNavigation && doMobile && !(cdiEnabled?? && cdiEnabled)>
+
+    /* Setter method for managed property mobilePageController */
+    public void setMobilePageController(MobilePageController mobilePageController) {
+        this.mobilePageController = mobilePageController;
+    }
 </#if>
 <#if !cdiEnabled?? || cdiEnabled == false || (cdiEnabled?? && cdiEnabled && injectAbstractEJB == false)>
 
@@ -229,9 +248,9 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
 </#if>
         }
 <#if (cdiEnabled?? && cdiEnabled && cdiExtensionVersion??)>
-        return "${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index?faces-redirect=true"}";
+        return <#if doMobile>this.mobilePageController.getMobilePagesPrefix() + </#if>"${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index?faces-redirect=true"}";
 <#else>
-        return "${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index"}";
+        return <#if doMobile>this.mobilePageController.getMobilePagesPrefix() + </#if>"${jsfFolder}${r"/"}${relationshipEntityDescriptor.relationClassName?uncap_first}${r"/index"}";
 </#if>
     }
 

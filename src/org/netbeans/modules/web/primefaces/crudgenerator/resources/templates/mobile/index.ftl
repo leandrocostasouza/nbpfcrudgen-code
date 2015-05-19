@@ -60,6 +60,13 @@
 <#if doCreate>
             <ui:include src="${mobileEntityIncludeFolder}/${entityName?uncap_first}/Create.xhtml"/>
 </#if>
+<#if (doRelationshipNavigation && hasParentRelationships && doRead)>
+<#list uniqueRelationshipEntityDescriptors as uniqueRelationshipEntityDescriptor>
+<#if uniqueRelationshipEntityDescriptor.relationshipOne>
+            <ui:include src="${mobileEntityIncludeFolder}/${uniqueRelationshipEntityDescriptor.relationClassName?uncap_first}/Edit.xhtml"/>
+</#if>
+</#list>
+</#if>
 
         </ui:define>
 

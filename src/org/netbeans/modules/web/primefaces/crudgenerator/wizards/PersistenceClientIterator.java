@@ -158,7 +158,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     static final String[] UTIL_CLASS_NAMES = {"JsfCrudELResolver", "JsfUtil", "PagingInfo"}; //NOI18N
     static final String[] UTIL_CLASS_NAMES2 = {"JsfUtil"}; //NOI18N
     static final String UTIL_FOLDER_NAME = "util"; //NOI18N
-    static final String[] UTIL_CLASS_NAMES_MOBILE = {"MobilePageController", "MobilePage"}; //NOI18N
+    static final String[] UTIL_CLASS_NAMES_MOBILE = {"CurrentPageActionListener", "MobilePageController", "MobilePage"}; //NOI18N
     private static final String FACADE_SUFFIX = "Facade"; //NOI18N
     private static final String ABSTRACT_CONTROLLER_CLASSNAME = "AbstractController";  //NOI18N
     private static final String CONTROLLER_SUFFIX = "Controller";  //NOI18N
@@ -480,7 +480,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         if (utilFolder == null) {
             utilFolder = FileUtil.createFolder(controllerTargetFolder, UTIL_FOLDER_NAME);
         }
-        String utilPackage = controllerPkg == null || controllerPkg.length() == 0 ? UTIL_FOLDER_NAME : controllerPkg + "." + UTIL_FOLDER_NAME;
+        String controllerUtilPkg = controllerPkg == null || controllerPkg.length() == 0 ? UTIL_FOLDER_NAME : controllerPkg + "." + UTIL_FOLDER_NAME;
         for (String UTIL_CLASS_NAMES21 : UTIL_CLASS_NAMES2) {
             if (utilFolder.getFileObject(UTIL_CLASS_NAMES21, JAVA_EXT) == null) {
                 progressMsg = NbBundle.getMessage(org.netbeans.modules.web.jsf.wizards.PersistenceClientIterator.class, "MSG_Progress_Jsf_Now_Generating", UTIL_CLASS_NAMES21 + "." + JAVA_EXT); //NOI18N
@@ -489,7 +489,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                 FileObject tableTemplate = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_TEMPLATE_PATH + UTIL_CLASS_NAMES21 + ".ftl");
                 FileObject target = FileUtil.createData(utilFolder, UTIL_CLASS_NAMES21 + "." + JAVA_EXT); //NOI18N
                 HashMap<String, Object> params = new HashMap<>();
-                params.put("packageName", utilPackage);
+                params.put("packageName", controllerUtilPkg);
                 params.put("comment", Boolean.FALSE); // NOI18N
                 JSFPaletteUtilities.expandJSFTemplate(tableTemplate, params, target);
             } else {
@@ -507,9 +507,18 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                     FileObject tableTemplate = FileUtil.getConfigRoot().getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_MOBILE_TEMPLATE_PATH + UTIL_CLASS_NAME_MOBILE.toLowerCase() + ".ftl");
                     FileObject target = FileUtil.createData(utilFolder, UTIL_CLASS_NAME_MOBILE + "." + JAVA_EXT); //NOI18N
                     HashMap<String, Object> params = new HashMap<>();
-                    params.put("packageName", utilPackage);
+                    params.put("packageName", controllerUtilPkg);
                     params.put("comment", Boolean.FALSE); // NOI18N
                     params.put("cdiEnabled", isCdiEnabled(project));
+                    if (jsfMobileFolder.length() > 0) {
+                        if (jsfMobileFolder.startsWith("/")) {
+                            params.put("jsfMobileFolder", jsfMobileFolder);
+                        } else {
+                            params.put("jsfMobileFolder", "/" + jsfMobileFolder);
+                        }
+                    } else {
+                        params.put("jsfMobileFolder", "mobile");
+                    }
                     JSFPaletteUtilities.expandJSFTemplate(tableTemplate, params, target);
                 } else {
                     progressContributor.progress(progressIndex++);
@@ -664,6 +673,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("cdiEnabled", isCdiEnabled(project));
             params.put("injectAbstractEJB", injectAbstractEJB);
             params.put("controllerPackageName", controllerPkg);
+            params.put("controllerUtilPackageName", controllerUtilPkg);
             params.put("controllerClassName", controllerClassName);
             params.put("abstractControllerClassName", ABSTRACT_CONTROLLER_CLASSNAME);
             params.put("entityFullClassName", entityClass);
@@ -698,6 +708,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("hasParentRelationships", hasParentRelationships);
             params.put("hasChildRelationships", hasChildRelationships);
             params.put("relationshipEntityDescriptors", relationshipEntityDescriptors);
+            params.put("doMobile", doMobile); // NOI18N
             if (jsfFolder.length() > 0) {
                 if (jsfFolder.startsWith("/")) {
                     params.put("jsfFolder", jsfFolder);

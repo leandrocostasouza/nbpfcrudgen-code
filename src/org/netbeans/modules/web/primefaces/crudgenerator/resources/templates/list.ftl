@@ -69,12 +69,12 @@
 <#assign ajaxUpdateIds = "">
 <#assign ajaxUpdateIdsExceptContextMenu = "">
 <#if doContextMenus>
-<#if doCreate><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + createButton/></#if>
-<#if doRead><#assign   ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + readButton/></#if>
-<#if doUpdate><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + updateButton/></#if>
-<#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + deleteButton/></#if>
+<#if doCreate><#assign ajaxUpdateIds = ajaxUpdateIds + " @form:" + createButton/></#if>
+<#if doRead><#assign   ajaxUpdateIds = ajaxUpdateIds + " @form:" + readButton/></#if>
+<#if doUpdate><#assign ajaxUpdateIds = ajaxUpdateIds + " @form:" + updateButton/></#if>
+<#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " @form:" + deleteButton/></#if>
 <#assign ajaxUpdateIdsExceptContextMenu = ajaxUpdateIds?trim/>
-<#if doRead><#assign   ajaxUpdateIds = ajaxUpdateIds + " :" + entityName + "ListForm:" + contextMenu/></#if>
+<#if doRead><#assign   ajaxUpdateIds = ajaxUpdateIds + " @form:" + contextMenu/></#if>
 <#else>
 <#if doCreate><#assign ajaxUpdateIds = ajaxUpdateIds + " " + createButton/></#if>
 <#if doRead><#assign   ajaxUpdateIds = ajaxUpdateIds + " " + readButton/></#if>
@@ -82,6 +82,7 @@
 <#if doDelete><#assign ajaxUpdateIds = ajaxUpdateIds + " " + deleteButton/></#if>
 </#if>
 <#assign ajaxUpdateIds = ajaxUpdateIds?trim>
+<#assign ajaxUpdateIds = ajaxUpdateIds?replace(" ",",")>
 <#if growlMessages>
   <#assign messageUpdate = ":growl">
 <#else>
