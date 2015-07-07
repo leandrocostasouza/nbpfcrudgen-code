@@ -47,6 +47,14 @@
  */
 package org.netbeans.modules.web.primefaces.crudgenerator.wizards;
 
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.TypeParameterTree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import java.awt.Image;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -61,11 +69,18 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.Task;
+import org.netbeans.api.java.source.TreeMaker;
+import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
@@ -75,6 +90,8 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.j2ee.common.J2eeProjectCapabilities;
+import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
+import org.netbeans.modules.j2ee.core.api.support.java.SourceUtils;
 import org.netbeans.modules.j2ee.core.api.support.wizard.Wizards;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
 import org.netbeans.modules.j2ee.ejbcore.ejb.wizard.jpa.dao.AppServerValidationPanel;
@@ -100,7 +117,6 @@ import org.netbeans.modules.web.jsf.JSFUtils;
 import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.Application;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigModel;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
 import org.netbeans.modules.web.jsf.api.facesmodel.NavigationHandler;
 import org.netbeans.modules.web.jsf.api.facesmodel.ResourceBundle;
 import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
@@ -160,7 +176,9 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     static final String UTIL_FOLDER_NAME = "util"; //NOI18N
     static final String[] UTIL_CLASS_NAMES_MOBILE = {"CurrentPageActionListener", "MobilePageController", "MobilePage"}; //NOI18N
     private static final String FACADE_SUFFIX = "Facade"; //NOI18N
+    private static final String FACADE_ABSTRACT = "AbstractFacade"; //NOI18N
     private static final String ABSTRACT_CONTROLLER_CLASSNAME = "AbstractController";  //NOI18N
+    private static final String LAZY_ENTITY_DATA_MODEL_CLASSNAME = "LazyEntityDataModel";  //NOI18N
     private static final String CONTROLLER_SUFFIX = "Controller";  //NOI18N
     private static final String CONVERTER_SUFFIX = "Converter";  //NOI18N
     private static final String JAVA_EXT = "java"; //NOI18N
@@ -207,6 +225,8 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final boolean doSort = sortBoolean == null ? true : sortBoolean;
         Boolean filterBoolean = (Boolean) wizard.getProperty(WizardProperties.FILTER_FUNCTION);
         final boolean doFilter = filterBoolean == null ? true : filterBoolean;
+        Boolean preferLazyLoadingBoolean = (Boolean) wizard.getProperty(WizardProperties.PREFER_LAZY_LOADING);
+        final boolean preferLazyLoading = preferLazyLoadingBoolean == null ? false : preferLazyLoadingBoolean;
         Boolean growlMessagesBoolean = (Boolean) wizard.getProperty(WizardProperties.GROWL_MESSAGES);
         final boolean growlMessages = growlMessagesBoolean == null ? true : growlMessagesBoolean;
         final int growlLife = ((Integer) wizard.getProperty(WizardProperties.GROWL_LIFE));
@@ -287,6 +307,9 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             FileObject jpaControllerPackageFileObject = FileUtil.createFolder(javaPackageRoot, jpaControllerPkg.replace('.', '/'));
                             if (genSessionBean) {
                                 EjbFacadeWizardIterator.generateSessionBeans(progressContributor, progressPanel, entities, project, jpaControllerPkg, jpaControllerPackageFileObject, false, false, null, null, true);
+                                //2015-07-06 Kay Wrobel: Add support for lazy-loading
+                                addCustomFacadeMethods(progressContributor, progressPanel, project, jpaControllerPkg, jpaControllerPackageFileObject);
+                                //TODO: also add the custom LazyDataModel class to facade package
                             } else {
 //                                assert !jsf2Generator : "jsf2 generator works only with EJBs";
                                 JpaControllerIterator.generateJpaControllers(reporter,
@@ -300,7 +323,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             Sources srcs = ProjectUtils.getSources(project);
                             SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                             FileObject webRoot = sgWeb[0].getRootFolder();
-                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, cdiExtensionVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, growlMessages, growlLife, tooltipMessages, confirmationDialogs, relationshipNavigation, contextMenus, maxTableCols, injectAbstractEJB, viewAccessScopedFullClassName, doMobile, jsfMobileFolder, jsfMobileGenericIncludeFolder, jsfMobileEntityIncludeFolder);
+                            generatePrimeFacesControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jsfConverterPackageFileObject, converterPkg, jpaControllerPkg, entities, project, jsfFolder, jsfGenericIncludeFolder, jsfEntityIncludeFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, defaultDataTableRows, defaultDataTableRowsPerPageTemplate, primeFacesVersion, cdiExtensionVersion, jsfVersion, searchLabelArtifacts, doCreate, doRead, doUpdate, doDelete, doSort, doFilter, preferLazyLoading, growlMessages, growlLife, tooltipMessages, confirmationDialogs, relationshipNavigation, contextMenus, maxTableCols, injectAbstractEJB, viewAccessScopedFullClassName, doMobile, jsfMobileFolder, jsfMobileGenericIncludeFolder, jsfMobileEntityIncludeFolder);
                             PersistenceUtils.logUsage(PersistenceClientIterator.class, "USG_PERSISTENCE_JSF", new Object[]{entities.size(), preferredLanguage});
                             progressContributor.progress(progressStepCount);
                         }
@@ -407,6 +430,226 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         return javaPackageRoot.getFileObject(bundleName) != null;
     }
 
+    private static void addCustomFacadeMethods(ProgressContributor progressContributor, ProgressPanel progressPanel, Project project, String jpaControllerPackage, FileObject jpaControllerPackageFileObject) throws IOException {
+        Task<CompilationController> waiter = null;
+        final String afName = jpaControllerPackage + "." + FACADE_ABSTRACT; //NOI18N
+        FileObject afFO = jpaControllerPackageFileObject.getFileObject(FACADE_ABSTRACT, "java");
+        JavaSource source = JavaSource.forFileObject(afFO);
+
+        if (source != null) {
+            source.runModificationTask(new Task<WorkingCopy>() {
+                @Override
+                public void run(WorkingCopy workingCopy) throws Exception {
+                    workingCopy.toPhase(JavaSource.Phase.RESOLVED);
+                    ClassTree classTree = SourceUtils.getPublicTopLevelTree(workingCopy);
+                    assert classTree != null;
+                    CompilationUnitTree cut = workingCopy.getCompilationUnit();
+                    TreeMaker maker = workingCopy.getTreeMaker();
+                    GenerationUtils genUtils = GenerationUtils.newInstance(workingCopy);
+                    TreePath classTreePath = workingCopy.getTrees().getPath(workingCopy.getCompilationUnit(), classTree);
+                    TypeElement classElement = (TypeElement) workingCopy.getTrees().getElement(classTreePath);
+
+                    for (Tree typeDecl : cut.getTypeDecls()) {
+                        if (Tree.Kind.CLASS == typeDecl.getKind()) {
+                            ClassTree clazz = (ClassTree) typeDecl;
+                            List<Tree> members = new ArrayList<>();
+                            
+                            // First method: findRange with one sort field and sort order
+                            ModifiersTree methodModifiers = genUtils.createModifiers(Modifier.PUBLIC);
+                            Tree returnType = genUtils.createType("java.util.List<T>", classElement);
+
+                            List<VariableTree> parameters = new ArrayList<>();
+                            parameters.add(genUtils.createVariable("first", genUtils.createType("int", classElement)));
+                            parameters.add(genUtils.createVariable("pageSize", genUtils.createType("int", classElement)));
+                            parameters.add(genUtils.createVariable("sortField", genUtils.createType("String", classElement)));
+                            parameters.add(genUtils.createVariable("sortOrder", genUtils.createType("String", classElement)));
+                            parameters.add(genUtils.createVariable("filters", genUtils.createType("java.util.Map<String, Object>", classElement)));
+                            String methodBody = "{"
+                                    + "        javax.persistence.criteria.CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();\n"
+                                    + "        javax.persistence.criteria.CriteriaQuery cq = cb.createQuery();\n"
+                                    + "        javax.persistence.criteria.Root<T> entityRoot = cq.from(entityClass);\n"
+                                    + "        cq.select(entityRoot);\n"
+                                    + "\n"
+                                    + "        List<javax.persistence.criteria.Predicate> predicates = getPredicates(cb, entityRoot, filters);\n"
+                                    + "        if (predicates.size() > 0) {\n"
+                                    + "            cq.where(predicates.toArray(new javax.persistence.criteria.Predicate[]{}));\n"
+                                    + "        }\n"
+                                    + "\n"
+                                    + "        if (sortField != null && sortField.length() > 0) {\n"
+                                    + "            if (entityRoot.get(sortField) != null) {\n"
+                                    + "                if (sortOrder.startsWith(\"ASC\")) {\n"
+                                    + "                    cq.orderBy(cb.asc(entityRoot.get(sortField)));\n"
+                                    + "                }\n"
+                                    + "                if (sortOrder.startsWith(\"DESC\")) {\n"
+                                    + "                    cq.orderBy(cb.desc(entityRoot.get(sortField)));\n"
+                                    + "                }\n"
+                                    + "            }\n"
+                                    + "        }\n"
+                                    + "\n"
+                                    + "        javax.persistence.Query q = getEntityManager().createQuery(cq);\n"
+                                    + "        q.setMaxResults(pageSize);\n"
+                                    + "        q.setFirstResult(first);\n"
+                                    + "        return q.getResultList();\n"
+                                    + "}";
+
+                            members.add(maker.Method(methodModifiers,
+                                    "findRange",
+                                    returnType,
+                                    Collections.<TypeParameterTree>emptyList(),
+                                    parameters,
+                                    Collections.<ExpressionTree>emptyList(),
+                                    methodBody,
+                                    null));
+
+                            // Second method: findRange with a map of sort fields and sort orders
+                            methodModifiers = genUtils.createModifiers(Modifier.PUBLIC);
+                            returnType = genUtils.createType("java.util.List<T>", classElement);
+
+                            parameters = new ArrayList<>();
+                            parameters.add(genUtils.createVariable("first", genUtils.createType("int", classElement)));
+                            parameters.add(genUtils.createVariable("pageSize", genUtils.createType("int", classElement)));
+                            parameters.add(genUtils.createVariable("sortFields", genUtils.createType("java.util.Map<String, String>", classElement)));
+                            parameters.add(genUtils.createVariable("filters", genUtils.createType("java.util.Map<String, Object>", classElement)));
+                            methodBody = "{"
+                                    + "        javax.persistence.criteria.CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();\n"
+                                    + "        javax.persistence.criteria.CriteriaQuery cq = cb.createQuery();\n"
+                                    + "        javax.persistence.criteria.Root<T> entityRoot = cq.from(entityClass);\n"
+                                    + "        cq.select(entityRoot);\n"
+                                    + "\n"
+                                    + "        List<javax.persistence.criteria.Predicate> predicates = getPredicates(cb, entityRoot, filters);\n"
+                                    + "        if (predicates.size() > 0) {\n"
+                                    + "            cq.where(predicates.toArray(new javax.persistence.criteria.Predicate[]{}));\n"
+                                    + "        }\n"
+                                    + "\n"
+                                    + "        if (sortFields != null && !sortFields.isEmpty()) {\n"
+                                    + "            for (String sortField : sortFields.keySet()) {\n"
+                                    + "                if (entityRoot.get(sortField) != null) {\n"
+                                    + "                    String sortOrder = sortFields.get(sortField);\n"
+                                    + "                    if (sortOrder.startsWith(\"ASC\")) {\n"
+                                    + "                        cq.orderBy(cb.asc(entityRoot.get(sortField)));\n"
+                                    + "                    }\n"
+                                    + "                    if (sortOrder.startsWith(\"DESC\")) {\n"
+                                    + "                        cq.orderBy(cb.desc(entityRoot.get(sortField)));\n"
+                                    + "                    }\n"
+                                    + "                }\n"
+                                    + "            }\n"
+                                    + "        }\n"
+                                    + "\n"
+                                    + "        javax.persistence.Query q = getEntityManager().createQuery(cq);\n"
+                                    + "        q.setMaxResults(pageSize);\n"
+                                    + "        q.setFirstResult(first);\n"
+                                    + "        return q.getResultList();\n"
+                                    + "}";
+
+                            members.add(maker.Method(methodModifiers,
+                                    "findRange",
+                                    returnType,
+                                    Collections.<TypeParameterTree>emptyList(),
+                                    parameters,
+                                    Collections.<ExpressionTree>emptyList(),
+                                    methodBody,
+                                    null));
+
+                            // Third method: count records with given filters
+                            methodModifiers = genUtils.createModifiers(Modifier.PUBLIC);
+                            returnType = genUtils.createType("int", classElement);
+
+                            parameters = new ArrayList<>();
+                            parameters.add(genUtils.createVariable("filters", genUtils.createType("java.util.Map<String, Object>", classElement)));
+                            methodBody = "{"
+                                    + "        javax.persistence.criteria.CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();\n"
+                                    + "        javax.persistence.criteria.CriteriaQuery cq = cb.createQuery();\n"
+                                    + "        javax.persistence.criteria.Root<T> entityRoot = cq.from(entityClass);\n"
+                                    + "        cq.select(cb.count(entityRoot));\n"
+                                    + "\n"
+                                    + "        List<javax.persistence.criteria.Predicate> predicates = getPredicates(cb, entityRoot, filters);\n"
+                                    + "        if (predicates.size() > 0) {\n"
+                                    + "            cq.where(predicates.toArray(new javax.persistence.criteria.Predicate[]{}));\n"
+                                    + "        }\n"
+                                    + "\n"
+                                    + "        javax.persistence.Query q = getEntityManager().createQuery(cq);\n"
+                                    + "        return ((Long) q.getSingleResult()).intValue();\n"
+                                    + "}";
+
+                            members.add(maker.Method(methodModifiers,
+                                    "count",
+                                    returnType,
+                                    Collections.<TypeParameterTree>emptyList(),
+                                    parameters,
+                                    Collections.<ExpressionTree>emptyList(),
+                                    methodBody,
+                                    null));
+
+                            // Fourth method: private method that returns Criteria Query Predicates
+                            methodModifiers = genUtils.createModifiers(Modifier.PRIVATE);
+                            returnType = genUtils.createType("java.util.List<javax.persistence.criteria.Predicate>", classElement);
+
+                            parameters = new ArrayList<>();
+                            parameters.add(genUtils.createVariable("cb", genUtils.createType("javax.persistence.criteria.CriteriaBuilder", classElement)));
+                            parameters.add(genUtils.createVariable("entityRoot", genUtils.createType("javax.persistence.criteria.Root<T>", classElement)));
+                            parameters.add(genUtils.createVariable("filters", genUtils.createType("java.util.Map<String, Object>", classElement)));
+                            methodBody = "{"
+                                    + "        // Add predicates (WHERE clauses) based on filters map\n"
+                                    + "        List<javax.persistence.criteria.Predicate> predicates = new java.util.ArrayList<>();\n"
+                                    + "        for (String s : filters.keySet()) {\n"
+                                    + "            if (entityRoot.get(s) != null) {\n"
+                                    + "                String simpleName = filters.get(s).getClass().getSimpleName();\n"
+                                    + "                if (simpleName.contains(\"String\")) {\n"
+                                    + "                    predicates.add(cb.like((javax.persistence.criteria.Expression) entityRoot.get(s), filters.get(s) + \"%\"));\n"
+                                    + "                }\n"
+                                    + "            }\n"
+                                    + "        }\n"
+                                    + "        return predicates;\n"
+                                    + "}";
+
+                            members.add(maker.Method(methodModifiers,
+                                    "getPredicates",
+                                    returnType,
+                                    Collections.<TypeParameterTree>emptyList(),
+                                    parameters,
+                                    Collections.<ExpressionTree>emptyList(),
+                                    methodBody,
+                                    null));
+
+                            // Add the new methods to the class
+                            ClassTree modifiedClazz = null;
+                            for (Tree member : members) {
+                                if (modifiedClazz == null) {
+                                    modifiedClazz = maker.addClassMember(clazz, member);
+                                } else {
+                                    modifiedClazz = maker.addClassMember(modifiedClazz, member);
+                                }
+                            }
+
+                            if (modifiedClazz != null) {
+                                workingCopy.rewrite(clazz, modifiedClazz);
+                            }
+                        }
+                    }
+                }
+            }).commit();
+
+            waiter = new Task<CompilationController>() {
+                @Override
+                public void run(CompilationController cc) throws Exception {
+                    cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                }
+            };
+
+        }
+
+    }
+    
+    private static void generatePrimeFacesControllers(
+            ProgressContributor progressContributor,
+            final ProgressPanel progressPanel,
+            String jpaControllerPkg,
+            Project project,
+            FileObject jpaControllerPackageFileObject,
+            int progressIndex) throws IOException {
+        
+    }
+
     //2013-01-08 Kay Wrobel:
     //NEW! Generate everything, but with PrimeFaces Widgets. Managed Beans
     //are also tailored for PrimeFaces, hence the complete duplication of
@@ -444,6 +687,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             boolean doDelete,
             boolean doSort,
             boolean doFilter,
+            boolean preferLazyLoading,
             boolean growlMessages,
             int growlLife,
             boolean tooltipMessages,
@@ -529,6 +773,13 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         //2013-02-11 Kay Wrobel: Retrieve the servlet mapping from the web.xml file
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
         String servletMapping = getServletMapping(wm);
+
+        //Create a LazyEntityDataModel class file
+        FileObject lazyEntityDataModelFileObject;
+        lazyEntityDataModelFileObject = jpaControllerPackageFileObject.getFileObject(LAZY_ENTITY_DATA_MODEL_CLASSNAME, JAVA_EXT);
+        if (lazyEntityDataModelFileObject == null) {
+            lazyEntityDataModelFileObject = jpaControllerPackageFileObject.createData(LAZY_ENTITY_DATA_MODEL_CLASSNAME, JAVA_EXT);
+        }
 
         //Create an abstract controller class file
         FileObject abstractControllerFileObject;
@@ -681,10 +932,13 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put(genSessionBean ? "ejbFullClassName" : "jpaControllerFullClassName", jpaControllerPkg + "." + simpleJpaControllerName);
             params.put("importEjbFullClassName", showImportStatement(controllerPkg, jpaControllerPkg + "." + simpleJpaControllerName));
             params.put(genSessionBean ? "ejbClassName" : "jpaControllerClassName", simpleJpaControllerName);
+            params.put("ejbFacadePackageName", jpaControllerPkg);
             if (genSessionBean) {
                 params.put("ejbFacadeFullClassName", jpaControllerPkg + ".Abstract" + FACADE_SUFFIX);
                 params.put("ejbFacadeClassName", "Abstract" + FACADE_SUFFIX);
             }
+            params.put("lazyEntityDataModelFullClassName", jpaControllerPkg + "." + LAZY_ENTITY_DATA_MODEL_CLASSNAME);
+            params.put("lazyEntityDataModelClassName", LAZY_ENTITY_DATA_MODEL_CLASSNAME);
             params.put("entityClassName", simpleClassName);
             params.put("comment", Boolean.FALSE); // NOI18N
             params.put("bundle", bundleName); // NOI18N
@@ -728,6 +982,12 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                 params.put("jsfMobileFolder", "mobile");
             }
             FromEntityBase.createParamsForConverterTemplate(params, controllerTargetFolder, entityClass, embeddedPkSupport);
+
+            //Generate LazyEntityDataModel on first loop
+            if (i == 0) {
+                FileObject lazyEntityDataModelTemplate = configRoot.getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_LAZY_ENTITY_DATA_MODEL_TEMPLATE);
+                JSFPaletteUtilities.expandJSFTemplate(lazyEntityDataModelTemplate, params, lazyEntityDataModelFileObject);
+            }
 
             //Generate abstract controller on first loop
             if (i == 0) {
@@ -786,6 +1046,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             }
 
             params = FromEntityBase.createFieldParameters(webRoot, entityClass, managedBean, managedBean + ".items", true, true, null);
+            params.put("managedBeanLazyProperty", managedBean + ".lazyItems"); // NOI18N
             params.put("controllerClassName", controllerClassName);
             params.put("converterClassName", converterClassName);
             params.put("defaultDataTableRows", defaultDataTableRows);
@@ -816,6 +1077,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("doContextMenus", contextMenus);
             params.put("maxTableCols", maxTableCols);
             params.put("templateMacros", templateMacros);
+            params.put("preferLazyLoading", preferLazyLoading);
             expandSingleJSFTemplate("list.ftl", entityClass, jsfEntityIncludeFolder, webRoot, "List", params, progressContributor, progressPanel, progressIndex++);
             if (doMobile) {
                 if (jsfMobileFolder.length() > 0) {

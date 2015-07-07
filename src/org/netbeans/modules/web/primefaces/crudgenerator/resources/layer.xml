@@ -102,6 +102,10 @@ made subject to such option by the copyright holder.
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
                     <attr name="template" boolvalue="true"/>
                 </file>
+                <file name="lazyentitydatamodel.ftl" url="templates/lazyentitydatamodel.ftl">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                    <attr name="template" boolvalue="true"/>
+                </file>
                 <file name="list.ftl" url="templates/list.ftl">
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
                     <attr name="template" boolvalue="true"/>

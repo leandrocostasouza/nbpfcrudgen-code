@@ -99,4 +99,5 @@ public class WizardProperties {
     public static final String JSF_MOBILE_GI_FOLDER = "JSFMobileGIFolder"; //NOI18N
     public static final String JSF_MOBILE_EI_FOLDER = "JSFMobileEIFolder"; //NOI18N
     public static final String DO_MOBILE = "DoMobile"; //NOI18N
+    public static final String PREFER_LAZY_LOADING = "PreferLazyLoading"; //NOI18N
 }

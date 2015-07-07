@@ -692,6 +692,8 @@
                               <Component id="sortFunctionCheckBox" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="filterFunctionCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="preferLazyLoadingCheckBox" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="growlCheckBox" min="-2" max="-2" attributes="0"/>
@@ -765,6 +767,7 @@
                           <Component id="readFunctionCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="sortFunctionCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="filterFunctionCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="preferLazyLoadingCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -930,6 +933,11 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="EJB Injection in AbstractController (CDI)"/>
                 <Property name="toolTipText" type="java.lang.String" value="Controls whether injection of EJB Facade objects happens on AbstractController or each Entity Controller. Some containers may not support injection inside an abstract class. Uncheck this box if that is the case. Note: CDI-enabled projects only."/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="preferLazyLoadingCheckBox">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Prefer Lazy Loading"/>
               </Properties>
             </Component>
           </SubComponents>

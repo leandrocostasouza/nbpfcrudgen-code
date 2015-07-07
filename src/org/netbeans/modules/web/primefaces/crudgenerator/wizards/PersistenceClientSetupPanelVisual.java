@@ -119,6 +119,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     public static final String PRIMEFACES_MOBILE_TEMPLATE_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/Mobile/template.ftl"; // NOI18N
     public static final String PRIMEFACES_MOBILE_APPMENU_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/Mobile/appmenu.ftl"; // NOI18N
     public static final String PRIMEFACES_MOBILE_APPINDEX_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/Mobile/appindex.ftl"; // NOI18N
+    // 2015-07-06 Kay Wrobel
+    public static final String PRIMEFACES_LAZY_ENTITY_DATA_MODEL_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/lazyentitydatamodel.ftl"; // NOI18N
 
     private WizardDescriptor wizard;
     private Project project;
@@ -222,6 +224,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         jLabel9 = new javax.swing.JLabel();
         maxDataTableColumnsTextField = new javax.swing.JTextField();
         injectEJBAbstractCheckBox = new javax.swing.JCheckBox();
+        preferLazyLoadingCheckBox = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         primeFacesVersionForLabel = new javax.swing.JLabel();
         primeFacesVersionLabel = new javax.swing.JLabel();
@@ -632,6 +635,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         injectEJBAbstractCheckBox.setText("EJB Injection in AbstractController (CDI)");
         injectEJBAbstractCheckBox.setToolTipText("Controls whether injection of EJB Facade objects happens on AbstractController or each Entity Controller. Some containers may not support injection inside an abstract class. Uncheck this box if that is the case. Note: CDI-enabled projects only.");
 
+        preferLazyLoadingCheckBox.setText("Prefer Lazy Loading");
+
         javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
         optionsPanel.setLayout(optionsPanelLayout);
         optionsPanelLayout.setHorizontalGroup(
@@ -655,7 +660,9 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(sortFunctionCheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(filterFunctionCheckBox))
+                        .addComponent(filterFunctionCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(preferLazyLoadingCheckBox))
                     .addGroup(optionsPanelLayout.createSequentialGroup()
                         .addComponent(growlCheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -713,7 +720,8 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                     .addComponent(deleteFunctionCheckBox)
                     .addComponent(readFunctionCheckBox)
                     .addComponent(sortFunctionCheckBox)
-                    .addComponent(filterFunctionCheckBox))
+                    .addComponent(filterFunctionCheckBox)
+                    .addComponent(preferLazyLoadingCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(growlCheckBox)
@@ -960,6 +968,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     private javax.swing.JPanel mobilePagesPanel;
     private javax.swing.JPanel optionsPanel;
     private javax.swing.JCheckBox overrideExistingCheckBox;
+    private javax.swing.JCheckBox preferLazyLoadingCheckBox;
     private javax.swing.JLabel primeFacesVersionForLabel;
     private javax.swing.JLabel primeFacesVersionLabel;
     private javax.swing.JLabel projectLabel;
@@ -1284,6 +1293,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         settings.putProperty(WizardProperties.DELETE_FUNCTION, Boolean.valueOf(deleteFunctionCheckBox.isSelected()));
         settings.putProperty(WizardProperties.SORT_FUNCTION, Boolean.valueOf(sortFunctionCheckBox.isSelected()));
         settings.putProperty(WizardProperties.FILTER_FUNCTION, Boolean.valueOf(filterFunctionCheckBox.isSelected()));
+        settings.putProperty(WizardProperties.PREFER_LAZY_LOADING, Boolean.valueOf(preferLazyLoadingCheckBox.isSelected()));
         settings.putProperty(WizardProperties.GROWL_MESSAGES, Boolean.valueOf(growlCheckBox.isSelected()));
         settings.putProperty(WizardProperties.GROWL_LIFE, growlLifeSpinner.getValue());
         settings.putProperty(WizardProperties.TOOLTIP_MESSAGES, Boolean.valueOf(tooltipMessagesCheckBox.isSelected()));

@@ -10,6 +10,7 @@
     entityName - name of entity being modified (type: String)
     managedBean - name of managed choosen in UI (type: String)
     managedBeanProperty - name of managed bean property choosen in UI (type: String)
+    managedBeanLazyProperty - name of managed bean property for lazy loading choosen in UI (type: String)
     item - name of property used for dataTable iteration (type: String)
     comment - always set to "false" (type: Boolean)
     entityDescriptors - list of beans describing individual entities. Bean has following properties:
@@ -52,6 +53,7 @@
     relationshipEntityDescriptors - List of child/parent entities (like entityDescriptors)
     growlMessages - Indicates whether to utilize Growl widget or traditional messages (type: Boolean)
     growlLife - Default display life time in ms for Growl widget (type: Integer)
+    preferLazyLoading - Prefer Lazy Loading instead of traditional loading (type: boolean)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category PrimeFaces CRUD Generator->PrimeFaces Pages from Entity Classes.
@@ -133,11 +135,17 @@
 
 </#if>
                 <p:dataTable id="datalist"
+<#if preferLazyLoading>
+                             value="${r"#{"}${managedBeanLazyProperty}${r"}"}"
+                             lazy="true"
+<#else>
                              value="${r"#{"}${managedBeanProperty}${r"}"}"
-                             var="${item}"
+                             lazy="false"
 <#if entityIdField?? && entityIdField != "">
                              rowKey="${r"#{"}${item}.${entityIdField}${r"}"}"
 </#if>
+</#if>
+                             var="${item}"
 <#if defaultDataTableRows?? && defaultDataTableRows != "">
                              paginator="true"
                              rows="${defaultDataTableRows}"
@@ -145,6 +153,30 @@
 </#if>
                              selectionMode="single"
                              selection="${r"#{"}${managedBean}${r".selected}"}">
+<#if preferLazyLoading>
+<!--
+         To disable Lazy Loading, please copy/replace the following lines above,
+         and be sure to replace the word HASH with the # symbol:
+
+         value="${r"HASH{"}${managedBeanProperty}${r"}"}"
+         lazy="false"
+<#if entityIdField?? && entityIdField != "">
+         rowKey="${r"HASH{"}${item}.${entityIdField}${r"}"}"
+</#if>
+-->
+<#else>
+<!--
+         To enable Lazy Loading, please copy/replace the following lines above,
+         and be sure to replace the word HASH with the # symbol:
+
+         value="${r"HASH{"}${managedBeanProperty}${r"}"}"
+         lazy="false"
+<#if entityIdField?? && entityIdField != "">
+         rowKey="${r"HASH{"}${item}.${entityIdField}${r"}"}"  <-- Remove this line
+</#if>
+-->
+</#if>
+
 <#if ajaxUpdateIds?? && ajaxUpdateIds != "">
 
                     <p:ajax event="rowSelect"   update="${ajaxUpdateIds}"<#if doRelationshipNavigation && hasParentRelationships && doRead> listener="${r"#{"}${managedBean}.resetParents${r"}"}"</#if>/>

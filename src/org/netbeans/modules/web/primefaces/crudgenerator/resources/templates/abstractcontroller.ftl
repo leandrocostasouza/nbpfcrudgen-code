@@ -32,6 +32,7 @@
 package ${controllerPackageName};
 
 import ${ejbFacadeFullClassName};
+import ${lazyEntityDataModelFullClassName};
 import ${controllerPackageName}.util.JsfUtil;
 import java.io.Serializable;
 import java.util.Collection;
@@ -68,6 +69,8 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
     private Class<T> itemClass;
     private T selected;
     private Collection<T> items;
+    private ${lazyEntityDataModelClassName}<T> lazyItems;
+
 
     private enum PersistAction {
         CREATE,
@@ -176,6 +179,17 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
     }
 
     /**
+     *
+     * @return Entity-specific Lazy Data Model
+     */
+    public ${lazyEntityDataModelClassName}<T> getLazyItems() {
+        if (lazyItems == null) {
+            lazyItems = new ${lazyEntityDataModelClassName}<>(this.ejbFacade);
+        }
+        return lazyItems;
+    }
+
+    /**
      * Apply changes to an existing item to the data layer.
      *
      * @param event an event from the widget that wants to save an Entity to the data layer
@@ -195,6 +209,7 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
         persist(PersistAction.CREATE, msg);
         if (!isValidationFailed()) {
             items = null; // Invalidate list of items to trigger re-query.
+            lazyItems = null; // Invalidate list of lazy items to trigger re-query.
         }
     }
 
@@ -209,6 +224,7 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
         if (!isValidationFailed()) {
             selected = null; // Remove selection
             items = null; // Invalidate list of items to trigger re-query.
+            lazyItems = null; // Invalidate list of lazy items to trigger re-query.
         }
     }
 
