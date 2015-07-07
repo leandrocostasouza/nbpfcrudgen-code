@@ -179,6 +179,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     private static final String FACADE_ABSTRACT = "AbstractFacade"; //NOI18N
     private static final String ABSTRACT_CONTROLLER_CLASSNAME = "AbstractController";  //NOI18N
     private static final String LAZY_ENTITY_DATA_MODEL_CLASSNAME = "LazyEntityDataModel";  //NOI18N
+    private static final String LAZY_ENTITY_SORTER_CLASSNAME = "LazyEntitySorter";  //NOI18N
     private static final String CONTROLLER_SUFFIX = "Controller";  //NOI18N
     private static final String CONVERTER_SUFFIX = "Converter";  //NOI18N
     private static final String JAVA_EXT = "java"; //NOI18N
@@ -781,6 +782,13 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             lazyEntityDataModelFileObject = jpaControllerPackageFileObject.createData(LAZY_ENTITY_DATA_MODEL_CLASSNAME, JAVA_EXT);
         }
 
+        //Create a LazyEntitySorter class file
+        FileObject lazyEntitySorterFileObject;
+        lazyEntitySorterFileObject = jpaControllerPackageFileObject.getFileObject(LAZY_ENTITY_SORTER_CLASSNAME, JAVA_EXT);
+        if (lazyEntitySorterFileObject == null) {
+            lazyEntitySorterFileObject = jpaControllerPackageFileObject.createData(LAZY_ENTITY_SORTER_CLASSNAME, JAVA_EXT);
+        }
+
         //Create an abstract controller class file
         FileObject abstractControllerFileObject;
         abstractControllerFileObject = controllerTargetFolder.getFileObject(ABSTRACT_CONTROLLER_CLASSNAME, JAVA_EXT);
@@ -983,10 +991,12 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             }
             FromEntityBase.createParamsForConverterTemplate(params, controllerTargetFolder, entityClass, embeddedPkSupport);
 
-            //Generate LazyEntityDataModel on first loop
+            //Generate LazyEntityDataModel and LazyEntitySorter on first loop
             if (i == 0) {
                 FileObject lazyEntityDataModelTemplate = configRoot.getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_LAZY_ENTITY_DATA_MODEL_TEMPLATE);
                 JSFPaletteUtilities.expandJSFTemplate(lazyEntityDataModelTemplate, params, lazyEntityDataModelFileObject);
+                FileObject lazyEntitySorterTemplate = configRoot.getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_LAZY_ENTITY_SORTER_TEMPLATE);
+                JSFPaletteUtilities.expandJSFTemplate(lazyEntitySorterTemplate, params, lazyEntitySorterFileObject);
             }
 
             //Generate abstract controller on first loop

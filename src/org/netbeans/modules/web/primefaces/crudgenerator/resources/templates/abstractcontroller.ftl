@@ -35,7 +35,9 @@ import ${ejbFacadeFullClassName};
 import ${lazyEntityDataModelFullClassName};
 import ${controllerPackageName}.util.JsfUtil;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.event.ActionEvent;
@@ -189,6 +191,18 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
         return lazyItems;
     }
 
+    public void setLazyItems(${lazyEntityDataModelClassName}<T> lazyItems) {
+        this.lazyItems = lazyItems;
+    }
+
+    public void setLazyItems(Collection<T> items) {
+        if (items instanceof List) {
+            lazyItems = new ${lazyEntityDataModelClassName}<>((List<T>) items);
+        } else {
+            lazyItems = new ${lazyEntityDataModelClassName}<>(new ArrayList<>(items));
+        }
+    }
+
     /**
      * Apply changes to an existing item to the data layer.
      *
@@ -318,7 +332,8 @@ public abstract class ${abstractControllerClassName}<T> implements Serializable 
     public void initParams() {
         Object paramItems = FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(itemClass.getSimpleName() + "_items");
         if (paramItems != null) {
-            this.items = (Collection<T>) paramItems;
+            setItems((Collection<T>) paramItems);
+            setLazyItems((Collection<T>) paramItems);
         }
     }
 

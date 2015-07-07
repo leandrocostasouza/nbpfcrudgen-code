@@ -121,6 +121,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     public static final String PRIMEFACES_MOBILE_APPINDEX_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/Mobile/appindex.ftl"; // NOI18N
     // 2015-07-06 Kay Wrobel
     public static final String PRIMEFACES_LAZY_ENTITY_DATA_MODEL_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/lazyentitydatamodel.ftl"; // NOI18N
+    public static final String PRIMEFACES_LAZY_ENTITY_SORTER_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/lazyentitysorter.ftl"; // NOI18N
 
     private WizardDescriptor wizard;
     private Project project;

@@ -243,6 +243,7 @@ public class ${controllerClassName} extends ${abstractControllerClassName}<${ent
         if (this.getSelected() != null) {
 <#if (cdiEnabled?? && cdiEnabled && cdiExtensionVersion??)>
             ${relationshipEntityDescriptor.id?uncap_first}Controller.setItems(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
+            ${relationshipEntityDescriptor.id?uncap_first}Controller.setLazyItems(this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
 <#else>
             FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("${relationshipEntityDescriptor.relationClassName?cap_first}_items", this.getSelected().get${relationshipEntityDescriptor.id?cap_first}());
 </#if>
