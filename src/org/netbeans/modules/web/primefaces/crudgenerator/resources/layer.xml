@@ -98,6 +98,10 @@ made subject to such option by the copyright holder.
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
                     <attr name="template" boolvalue="true"/>
                 </file>
+                <file name="entityutility.ftl" url="templates/entityutility.ftl">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
+                    <attr name="template" boolvalue="true"/>
+                </file>
                 <file name="index.ftl" url="templates/index.ftl">
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.crudgenerator.Bundle"/>
                     <attr name="template" boolvalue="true"/>

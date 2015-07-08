@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
@@ -164,23 +162,21 @@ public class LazyEntityDataModel<T> extends LazyDataModel<T> {
 
     private List<T> filter(List<T> itemList, Map<String, Object> filters) {
 
-        List<T> filteredItemList = new ArrayList<>(itemList);
+        List<T> filteredItemList = new ArrayList<>();
 
         // apply filters
-        if (filters != null && filters.size() > 0) {
-            for (T entity : filteredItemList) {
-                for (String filterField : filters.keySet()) {
-                    Object filterValue = filters.get(filterField);
-                    String fieldValue = null;
-                    try {
-                        fieldValue = String.valueOf(entity.getClass().getField(filterField).get(entity));
-                    } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-                        Logger.getLogger(LazyEntityDataModel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    if (filterValue != null && fieldValue != null && !fieldValue.startsWith(filterValue.toString())) {
-                        filteredItemList.remove(entity);
-                    }
+        for (T entity : itemList) {
+            boolean match = true;
+            for (String filterField : filters.keySet()) {
+                String filterValue = String.valueOf(filters.get(filterField)).toLowerCase();
+                String fieldValue = String.valueOf(EntityUtility.getFieldValue(entity, filterField)).toLowerCase();
+                if (filterValue != null && fieldValue != null && !fieldValue.startsWith(filterValue)) {
+                    match = false;
+                    break;
                 }
+            }
+            if (match) {
+                filteredItemList.add(entity);
             }
         }
         return filteredItemList;

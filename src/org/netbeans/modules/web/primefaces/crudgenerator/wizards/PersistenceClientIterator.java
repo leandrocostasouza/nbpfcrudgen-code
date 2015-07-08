@@ -180,6 +180,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     private static final String ABSTRACT_CONTROLLER_CLASSNAME = "AbstractController";  //NOI18N
     private static final String LAZY_ENTITY_DATA_MODEL_CLASSNAME = "LazyEntityDataModel";  //NOI18N
     private static final String LAZY_ENTITY_SORTER_CLASSNAME = "LazyEntitySorter";  //NOI18N
+    private static final String ENTITY_UTILITY_CLASSNAME = "EntityUtility";  //NOI18N
     private static final String CONTROLLER_SUFFIX = "Controller";  //NOI18N
     private static final String CONVERTER_SUFFIX = "Converter";  //NOI18N
     private static final String JAVA_EXT = "java"; //NOI18N
@@ -775,6 +776,13 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
         String servletMapping = getServletMapping(wm);
 
+        //Create a EntityUtility class file
+        FileObject entityHelperFileObject;
+        entityHelperFileObject = jpaControllerPackageFileObject.getFileObject(ENTITY_UTILITY_CLASSNAME, JAVA_EXT);
+        if (entityHelperFileObject == null) {
+            entityHelperFileObject = jpaControllerPackageFileObject.createData(ENTITY_UTILITY_CLASSNAME, JAVA_EXT);
+        }
+
         //Create a LazyEntityDataModel class file
         FileObject lazyEntityDataModelFileObject;
         lazyEntityDataModelFileObject = jpaControllerPackageFileObject.getFileObject(LAZY_ENTITY_DATA_MODEL_CLASSNAME, JAVA_EXT);
@@ -991,8 +999,10 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             }
             FromEntityBase.createParamsForConverterTemplate(params, controllerTargetFolder, entityClass, embeddedPkSupport);
 
-            //Generate LazyEntityDataModel and LazyEntitySorter on first loop
+            //Generate LazyEntityDataModel, LazyEntitySorter and EntityUtility classes on first loop
             if (i == 0) {
+                FileObject entityHelperTemplate = configRoot.getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_ENTITY_UTILITY_TEMPLATE);
+                JSFPaletteUtilities.expandJSFTemplate(entityHelperTemplate, params, entityHelperFileObject);
                 FileObject lazyEntityDataModelTemplate = configRoot.getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_LAZY_ENTITY_DATA_MODEL_TEMPLATE);
                 JSFPaletteUtilities.expandJSFTemplate(lazyEntityDataModelTemplate, params, lazyEntityDataModelFileObject);
                 FileObject lazyEntitySorterTemplate = configRoot.getFileObject(PersistenceClientSetupPanelVisual.PRIMEFACES_LAZY_ENTITY_SORTER_TEMPLATE);

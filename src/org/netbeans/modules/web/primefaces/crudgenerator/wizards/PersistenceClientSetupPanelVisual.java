@@ -122,6 +122,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
     // 2015-07-06 Kay Wrobel
     public static final String PRIMEFACES_LAZY_ENTITY_DATA_MODEL_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/lazyentitydatamodel.ftl"; // NOI18N
     public static final String PRIMEFACES_LAZY_ENTITY_SORTER_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/lazyentitysorter.ftl"; // NOI18N
+    public static final String PRIMEFACES_ENTITY_UTILITY_TEMPLATE = "/Templates/PrimeFacesCRUDGenerator/PrimeFaces_From_Entity_Wizard/entityutility.ftl"; // NOI18N
 
     private WizardDescriptor wizard;
     private Project project;

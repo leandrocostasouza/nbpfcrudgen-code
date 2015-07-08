@@ -40,13 +40,13 @@ public class LazyEntitySorter<T> implements Comparator<T> {
     @Override
     public int compare(T entity1, T entity2) {
         try {
-            Object value1 = entity1.getClass().getField(this.sortField).get(entity1);
-            Object value2 = entity2.getClass().getField(this.sortField).get(entity2);
+            Object value1 = EntityUtility.getFieldValue(entity1, sortField);
+            Object value2 = EntityUtility.getFieldValue(entity2, sortField);
 
             int value = ((Comparable) value1).compareTo(value2);
 
             return SortOrder.ASCENDING.equals(sortOrder) ? value : -1 * value;
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+        } catch (SecurityException | IllegalArgumentException e) {
             throw new RuntimeException();
         }
     }
