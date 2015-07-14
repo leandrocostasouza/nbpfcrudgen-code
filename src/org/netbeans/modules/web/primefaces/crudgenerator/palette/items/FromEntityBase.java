@@ -154,14 +154,15 @@ public abstract class FromEntityBase {
                                 }
                                 String propName = fd.getPropertyName();
                                 for (ExecutableElement pkMethod : embeddedPkSupport.getPkAccessorMethods(bean)) {
-                                    if (!embeddedPkSupport.isRedundantWithRelationshipField(bean, pkMethod)) {
-                                        String pkMethodName = pkMethod.getSimpleName().toString();
-                                        fd = new FieldDesc(controller, pkMethod, bean);
-                                        fd.setLabel(pkMethodName.substring(3));
-                                        fd.setPropertyName(propName + "." + CustomJpaControllerUtil.getPropNameFromMethod(pkMethodName));
-                                        fd.setEmbeddedKey();
-                                        fields.add(fd);
+                                    String pkMethodName = pkMethod.getSimpleName().toString();
+                                    fd = new FieldDesc(controller, pkMethod, bean);
+                                    fd.setLabel(pkMethodName.substring(3));
+                                    fd.setPropertyName(propName + "." + CustomJpaControllerUtil.getPropNameFromMethod(pkMethodName));
+                                    fd.setEmbeddedKey();
+                                    if (embeddedPkSupport.isRedundantWithRelationshipField(bean, pkMethod)) {
+                                        fd.setKeyPartOfRelationshipFied();
                                     }
+                                    fields.add(fd);
                                 }
                             } else {
                                 fields.add(fd);
@@ -442,6 +443,7 @@ public abstract class FromEntityBase {
         private boolean primaryKey;
         private boolean generatedValue;
         private boolean embeddedKey;
+        private boolean keyPartOfRelationshipFied;
         private boolean readOnly;
         private boolean versionField;
 
@@ -488,6 +490,14 @@ public abstract class FromEntityBase {
 
         public void setEmbeddedKey() {
             this.embeddedKey = true;
+        }
+
+        public boolean isKeyPartOfRelationshipFied() {
+            return keyPartOfRelationshipFied;
+        }
+
+        public void setKeyPartOfRelationshipFied() {
+            this.keyPartOfRelationshipFied = true;
         }
 
         public String getMethodName() {
@@ -629,7 +639,7 @@ public abstract class FromEntityBase {
             TypeElement passedReturnTypeStrippedElement = (TypeElement) types.asElement(passedReturnTypeStripped);
             return passedReturnTypeStrippedElement.getQualifiedName().toString();
         }
-        
+
         public String getValuesListGetter() {
             if (getRelationship() == CustomJpaControllerUtil.REL_NONE) {
                 return null;
