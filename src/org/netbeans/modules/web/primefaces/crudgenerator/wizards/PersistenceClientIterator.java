@@ -590,22 +590,95 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                             parameters.add(genUtils.createVariable("cb", genUtils.createType("javax.persistence.criteria.CriteriaBuilder", classElement)));
                             parameters.add(genUtils.createVariable("entityRoot", genUtils.createType("javax.persistence.criteria.Root<T>", classElement)));
                             parameters.add(genUtils.createVariable("filters", genUtils.createType("java.util.Map<String, Object>", classElement)));
-                            methodBody = "{"
-                                    + "        // Add predicates (WHERE clauses) based on filters map\n"
-                                    + "        List<javax.persistence.criteria.Predicate> predicates = new java.util.ArrayList<>();\n"
-                                    + "        for (String s : filters.keySet()) {\n"
-                                    + "            if (entityRoot.get(s) != null) {\n"
-                                    + "                String simpleName = filters.get(s).getClass().getSimpleName();\n"
-                                    + "                if (simpleName.contains(\"String\")) {\n"
-                                    + "                    predicates.add(cb.like((javax.persistence.criteria.Expression) entityRoot.get(s), filters.get(s) + \"%\"));\n"
-                                    + "                }\n"
-                                    + "            }\n"
-                                    + "        }\n"
-                                    + "        return predicates;\n"
-                                    + "}";
+                            methodBody = "{\n" +
+                                    "\n" +
+                                    "        javax.persistence.metamodel.Metamodel entityModel = this.getEntityManager().getMetamodel();\n" +
+                                    "        javax.persistence.metamodel.ManagedType<T> entityType = entityModel.managedType(entityClass);\n" +
+                                    "        java.util.Set<javax.persistence.metamodel.EmbeddableType<?>> embeddables = entityModel.getEmbeddables();\n" +
+                                    "        String fieldTypeName = null;\n" +
+                                    "\n" +
+                                    "        // Add predicates (WHERE clauses) based on filters map\n" +
+                                    "        List<javax.persistence.criteria.Predicate> predicates = new java.util.ArrayList<>();\n" +
+                                    "        for (String s : filters.keySet()) {\n" +
+                                    "\n" +
+                                    "            javax.persistence.criteria.Path<Object> pkFieldPath = null;\n" +
+                                    "            if (s.contains(\".\")) {\n" +
+                                    "                String embeddedIdField = s.split(\"\\\\.\")[0];\n" +
+                                    "                String embeddedIdMember = s.split(\"\\\\.\")[1];\n" +
+                                    "                pkFieldPath = entityRoot.get(embeddedIdField).get(embeddedIdMember);\n" +
+                                    "                javax.persistence.metamodel.EmbeddableType<?> embeddableType = entityModel.embeddable(entityType.getAttribute(embeddedIdField).getJavaType());\n" +
+                                    "                fieldTypeName = embeddableType.getAttribute(embeddedIdMember).getJavaType().getName();\n" +
+                                    "            } else {\n" +
+                                    "                pkFieldPath = entityRoot.get(s);\n" +
+                                    "                fieldTypeName = entityType.getAttribute(s).getJavaType().getName();\n" +
+                                    "            }\n" +
+                                    "\n" +
+                                    "            if (pkFieldPath != null && fieldTypeName != null) {\n" +
+                                    "                if (fieldTypeName.contains(\"String\")) {\n" +
+                                    "                    predicates.add(cb.like((javax.persistence.criteria.Expression) pkFieldPath, filters.get(s) + \"%\"));\n" +
+                                    "                } else {\n" +
+                                    "                    javax.persistence.criteria.Expression<?> filterExpression = getCastExpression((String) filters.get(s), fieldTypeName, cb);\n" +
+                                    "                    if (filterExpression != null) {\n" +
+                                    "                        predicates.add(cb.equal((javax.persistence.criteria.Expression<?>) pkFieldPath, filterExpression));\n" +
+                                    "\n" +
+                                    "                    } else {\n" +
+                                    "                        predicates.add(cb.equal((javax.persistence.criteria.Expression<?>) pkFieldPath, filters.get(s)));\n" +
+                                    "                    }\n" +
+                                    "                }\n" +
+                                    "            }\n" +
+                                    "        }\n" +
+                                    "        return predicates;\n" +
+                                    "    }";
 
                             members.add(maker.Method(methodModifiers,
                                     "getPredicates",
+                                    returnType,
+                                    Collections.<TypeParameterTree>emptyList(),
+                                    parameters,
+                                    Collections.<ExpressionTree>emptyList(),
+                                    methodBody,
+                                    null));
+
+                            // Fourth method: private method that returns Criteria Query Predicates
+                            methodModifiers = genUtils.createModifiers(Modifier.PRIVATE);
+                            returnType = genUtils.createType("javax.persistence.criteria.Expression<?>", classElement);
+
+                            parameters = new ArrayList<>();
+                            parameters.add(genUtils.createVariable("searchValue", genUtils.createType("String", classElement)));
+                            parameters.add(genUtils.createVariable("typeName", genUtils.createType("String", classElement)));
+                            parameters.add(genUtils.createVariable("cb", genUtils.createType("javax.persistence.criteria.CriteriaBuilder", classElement)));
+                            methodBody = "{\n" +
+                                    "        javax.persistence.criteria.Expression<?> expression = null;\n" +
+                                    "        switch (typeName) {\n" +
+                                    "            case \"short\":\n" +
+                                    "                expression = cb.literal(Short.parseShort(searchValue));\n" +
+                                    "                break;\n" +
+                                    "            case \"byte\":\n" +
+                                    "                expression = cb.literal(Byte.parseByte(searchValue));\n" +
+                                    "                break;\n" +
+                                    "            case \"int\":\n" +
+                                    "                expression = cb.literal(Integer.parseInt(searchValue));\n" +
+                                    "                break;\n" +
+                                    "            case \"long\":\n" +
+                                    "                expression = cb.literal(Long.parseLong(searchValue));\n" +
+                                    "                break;\n" +
+                                    "            case \"float\":\n" +
+                                    "                expression = cb.literal(Float.parseFloat(searchValue));\n" +
+                                    "                break;\n" +
+                                    "            case \"double\":\n" +
+                                    "                expression = cb.literal(Double.parseDouble(searchValue));\n" +
+                                    "                break;\n" +
+                                    "            case \"boolean\":\n" +
+                                    "                expression = cb.literal(Boolean.parseBoolean(searchValue));\n" +
+                                    "                break;\n" +
+                                    "            default:\n" +
+                                    "                break;\n" +
+                                    "        }\n" +
+                                    "        return expression;\n" +
+                                    "    }";
+
+                            members.add(maker.Method(methodModifiers,
+                                    "getCastExpression",
                                     returnType,
                                     Collections.<TypeParameterTree>emptyList(),
                                     parameters,
