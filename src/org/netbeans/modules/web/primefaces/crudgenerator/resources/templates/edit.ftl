@@ -130,7 +130,7 @@
     <#else>
                     <p:commandButton actionListener="${r"#{"}${managedBean}${r".save}"}" value="${r"#{"}${bundle}.Save${r"}"}" update="display,:${entityName}ListForm:datalist,${messageUpdate}" oncomplete="handleSubmit(xhr,status,args,<@pf>${entityName}EditDialog</@pf>);"/>
     </#if>
-                    <p:commandButton value="${r"#{"}${bundle}.Cancel${r"}"}" onclick="<@pf>${entityName}EditDialog</@pf>.hide()"/>
+                    <p:commandButton value="${r"#{"}${bundle}.Cancel${r"}"}" oncomplete="<@pf>${entityName}EditDialog</@pf>.hide()" update="display" process="@this" immediate="true" resetValues="true"/>
                 </h:panelGroup>
 
             </h:form>
