@@ -119,10 +119,10 @@
                     <p:separator/>
 <#list relationshipEntityDescriptors as relationshipEntityDescriptor>
 <#if relationshipEntityDescriptor.relationshipOne>
-                    <p:menuitem value="${r"#{"}${bundle}.${entityName}MenuItem_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search"  actionListener="${r"#{"}${managedBean}.prepare${relationshipEntityDescriptor.id?cap_first}${r"}"}" update=":${relationshipEntityDescriptor.relationClassName}ViewForm" oncomplete="<@pf>${relationshipEntityDescriptor.relationClassName}ViewDialog</@pf>.show()" disabled="${r"#{"}empty ${managedBean}.selected.${relationshipEntityDescriptor.id?uncap_first}${r"}"}"/>  
+                    <p:menuitem value="${r"#{"}${bundle}.${entityName}MenuItem_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search"  actionListener="${r"#{"}${managedBean}.prepare${relationshipEntityDescriptor.id?cap_first}${r"}"}" update=":${relationshipEntityDescriptor.relationClassName}ViewForm" oncomplete="<@pf>${relationshipEntityDescriptor.relationClassName}ViewDialog</@pf>.show()" disabled="${r"#{"}empty ${managedBean}.selected.${relationshipEntityDescriptor.id}${r"}"}"/>  
 </#if>
 <#if relationshipEntityDescriptor.relationshipMany>
-                    <p:menuitem value="${r"#{"}${bundle}.${entityName}MenuItem_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search"  action="${r"#{"}${managedBean}.navigate${relationshipEntityDescriptor.id?cap_first}${r"}"}" disabled="${r"#{"}empty ${managedBean}.selected.${relationshipEntityDescriptor.id?uncap_first}${r"}"}" ajax="false"/>  
+                    <p:menuitem value="${r"#{"}${bundle}.${entityName}MenuItem_${relationshipEntityDescriptor.id?replace(".","_")}${r"}"}" icon="ui-icon-search"  action="${r"#{"}${managedBean}.navigate${relationshipEntityDescriptor.id?cap_first}${r"}"}" disabled="${r"#{"}empty ${managedBean}.selected.${relationshipEntityDescriptor.id}${r"}"}" ajax="false"/>  
 </#if>
 </#list>
 </#if>
