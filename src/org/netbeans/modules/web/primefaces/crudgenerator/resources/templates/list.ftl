@@ -169,10 +169,10 @@
          To enable Lazy Loading, please copy/replace the following lines above,
          and be sure to replace the word HASH with the # symbol:
 
-         value="${r"HASH{"}${managedBeanProperty}${r"}"}"
-         lazy="false"
+         value="${r"HASH{"}${managedBeanLazyProperty}${r"}"}"
+         lazy="true"
 <#if entityIdField?? && entityIdField != "">
-         rowKey="${r"HASH{"}${item}.${entityIdField}${r"}"}"  <-- Remove this line
+         rowKey="${r"HASH{"}${item}.${entityIdField}${r"}"}"  <<< Remove this line
 </#if>
 -->
 </#if>
